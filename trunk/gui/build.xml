@@ -1,0 +1,107 @@
+<project default="dist">
+    <property name="version" value="2.x"/>
+
+    <property name="ligadir" location="../liga"/>
+    <property name="distdir" location="dist"/>
+
+    <target name="init">
+        <path id="compilelib">
+            <fileset dir="libs">
+                <include name="**/*.jar"/>
+            </fileset>
+            <fileset dir="${ligadir}/lib">
+                <include name="**/*.jar"/>
+            </fileset>
+            <pathelement location="${ligadir}/target/dart-${version}.jar"/>
+        </path>
+    </target>
+
+    <target name="clean">
+        <delete dir="${distdir}"/>
+        <delete dir="target"/>
+        <ant dir="${ligadir}" antfile="build.xml" target="clean"/>
+    </target>
+
+    <target name="compile" depends="init">
+        <mkdir dir="target/classes"/>
+        <javac destdir="target/classes" debug="true" encoding="ISO-8859-1">
+            <src location="src"/>
+            <classpath refid="compilelib"/>
+        </javac>
+    </target>
+
+    <target name="jar" depends="compile">
+        <jar file="target/dartgui-${version}.jar">
+            <fileset dir="target/classes">
+                <include name="**"/>
+            </fileset>
+            <fileset dir="src">
+                <include name="**/*.properties"/>
+                <include name="**/*.xml"/>
+            </fileset>
+            <fileset dir="config"/>
+        </jar>
+    </target>
+
+    <target name="ligadist">
+        <ant dir="${ligadir}" antfile="build.xml"/>
+    </target>
+
+    <target name="dist" depends="ligadist,jar">
+        <mkdir dir="${distdir}/lib"/>
+        <copy todir="${distdir}/lib">
+            <fileset dir="${ligadir}/target">
+                <include name="dart-${version}.jar"/>
+            </fileset>
+            <fileset dir="${ligadir}/lib">
+                <include name="*.jar"/>
+            </fileset>
+            <fileset dir="${ligadir}/lib/hibernate">
+                <include name="*.jar"/>
+            </fileset>
+            <fileset dir="libs">
+                <include name="*.jar"/>
+            </fileset>
+        </copy>
+        <copy file="target/dartgui-${version}.jar" todir="${distdir}/lib"/>
+        <copy todir="${distdir}/config">
+            <fileset dir="config"/>
+            <fileset dir="${ligadir}/config">
+                <include name="settings.properties"/>
+            </fileset>
+        </copy>
+        <copy todir="${distdir}/media">
+            <fileset dir="media"/>
+        </copy>
+
+        <copy todir="${distdir}/misc" file="${ligadir}/database/liga.dump"/>
+        <copy todir="${distdir}" file="dart.bat"/>
+        <copy todir="${distdir}" file="${ligadir}/docs/Dokumentation.doc"/>
+    </target>
+
+  <target name="start" description="launch application">
+    <java classname="org.en.tealEye.guiMain.AppStartup" dir="dist" fork="true">
+      <classpath>
+        <pathelement location="dist/config"/>
+        <fileset dir="dist/lib">
+          <include name="*.jar"/>
+        </fileset>
+      </classpath>
+    </java>
+  </target>
+
+    <target name="zip">
+        <tstamp/>
+        <zip destfile="tealeye-${DSTAMP}-${TSTAMP}.zip" basedir=".">
+            <include name="*.xml"/>
+            <include name="*.bat"/>
+            <include name="src/**"/>
+            <include name="test/**"/>
+            <exclude name="**/*.jar"/>
+            <!--<include name="gen-src/**"/>-->
+            <include name="config/**"/>
+            <include name="database/**"/>
+        </zip>
+    </target>
+
+</project>

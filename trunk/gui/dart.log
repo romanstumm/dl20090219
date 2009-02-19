@@ -1,0 +1,1 @@
+2009-02-09 21:37:37,531 [main] FATAL de.liga.dart.common.service.util.HibernateUtil  - Initial SessionFactory creation failed.org.hibernate.MappingNotFoundException: resource: de/twl/dart/model/Automatenaufsteller.hbm.xml not found

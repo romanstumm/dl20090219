@@ -1,0 +1,85 @@
+<project default="jar">
+    <property name="version" value="2.x"/>
+
+    <path id="compilelib">
+        <fileset dir="lib">
+            <include name="**/*.jar"/>
+        </fileset>
+    </path>
+    <path id="toolslib">
+        <path refid="compilelib"/>
+        <fileset dir="lib">
+            <include name="**/*.jar"/>
+        </fileset>
+    </path>
+    <taskdef name="hibernatetool"
+             classname="org.hibernate.tool.ant.HibernateToolTask"
+             classpathref="toolslib"/>
+
+    <target name="clean">
+        <delete dir="target"/>
+        <delete>
+            <fileset dir=".">
+                <include name="*.zip"/>
+            </fileset>
+        </delete>
+        <delete dir="../bin/lib"/>
+    </target>
+
+    <target name="compile">
+        <mkdir dir="target/classes"/>
+        <javac destdir="target/classes" debug="true" encoding="ISO-8859-1">
+            <src location="src"/>
+            <classpath refid="compilelib"/>
+        </javac>
+    </target>
+
+    <target name="install" depends="jar"/>
+
+    <target name="jar" depends="compile">
+        <jar file="target/dart-${version}.jar">
+            <fileset dir="target/classes">
+                <include name="**"/>
+            </fileset>
+            <fileset dir="src">
+                <include name="**/*.properties"/>
+                <include name="**/*.xml"/>
+            </fileset>
+            <fileset dir="config">
+                <exclude name="settings.properties"/>
+            </fileset>
+        </jar>
+    </target>
+
+    <target name="rev">
+        <delete dir="gen-src"/>
+        <mkdir dir="gen-src"/>
+        <hibernatetool destdir="gen-src">
+            <classpath refid="toolslib"/>
+            <jdbcconfiguration
+                    configurationfile="database/hibernate.cfg.xml"
+                    revengfile="database/hibernate.reverse.engineering.xml"
+                    detectmanytomany="true"
+                    packagename="de.liga.dart.model"/>
+            <hbm2java jdk5="true"/>
+            <!--<hbm2dao/>-->
+            <hbm2hbmxml destdir="gen-src"/>
+        </hibernatetool>
+
+    </target>
+
+    <target name="zip">
+        <tstamp/>
+        <zip destfile="dart-src-${DSTAMP}-${TSTAMP}.zip" basedir=".">
+            <include name="*.xml"/>
+            <include name="*.bat"/>
+            <include name="src/**"/>
+            <include name="test/**"/>
+            <exclude name="**/*.jar"/>
+            <!--<include name="gen-src/**"/>-->
+            <include name="config/**"/>
+            <include name="database/**"/>
+        </zip>
+    </target>
+
+</project>
