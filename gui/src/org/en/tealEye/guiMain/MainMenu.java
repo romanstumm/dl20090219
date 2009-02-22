@@ -26,14 +26,33 @@ public class MainMenu extends JMenuBar {
 
         dateiMenu.add(new JMenuItem("Drucken"));
         dateiMenu.addSeparator();
-        dateiMenu.add(item = new JMenuItem("Datenimport (csv Standorte, Aufsteller)"));
-        item.setActionCommand("MENU_Datenimport");
-        dateiMenu.add(item = new JMenuItem("Datenimport (dBase Spielorte, Aufsteller)"));
+        // - - - - - - - - - - - -
+
+        JMenu menu = new JMenu("Import von...");
+        dateiMenu.add(menu);
+
+        menu.add(item = new JMenuItem("Excel (alles)"));
+        item.setActionCommand("MENU_Excelimport");
+
+        menu.add(item = new JMenuItem("vfs/dBase (Spielorte, Aufsteller)"));
         item.setActionCommand("MENU_Datenabgleich");
-        dateiMenu.addSeparator();
-        dateiMenu.add(item = new JMenuItem("Datenexport (dBase Teams, Gruppen)"));
+
+        menu.add(item = new JMenuItem("CSV-Dateien (Standorte, Aufsteller)"));
+        item.setActionCommand("MENU_Datenimport");
+
+        addMenuController(menu);
+        // - - - - - - - - - - - -
+        menu = new JMenu("Export nach...");
+        dateiMenu.add(menu);
+
+        menu.add(item = new JMenuItem("Excel (alles)"));
+        item.setActionCommand("MENU_Excelexport");
+
+        menu.add(item = new JMenuItem("vfs/dBase (Teams, Gruppen)"));
         item.setActionCommand("MENU_Datenexport");
         dateiMenu.addSeparator();
+        addMenuController(menu);
+        // - - - - - - - - - - - -
         dateiMenu.add(new JMenuItem("Beenden"));
 
         aboutMenu.add(item = new JMenuItem("Über dieses Programm"));
@@ -66,7 +85,7 @@ public class MainMenu extends JMenuBar {
     }
 
     private void addMenuController(JMenu dateiMenu) {
-        for (int i = 0; i < dateiMenu.getItemCount(); i++) {
+        for (int i = 0; i < dateiMenu.getMenuComponentCount(); i++) {
             JMenuItem item = dateiMenu.getItem(i);
             if (item != null) {
                 item.addActionListener(menuController);

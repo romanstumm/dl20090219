@@ -45,6 +45,39 @@ public class CalendarUtils {
         }
     }
 
+    /**
+     * database time formatted string -> Time
+     * @param time
+     * @return
+     */
+    public static Time dbstringToTime(String time) {
+        if (StringUtils.isEmpty(time)) return null;
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+        format.setLenient(false);
+        try {
+            return new Time(format.parse(time).getTime());
+        } catch (ParseException e) {
+            return null;
+        }
+    }
+
+    /**
+     * database timestamp formatted string -> Timestamp
+     * e.g. 2009-02-22 14:12:04.468
+     * @param timestamp
+     * @return
+     */
+    public static Timestamp dbstringToTimestamp(String timestamp) {
+        if (StringUtils.isEmpty(timestamp)) return null;
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        format.setLenient(false);
+        try {
+            return new Timestamp(format.parse(timestamp).getTime());
+        } catch (ParseException e) {
+            return null;
+        }
+    }
+
     public static String getWeekdayName(int dayOfWeek) {
         DateFormatSymbols symbols = DateFormatSymbols.getInstance();
         return symbols.getWeekdays()[dayOfWeek];

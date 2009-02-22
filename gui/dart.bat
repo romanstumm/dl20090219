@@ -9,6 +9,6 @@ SET MYCP=%MYCP%;lib\commons-lang-2.3.jar;lib\commons-logging-1.0.4.jar;lib\concu
 SET MYCP=%MYCP%;lib\connector.jar;lib\dart-2.x.jar;lib\dartgui-2.x.jar;lib\dom4j-1.6.1.jar;lib\ehcache-1.2.3.jar
 SET MYCP=%MYCP%;lib\hibernate3.jar;lib\jaas.jar;lib\javassist.jar;lib\jdbc2_0-stdext.jar;lib\jta.jar
 SET MYCP=%MYCP%;lib\liquidlnf.jar;lib\log4j-1.2.11.jar;lib\nimrodlf.j16.jar;lib\postgresql-8.2-506.jdbc4.jar
-SET MYCP=%MYCP%;lib\proxool-0.8.3.jar;lib\substance.jar;lib\jl1.0.jar;lib\dbfdriver.jar
+SET MYCP=%MYCP%;lib\proxool-0.8.3.jar;lib\substance.jar;lib\jl1.0.jar;lib\dbfdriver.jar;lib\poi-3.2-FINAL-20081019.jar
 
 %JAVA_CMD% -cp %MYCP% org.en.tealEye.guiMain.AppStartup

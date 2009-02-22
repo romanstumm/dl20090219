@@ -59,6 +59,12 @@ public class MenuController
         } else if (action.startsWith("MENU_Datenimport")) {
             instance = new ImportThreadWorker(mainAppFrame, IO_ACTION.CsvImport);
             instance.execute();
+        } else if (action.startsWith("MENU_Excelimport")) {
+            instance = new ImportThreadWorker(mainAppFrame, IO_ACTION.ExcelImport);
+            instance.execute();
+        } else if (action.startsWith("MENU_Excelexport")) {
+            instance = new ImportThreadWorker(mainAppFrame, IO_ACTION.ExcelExport);
+            instance.execute();
         } else if (action.startsWith("MENU_Info")) {
             SwingUtils.createOkDialog(mainAppFrame,
                     Application.APPLICATION_NAME + " " + Application.APPLICATION_VERSION +
