@@ -1,4 +1,4 @@
-<project default="dist">
+<project default="dist" basedir=".">
     <property name="version" value="2.x"/>
 
     <property name="ligadir" location="../liga"/>
@@ -45,6 +45,14 @@
 
     <target name="ligadist">
         <ant dir="${ligadir}" antfile="build.xml"/>
+    </target>
+
+    <target name="copyToSrc" description="kopiere compressed dateien in die sourcen">
+        <ant dir="../compressed" target="copyToSrc"/>
+    </target>
+
+    <target name="copyToCompressed" description="kopiere spezielle dateien aus den Sourcen nach compressed">
+        <ant dir="../compressed" target="copyToCompressed"/>
     </target>
 
     <target name="dist" depends="ligadist,jar">
