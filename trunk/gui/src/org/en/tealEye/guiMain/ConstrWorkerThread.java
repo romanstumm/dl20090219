@@ -32,7 +32,7 @@ public class ConstrWorkerThread extends SwingWorker implements ConstrWorkerThrea
         threadedClass.updatePanelLayout(maf.getFontMap());
         maf.showProgress(45, null);
         threadedClass.updatePanel();
-        maf.showProgress(100, "Laden Beendet");
+        maf.showProgress(0, "");
         return threadedClass;
     }
 

@@ -115,10 +115,13 @@ public class AutoMigratorImpl implements AutoMigrator {
                         execSqlFile(each.getUrl(), stmt);
                         updateDBVersion(each.getVersion());
                     }
+                    updateDBVersion(appVersion);
                     log.info("** ALL files DONE successfully! **");
                 } finally {
                     stmt.close();
                 }
+            } else {
+                updateDBVersion(appVersion);
             }
         }
     }

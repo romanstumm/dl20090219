@@ -11,7 +11,11 @@ import org.apache.commons.logging.LogFactory;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.EntityMode;
+import org.hibernate.metadata.ClassMetadata;
 import org.hibernate.cfg.Configuration;
+
+import java.util.Map;
 
 public final class HibernateUtil {
     private static final Log log = LogFactory.getLog(HibernateUtil.class);
@@ -34,12 +38,21 @@ public final class HibernateUtil {
     }
 
     public static Session getCurrentSession() {
-        if(sessionFactory.isClosed()) return null;
+        if (sessionFactory.isClosed()) return null;
         return getSessionFactory().getCurrentSession();
     }
 
     public static Transaction getCurrentTransaction() {
-        if(sessionFactory.isClosed()) return null;
+        if (sessionFactory.isClosed()) return null;
         return getCurrentSession().getTransaction();
+    }
+
+    public static void evictSecondLevelCaches() {
+        getSessionFactory().evictQueries();
+        Map<String, ClassMetadata> meta =
+                getSessionFactory().getAllClassMetadata();
+        for (ClassMetadata eachMeta : meta.values()) {
+            getSessionFactory().evict(eachMeta.getMappedClass(EntityMode.POJO));
+        }
     }
 }

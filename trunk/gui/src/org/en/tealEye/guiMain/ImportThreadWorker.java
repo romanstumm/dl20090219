@@ -1,16 +1,16 @@
 package org.en.tealEye.guiMain;
 
-import de.liga.dart.fileimport.DataExchanger;
-import de.liga.dart.fileimport.DbfExporter;
-import de.liga.dart.fileimport.DbfImporter;
-import de.liga.dart.fileimport.FileImporter;
+import de.liga.dart.fileimport.*;
 import de.liga.dart.gruppen.check.ProgressIndicator;
+import de.liga.dart.exception.DartException;
 import de.liga.util.thread.ThreadManager;
 import org.en.tealEye.framework.LigaChooser;
 import org.en.tealEye.framework.SwingUtils;
 
 import javax.swing.*;
 import java.io.File;
+import java.io.IOException;
+import java.io.FileNotFoundException;
 
 /**
  * Description: <br/>
@@ -41,6 +41,10 @@ public class ImportThreadWorker extends SwingWorker implements ProgressIndicator
                     return doDBaseImport();
                 case DBaseExport:
                     return doDBaseExport();
+                case ExcelExport:
+                    return doExcelExport();
+                case ExcelImport:
+                    return doExcelImport();
                 default:
                     return null; // unknown action
             }
@@ -49,59 +53,115 @@ public class ImportThreadWorker extends SwingWorker implements ProgressIndicator
         }
     }
 
+    private Object doExcelExport() throws IOException {
+        final JFileChooser fc = new JFileChooser(REMEMBER_DIR);
+        fc.setDialogTitle("Daten in Exceldatei sichern");
+        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        int returnVal = fc.showSaveDialog(mainAppFrame);
+        if (fc.getSelectedFile() != null) REMEMBER_DIR = fc.getSelectedFile();
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = fc.getSelectedFile();
+            DataExchanger exporter = new ExcelExporter(file);
+            exporter.setProgressIndicator(this);
+            try {
+                if (exporter.start()) {
+                    mainAppFrame.setMessage("Excel-Export " + file.getPath() + " erfolgreich.");
+                } else {
+                    mainAppFrame.setMessage("Excel-Export - nicht möglich (Fehler)!");
+                }
+            } catch (DartException ex) {
+                mainAppFrame.setMessage(ex.getMessage());
+                SwingUtils.createOkDialog(mainAppFrame, ex.getMessage(), "Excel-Export");
+            }
+        }
+        return null;
+    }
+
+    private Object doExcelImport() throws FileNotFoundException {
+        final JFileChooser fc = new JFileChooser(REMEMBER_DIR);
+        fc.setDialogTitle("Daten aus Exceldatei wiederherstellen");
+        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        int returnVal = fc.showOpenDialog(mainAppFrame);
+        if (fc.getSelectedFile() != null) REMEMBER_DIR = fc.getSelectedFile();
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = fc.getSelectedFile();
+            try {
+                DataExchanger exporter = new ExcelImporter(file);
+                exporter.setProgressIndicator(this);
+                if (exporter.start()) {
+                    mainAppFrame.setMessage("Excel-Import " + file.getPath() + " erfolgreich.");
+                } else {
+                    mainAppFrame.setMessage("Excel-Import - nicht möglich (Fehler)!");
+                    SwingUtils.createOkDialog(mainAppFrame, "Import nicht möglich (Fehler)!",
+                            "Excel-Import");
+                }
+            } catch (DartException ex) {
+                mainAppFrame.setMessage(ex.getMessage());
+                SwingUtils.createOkDialog(mainAppFrame, ex.getMessage(), "Excel-Import");
+            }
+        }
+        return null;
+    }
+
     private Object doDBaseExport() {
-        LigaChooser chooser = new LigaChooser("Export Teams und Gruppen aus DBase Dateien", mainAppFrame);
+        LigaChooser chooser =
+                new LigaChooser("Export Teams und Gruppen aus DBase Dateien", mainAppFrame);
         if (!chooser.choose()) {
             mainAppFrame.setMessage("Datenexport - Abbruch!");
             return null;
         }
         DataExchanger importer = new DbfExporter();
         importer.setProgressIndicator(this);
-        mainAppFrame.setMessage("Datenexport gestartet...");
         boolean success;
         if (chooser.getSelectedLiga() != null) {
             success = importer.start(chooser.getSelectedLiga().getLigaName());
             if (success) {
-                mainAppFrame.setMessage("Datenexport für Liga " +
+                mainAppFrame.setMessage("dBase-Export für Liga " +
                         chooser.getSelectedLiga().getLigaName() + " beendet");
             } else {
-                mainAppFrame.setMessage("Datenexport - nicht möglich (Fehler)!");
+                mainAppFrame.setMessage("dBase-Export - nicht möglich (Fehler)!");
+                SwingUtils.createOkDialog(mainAppFrame, "Export nicht möglich (Fehler)!",
+                            "dBase-Export");
             }
         } else {
             success = importer.start();
             if (success) {
-                mainAppFrame.setMessage("Datenexport für alle Ligen beendet");
+                mainAppFrame.setMessage("dBase-Export für alle Ligen beendet");
             } else {
-                mainAppFrame.setMessage("Datenexport - nicht möglich (Fehler)!");
+                mainAppFrame.setMessage("dBase-Export - nicht möglich (Fehler)!");
             }
         }
         return null;
     }
 
     private Object doDBaseImport() {
-        LigaChooser chooser = new LigaChooser("Import Spielorte und Aufsteller aus DBase Dateien", mainAppFrame);
+        LigaChooser chooser =
+                new LigaChooser("Import Spielorte und Aufsteller aus DBase Dateien", mainAppFrame);
         if (!chooser.choose()) {
-            mainAppFrame.setMessage("Datenimport - Abbruch!");
+            mainAppFrame.setMessage("dBase-Import - Abbruch!");
             return null;
         }
         DataExchanger importer = new DbfImporter();
         importer.setProgressIndicator(this);
-        mainAppFrame.setMessage("Datenimport gestartet...");
         boolean success;
         if (chooser.getSelectedLiga() != null) {
             success = importer.start(chooser.getSelectedLiga().getLigaName());
             if (success) {
-                mainAppFrame.setMessage("Datenimport für Liga " +
+                mainAppFrame.setMessage("dBase-Import für Liga " +
                         chooser.getSelectedLiga().getLigaName() + " beendet");
             } else {
-                mainAppFrame.setMessage("Datenimport - nicht möglich (Fehler)!");
+                mainAppFrame.setMessage("dBase-Import - nicht möglich (Fehler)!");
+                SwingUtils.createOkDialog(mainAppFrame, "Import nicht möglich (Fehler)!",
+                            "dBase-Import");
             }
         } else {
             success = importer.start();
             if (success) {
-                mainAppFrame.setMessage("Datenimport für alle Ligen beendet");
+                mainAppFrame.setMessage("dBase-Import für alle Ligen beendet");
             } else {
-                mainAppFrame.setMessage("Datenimport - nicht möglich (Fehler)!");
+                mainAppFrame.setMessage("dBase-Import - nicht möglich (Fehler)!");
+                SwingUtils.createOkDialog(mainAppFrame, "Import nicht möglich (Fehler)!",
+                            "dBase-Import");
             }
         }
         return null;
@@ -123,11 +183,11 @@ public class ImportThreadWorker extends SwingWorker implements ProgressIndicator
                 } else {
                     importSingle(fc.getSelectedFile());
                 }
-            } else {
-                mainAppFrame.setMessage("Nicht importiert.");
             }
         } catch (Exception e1) {
             mainAppFrame.setMessage("Fehler: " + e1.getMessage());
+            SwingUtils.createOkDialog(mainAppFrame, "Fehler: " + e1.getMessage(),
+                            "csv-Import");
         }
         return null;
     }
@@ -141,8 +201,6 @@ public class ImportThreadWorker extends SwingWorker implements ProgressIndicator
             mainAppFrame.setMessage("Import läuft...");
             new FileImporter(file).start(liga);
             mainAppFrame.setMessage("Import aus " + file + " beendet.");
-        } else {
-            mainAppFrame.setMessage("Nicht importiert.");
         }
     }
 
