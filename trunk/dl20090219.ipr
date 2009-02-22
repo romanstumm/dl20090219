@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project version="4" relativePaths="false">
+<project version="4" relativePaths="true">
   <component name="AntConfiguration">
     <defaultAnt bundledAnt="true" />
   </component>
@@ -31,6 +31,7 @@
       <entry name="?*.html" />
       <entry name="?*.dtd" />
       <entry name="?*.tld" />
+      <entry name="?*.sql" />
     </wildcardResourcePatterns>
   </component>
   <component name="DataSourceManagerImpl" />
@@ -298,7 +299,7 @@
     <option name="GENERATE_NO_WARNINGS" value="false" />
     <option name="DEPRECATION" value="true" />
     <option name="ADDITIONAL_OPTIONS_STRING" value="" />
-    <option name="MAXIMUM_HEAP_SIZE" value="128" />
+    <option name="MAXIMUM_HEAP_SIZE" value="178" />
   </component>
   <component name="JavadocGenerationManager">
     <option name="OUTPUT_DIRECTORY" />
@@ -460,7 +461,7 @@
     </modules>
   </component>
   <component name="ProjectRootManager" version="2" assert-keyword="true" jdk-15="true" project-jdk-name="1.6.0_02" project-jdk-type="JavaSDK">
-    <output url="file://D:/Develop/horst/classes" />
+    <output url="file://$PROJECT_DIR$/../horst/classes" />
   </component>
   <component name="ProjectRunConfigurationManager" />
   <component name="RmicSettings">
