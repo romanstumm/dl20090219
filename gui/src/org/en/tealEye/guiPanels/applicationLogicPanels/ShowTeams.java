@@ -7,12 +7,14 @@ import org.en.tealEye.guiMain.util.LigaklasseSelectable;
 import org.en.tealEye.guiMain.util.SpielortSelectable;
 
 import javax.swing.*;
+import java.awt.event.KeyEvent;
 
 /**
  * @author Stephan
  */
 public class ShowTeams extends ShowTablePanel
         implements LigaSelectable, LigaklasseSelectable, SpielortSelectable {
+    private JCheckBox keineGruppe;
 
     /**
      * Creates new form ShowGroups
@@ -55,6 +57,12 @@ public class ShowTeams extends ShowTablePanel
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
 
+        keineGruppe = new javax.swing.JCheckBox();
+        keineGruppe.setText("In keiner Gruppe");
+        keineGruppe.setMnemonic(KeyEvent.VK_G);
+        keineGruppe.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        keineGruppe.setMargin(new java.awt.Insets(0, 0, 0, 0));
+
         setLayout(new java.awt.GridBagLayout());
 
         headerPanel.setLayout(new java.awt.GridBagLayout());
@@ -92,6 +100,12 @@ public class ShowTeams extends ShowTablePanel
         gridBagConstraints.gridy = 1;
         gridBagConstraints.insets = new java.awt.Insets(1, 10, 1, 10);
         comboPanel.add(showGroupsLeagueClass, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.insets = new java.awt.Insets(1, 10, 1, 10);
+        comboPanel.add(keineGruppe, gridBagConstraints);
 
         showGroupsLocation.setName("Combo_SpielortMitLeer");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -223,4 +237,7 @@ public class ShowTeams extends ShowTablePanel
         return showGroupsLeague;
     }
 
+    public JCheckBox getKeineGruppe() {
+        return keineGruppe;
+    }
 }

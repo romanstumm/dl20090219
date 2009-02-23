@@ -19,6 +19,7 @@ import org.en.tealEye.guiMain.util.TimeHandler;
 import org.en.tealEye.guiMain.util.WeekdayHandler;
 import org.en.tealEye.guiPanels.applicationLogicPanels.CreateGroup;
 import org.en.tealEye.guiPanels.applicationLogicPanels.CreateTeam;
+import org.en.tealEye.guiPanels.applicationLogicPanels.ShowTeams;
 
 import javax.swing.*;
 import java.util.HashSet;
@@ -105,10 +106,16 @@ public class DartComponentRegistry extends ComponentRegistry {
             public Object createTransacted(JPanel panel) {
                 BeanTableModel model = new BeanTableModel(TABLE_LIGATEAM);
                 Liga liga = SelectionUtil.getLiga(panel);
-                Ligaklasse klasse = SelectionUtil.getLigaklasse(panel);
+//                SelectionUtil.OPTION option = SelectionUtil.getLigaklasseOption(panel);
+                boolean keineGruppe = false;
+                if (panel instanceof ShowTeams) {
+                    keineGruppe = ((ShowTeams) panel).getKeineGruppe().isSelected();
+                }
                 Spielort ort = SelectionUtil.getSpielort(panel);
+                Ligaklasse klasse = SelectionUtil.getLigaklasse(panel);
                 model.setObjects(ServiceFactory
-                        .get(LigateamService.class).findTeamsByLigaKlasseOrt(liga, klasse, ort));
+                        .get(LigateamService.class).findTeamsByLigaKlasseOrt(liga, klasse,
+                        ort, keineGruppe));
                 model.touch();
                 return model;
             }
