@@ -21,6 +21,7 @@ import java.awt.event.*;
 public class CreateTeam extends ExtJEditPanel
       implements LigaSelectable, ActionListener, FocusListener {
     private JButton teamNew;
+    private JButton teamInfo;
     private JComboBox teamWunschListSortCombo;
     private JLabel filterLigaclassLabel;
 
@@ -84,6 +85,7 @@ public class CreateTeam extends ExtJEditPanel
 
         teamNew = new JButton();
         setLayout(new java.awt.GridBagLayout());
+        teamInfo = new JButton();
 
         teamTime.addFocusListener(this);
 
@@ -100,7 +102,7 @@ public class CreateTeam extends ExtJEditPanel
         gridBagConstraints.ipady = 20;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 0.2;
-        gridBagConstraints.insets = new java.awt.Insets(10, 5, 10, 5);
+        gridBagConstraints.insets = new java.awt.Insets(5, 3, 5, 3);
         add(headerPanel, gridBagConstraints);
 
         formularPanel.setLayout(new java.awt.GridBagLayout());
@@ -367,7 +369,7 @@ public class CreateTeam extends ExtJEditPanel
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(10, 5, 10, 5);
+        gridBagConstraints.insets = new java.awt.Insets(5, 3, 5, 3);
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
         buttonNestedPanel.add(teamAccept, gridBagConstraints);
@@ -378,7 +380,7 @@ public class CreateTeam extends ExtJEditPanel
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(10, 5, 10, 5);
+        gridBagConstraints.insets = new java.awt.Insets(5, 3, 5, 3);
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
         buttonNestedPanel.add(teamDecline, gridBagConstraints);
@@ -387,10 +389,19 @@ public class CreateTeam extends ExtJEditPanel
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(10, 5, 10, 5);
+        gridBagConstraints.insets = new java.awt.Insets(5, 3, 5, 3);
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         buttonNestedPanel.add(teamNew, gridBagConstraints);
+
+        teamInfo.setText("Infos...");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(5, 3, 5, 3);
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 0;
+        buttonNestedPanel.add(teamInfo, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -414,6 +425,8 @@ public class CreateTeam extends ExtJEditPanel
         teamAccept.setMnemonic(KeyEvent.VK_S);
         teamDecline.setName("abbrechen");
         teamDecline.setMnemonic(KeyEvent.VK_A);
+        teamInfo.setName("infos");
+        teamInfo.setMnemonic(KeyEvent.VK_I);
 
         getWunschListTeams().addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent e) {
