@@ -14,6 +14,7 @@ import de.liga.dart.spielort.service.SpielortService;
 import org.en.tealEye.controller.PanelController;
 import org.en.tealEye.framework.BeanTableModel;
 import org.en.tealEye.framework.TransactionWorker;
+import org.en.tealEye.framework.SwingUtils;
 import org.en.tealEye.guiExt.ExtPanel.ExtJTablePanel;
 import org.en.tealEye.guiExt.ExtPanel.ShowTablePanel;
 
@@ -41,7 +42,7 @@ public class DeleteThreadWorker extends TransactionWorker {
     public Object executeTransaction() throws Exception {
         mainApp.showProgress(25, "");
         if (jPanel instanceof ShowTablePanel) {
-            ((ShowTablePanel)jPanel).setToggleDeleteState(false);
+            ((ShowTablePanel) jPanel).setToggleDeleteState(false);
         }
         try {
             BeanTableModel model =
@@ -62,8 +63,14 @@ public class DeleteThreadWorker extends TransactionWorker {
             } else if (jPanel.getModelClass().equals(Ligateam.class)) {
                 LigateamService service =
                         ServiceFactory.get(LigateamService.class);
-                for (Ligateam each : (List<Ligateam>) entries) {
-                    service.deleteLigateam(each);
+                try {
+                    for (Ligateam each : (List<Ligateam>) entries) {
+                        service.deleteLigateam(each, true);
+                    }
+                } catch (DartValidationException ex) {
+                    SwingUtils.createOkDialog(mainApp, ex.getMessage(),
+                            "Team kann nicht gelöscht werden");
+                    throw ex;
                 }
             } else if (jPanel.getModelClass().equals(Ligagruppe.class)) {
                 GruppenService service =
@@ -79,7 +86,11 @@ public class DeleteThreadWorker extends TransactionWorker {
             }
         } catch (
                 DartValidationException ex) {
-            mainApp.setMessage(ex.getMessages().toString());
+            if (ex.getMessages().isEmpty()) {
+                mainApp.setMessage(ex.getMessage());
+            } else {
+                mainApp.setMessage(ex.getMessages().toString());
+            }
         } catch (DartException ex) {
             mainApp.setMessage(ex.getMessage());
         }
