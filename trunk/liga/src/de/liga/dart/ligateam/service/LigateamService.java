@@ -39,8 +39,15 @@ public interface LigateamService extends Service {
      */
     List<Ligateam> findAllTeamsInLiga(Liga liga);
 
+    /**
+     * @param liga
+     * @param klasse
+     * @param ort
+     * @param keineGruppe - false: keine Auswirkung, true: nur Teams, die derzeit keinem LigateamSpiel zugeordnet sind
+     * @return
+     */
     List<Ligateam> findTeamsByLigaKlasseOrt(Liga liga, Ligaklasse klasse,
-                                            Spielort ort);
+                                            Spielort ort, boolean keineGruppe);
 
     List<Ligateam> findAllTeams();
 

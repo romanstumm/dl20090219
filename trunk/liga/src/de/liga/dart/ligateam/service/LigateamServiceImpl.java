@@ -99,31 +99,47 @@ public class LigateamServiceImpl extends AbstractService implements LigateamServ
         return query.list();
     }
 
-    public List<Ligateam> findTeamsByLigaKlasseOrt(Liga liga, Ligaklasse klasse, Spielort ort) {
+    public List<Ligateam> findTeamsByLigaKlasseOrt(Liga liga, Ligaklasse klasse, Spielort ort,
+                                                   boolean keineGruppe) {
         Query query;
-        if (klasse == null && ort == null) return findAllTeamsInLiga(liga);
-        else if (liga != null && klasse != null && ort != null) {
-            query = getSession().createQuery(
-                    "select t from Ligateam t where t.liga=:liga and t.ligaklasse=:klasse and t.spielort=:ort order by t.teamName");
-            query.setParameter("liga", liga);
-            query.setParameter("klasse", klasse);
-            query.setParameter("ort", ort);
-        } else if (liga == null && klasse != null) {
-            query = getSession().createQuery(
-                    "select t from Ligateam t where t.ligaklasse=:klasse order by t.teamName");
-            query.setParameter("klasse", klasse);
-        } else if (klasse == null && liga != null) {
-            query = getSession().createQuery(
-                    "select t from Ligateam t where t.liga=:liga and t.spielort=:ort order by t.teamName");
-            query.setParameter("liga", liga);
-            query.setParameter("ort", ort);
-        } else if (klasse != null) {
-            query = getSession().createQuery(
-                    "select t from Ligateam t where t.liga=:liga and t.ligaklasse=:klasse order by t.teamName");
-            query.setParameter("liga", liga);
-            query.setParameter("klasse", klasse);
-        } else return Collections.EMPTY_LIST;
+        StringBuilder buf = new StringBuilder("select t from Ligateam t ");
+        Map<String, Object> params = new HashMap();
+        boolean where = false;
+        if (keineGruppe) {
+            where = and(where, buf);
+            buf.append("t.ligateamspiele is empty ");
+        }
+        if (liga != null) {
+            params.put("liga", liga);
+            where = and(where, buf);
+            buf.append("t.liga=:liga ");
+        }
+        if (klasse != null) {
+            params.put("klasse", klasse);
+            where = and(where, buf);
+            buf.append("t.ligaklasse=:klasse ");
+        }
+        if (ort != null) {
+            params.put("ort", ort);
+            //noinspection UnusedAssignment
+            where = and(where, buf);
+            buf.append("t.spielort=:ort ");
+        }
+        buf.append("order by t.teamName");
+        query = getSession().createQuery(buf.toString());
+        for(Map.Entry<String,Object> entry : params.entrySet()) {
+            query.setParameter(entry.getKey(), entry.getValue());
+        }
         return query.list();
+    }
+
+    private boolean and(boolean where, StringBuilder buf) {
+        if (!where) {
+            buf.append("where ");
+        } else {
+            buf.append("and ");
+        }
+        return true;
     }
 
     public List<Ligateam> findAllTeams() {
@@ -154,7 +170,7 @@ public class LigateamServiceImpl extends AbstractService implements LigateamServ
      */
     public List<Ligateam> findWunschListCandidates(Ligateam team, Liga filterLiga,
                                                    Ligaklasse filterKlasse) {
-        if(filterLiga == null) return Collections.EMPTY_LIST;
+        if (filterLiga == null) return Collections.EMPTY_LIST;
 
 
         Query query = getSession().createQuery(
@@ -194,8 +210,8 @@ public class LigateamServiceImpl extends AbstractService implements LigateamServ
 
         }
         List<LigateamWunsch> wuensche = query.list();
-        for(LigateamWunsch wunsch : wuensche) {
-            if(wunsch.getTeam1() != null)
+        for (LigateamWunsch wunsch : wuensche) {
+            if (wunsch.getTeam1() != null)
                 wunsch.getTeam1().removeFromWuensche(wunsch, getSession());
         }
 

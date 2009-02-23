@@ -13,6 +13,10 @@ import javax.swing.*;
  * Date: 09.11.2007, 22:00:36
  */
 public class SelectionUtil {
+    public enum OPTION {
+        ALLE_SELECTED, OBJECT_SELECTED
+    }
+
     public static Liga getLiga(JPanel selectable) {
         if (selectable instanceof LigaSelectable) {
             Object selected = ((LigaSelectable) selectable).getLiga()
@@ -30,6 +34,21 @@ public class SelectionUtil {
                             .getSelectedItem();
             return (selected instanceof Ligaklasse) ? (Ligaklasse) selected :
                     null;
+        } else {
+            return null;
+        }
+    }
+
+    public static OPTION getLigaklasseOption(JPanel selectable) {
+        if (selectable instanceof LigaklasseSelectable) {
+            Object selected =
+                    ((LigaklasseSelectable) selectable).getLigaklasse()
+                            .getSelectedItem();
+            if("-alle-".equals(selected)) {
+                return OPTION.ALLE_SELECTED;
+            } else {
+                return OPTION.OBJECT_SELECTED;
+            }
         } else {
             return null;
         }
