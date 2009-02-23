@@ -51,7 +51,13 @@ public interface LigateamService extends Service {
 
     List<Ligateam> findAllTeams();
 
-    void deleteLigateam(Ligateam aLiga) throws DartException;
+    /**
+     * @param aLiga
+     * @param validate - true: Prüfung, ob Team in keiner Gruppe eingeteilt. falls doch: Exception
+     * @throws DartException
+     * @throws DartValidationException (wenn validate:true und validierung fehlgeschlagen)
+     */
+    void deleteLigateam(Ligateam aLiga, boolean validate) throws DartException;
 
     /**
      * finde alle Kandidaten fuer die Auswahl in der Wunschlist,

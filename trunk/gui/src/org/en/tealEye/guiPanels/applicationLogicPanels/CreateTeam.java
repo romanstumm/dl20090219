@@ -442,7 +442,7 @@ public class CreateTeam extends ExtJEditPanel
             if (team.getLigateamspiel() != null) {
                 getLigaklasse().setEnabled(false);
                 getLiga().setEnabled(false);
-                teamLeagueGroupLabel.setText(" Eingeteilt in Gruppe " + team
+                teamLeagueGroupLabel.setText(" Spielt in Gruppe " + team
                       .getLigateamspiel().getLigagruppe().getGruppenName() +
                       " auf Platz " + team.getLigateamspiel().getPlatzNr() + ".");
             } else {

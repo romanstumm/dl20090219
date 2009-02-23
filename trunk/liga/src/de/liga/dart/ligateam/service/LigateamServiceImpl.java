@@ -127,7 +127,7 @@ public class LigateamServiceImpl extends AbstractService implements LigateamServ
         }
         buf.append("order by t.teamName");
         query = getSession().createQuery(buf.toString());
-        for(Map.Entry<String,Object> entry : params.entrySet()) {
+        for (Map.Entry<String, Object> entry : params.entrySet()) {
             query.setParameter(entry.getKey(), entry.getValue());
         }
         return query.list();
@@ -149,13 +149,22 @@ public class LigateamServiceImpl extends AbstractService implements LigateamServ
         return query.list();
     }
 
-    public void deleteLigateam(Ligateam ligateam) throws DartException {
-        if (ligateam.getLigateamId() > 0) {
+    public void deleteLigateam(Ligateam team, boolean validate)
+            throws DartException, DartValidationException {
+        if (team.getLigateamId() > 0) {
             // needed for wunschlist deletion!
             // !!alternative implementation for save() below!!
-            getSession().refresh(ligateam);
-            ligateam.clearWuensche(getSession());
-            delete(ligateam);
+            getSession().refresh(team);
+            if (validate) {
+                if (team.getLigateamspiel() != null) {
+                    throw new DartValidationException("Löschen verhindert: \""+ team.getTeamName()
+                            + "\" spielt in Gruppe " + team
+                            .getLigateamspiel().getLigagruppe().getGruppenName() +
+                            " auf Platz " + team.getLigateamspiel().getPlatzNr() + ".");
+                }
+            }
+            team.clearWuensche(getSession());
+            delete(team);
         }
     }
 
