@@ -18,7 +18,7 @@ public class CreateLocation extends ExtJEditPanel implements LigaSelectable, Act
     private JButton locationNew;
     private JComboBox locationLiga;
     private final JLabel locationLigaLabel = new JLabel("Liga");
-    private JLabel labelTeamsAnzahl;
+    private JTextArea labelTeamsAnzahl;
 
     public CreateLocation() {
 
@@ -325,7 +325,12 @@ public class CreateLocation extends ExtJEditPanel implements LigaSelectable, Act
         gridBagConstraints.insets = new java.awt.Insets(1, 10, 1, 2);
         formularPanel.add(fieldAutomatenAnzahl, gridBagConstraints);
 
-        labelTeamsAnzahl = new JLabel();
+        labelTeamsAnzahl = new JTextArea();
+        labelTeamsAnzahl.setRows(4);
+        labelTeamsAnzahl.setColumns(60);
+        labelTeamsAnzahl.setWrapStyleWord(true);
+        labelTeamsAnzahl.setLineWrap(true);
+        labelTeamsAnzahl.setEditable(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 13;
@@ -493,7 +498,7 @@ public class CreateLocation extends ExtJEditPanel implements LigaSelectable, Act
         return locationLiga;
     }
 
-    public JLabel getLabelTeamsAnzahl() {
+    public JTextArea getLabelTeamsAnzahl() {
         return labelTeamsAnzahl;
     }
 
@@ -525,10 +530,18 @@ public class CreateLocation extends ExtJEditPanel implements LigaSelectable, Act
         } else {
             StringBuilder buf = new StringBuilder();
             buf.append("Stammkneipe von ").append(ort.getLigateams().size())
-                  .append(" Teams. ");
+                  .append(" Teams.\n");
             int i = 1;
             for (Ligateam team : ort.getLigateams()) {
                 buf.append(team.getTeamName());
+                buf.append(" (");
+                buf.append(team.getLiga().getLigaName());
+                buf.append(" ");
+                buf.append(team.getGruppeKlasse());
+                if(team.getLigateamspiel() != null) {
+                    buf.append(" Platz: ").append(team.getLigateamspiel().getPlatzNr());
+                }
+                buf.append(")");
                 i++;
                 if (i == ort.getLigateams().size()) {
                     buf.append(" und ");
