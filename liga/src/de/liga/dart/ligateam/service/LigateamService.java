@@ -10,6 +10,7 @@ import de.liga.dart.model.Ligateam;
 import de.liga.dart.model.Spielort;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Description:   <br/>
@@ -78,4 +79,6 @@ public interface LigateamService extends Service {
      * @param liga - wenn leer, werden ALLE Ligen bearbeitet!!
      */
     void deleteAllLigateamWunsch(Liga liga);
+
+    String queryTeamInfos(Ligateam team);
 }

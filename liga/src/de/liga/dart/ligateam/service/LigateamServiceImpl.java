@@ -1,6 +1,7 @@
 package de.liga.dart.ligateam.service;
 
 import de.liga.dart.common.service.AbstractService;
+import de.liga.dart.common.service.util.HibernateUtil;
 import de.liga.dart.exception.DartException;
 import de.liga.dart.exception.DartValidationException;
 import de.liga.dart.exception.ValidationMessage;
@@ -157,7 +158,7 @@ public class LigateamServiceImpl extends AbstractService implements LigateamServ
             getSession().refresh(team);
             if (validate) {
                 if (team.getLigateamspiel() != null) {
-                    throw new DartValidationException("Löschen verhindert: \""+ team.getTeamName()
+                    throw new DartValidationException("Löschen verhindert: \"" + team.getTeamName()
                             + "\" spielt in Gruppe " + team
                             .getLigateamspiel().getLigagruppe().getGruppenName() +
                             " auf Platz " + team.getLigateamspiel().getPlatzNr() + ".");
@@ -224,5 +225,49 @@ public class LigateamServiceImpl extends AbstractService implements LigateamServ
                 wunsch.getTeam1().removeFromWuensche(wunsch, getSession());
         }
 
+    }
+
+    public String queryTeamInfos(Ligateam team) {
+        // teams in gleicher gaststaette
+        // incl gruppenzuordnng
+        //      platz
+        //      tag
+        Spielort ort = team.getSpielort();
+        getSession().refresh(ort);
+        List<String> infos = new ArrayList();
+        for (Ligateam otherteam : ort.getLigateams()) {
+            if (otherteam.getLigateamId() != team.getLigateamId()) {
+                StringBuilder buf = new StringBuilder();
+                buf.append(otherteam.getLiga().getLigaName());
+                buf.append(" ");
+                buf.append(otherteam.getGruppeKlasse());
+                if (otherteam.getLigateamspiel() != null) {
+                    buf.append(" Platz ");
+                    buf.append(otherteam.getLigateamspiel().getPlatzNr());
+                }
+                buf.append(": \"");
+                buf.append(otherteam.getTeamNameTagName());
+                buf.append("\"");
+                infos.add(buf.toString());
+            }
+        }
+        Collections.sort(infos);
+        final String infoText;
+        if (infos.isEmpty()) {
+            infoText = "Keine weiteren Teams in \"" + ort.getSpielortName() + "\"";
+        } else {
+            StringBuilder buf = new StringBuilder();
+            buf.append("Neben \"");
+            buf.append(team.getTeamName());
+            buf.append("\" spielen in \"");
+            buf.append(ort.getSpielortName());
+            buf.append("\" die Teams: \n");
+            for (String line : infos) {
+                buf.append(line);
+                buf.append("\n");
+            }
+            infoText = buf.toString();
+        }
+        return infoText;
     }
 }

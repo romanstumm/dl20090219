@@ -1,7 +1,10 @@
 package org.en.tealEye.controller;
 
 import de.liga.dart.ligateam.model.TeamWunsch;
+import de.liga.dart.ligateam.service.LigateamService;
 import de.liga.dart.model.Ligateam;
+import de.liga.dart.model.Spielort;
+import de.liga.dart.common.service.ServiceFactory;
 import org.apache.commons.lang.StringUtils;
 import org.en.tealEye.framework.BeanTableModel;
 import org.en.tealEye.framework.SwingUtils;
@@ -18,6 +21,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.Collection;
+import java.util.Map;
+import java.util.List;
 
 /**
  * Description: <br/>
@@ -37,7 +42,7 @@ public class TeamController extends PanelController {
 //        this.mainApp.addPropertyChangeListener(this); // // RSt: entfernt
         this.mainApp.addKeyListener(this);
         this.h = h;
-        
+
     }
 
     public void mouseClicked(MouseEvent e) {
@@ -48,7 +53,8 @@ public class TeamController extends PanelController {
                 if (e.getClickCount() == 2) {
                     //mainApp.insertInternalFrame("CreateTeam", false);
                     JPanel p = h.showPanel("CreateTeam");
-                    Object obje = ((BeanTableModel) ((JTable) obj).getModel()).getObject(((JTable) obj).getSelectedRow());
+                    Object obje = ((BeanTableModel) ((JTable) obj).getModel())
+                            .getObject(((JTable) obj).getSelectedRow());
                     try {
                         TransactionWorker instance =
                                 new EditThreadWorker(this, (ExtJEditPanel) p, obje, mainApp);
@@ -67,12 +73,13 @@ public class TeamController extends PanelController {
                 }
             }
         } else if (obj instanceof JList) {
-            if (((JList) obj).getName().equals("List_possibleTeamsForWunschList") && ((JList) obj).getSelectedValue() != null) {
+            if (((JList) obj).getName().equals("List_possibleTeamsForWunschList") &&
+                    ((JList) obj).getSelectedValue() != null) {
                 if (e.getClickCount() == 2) {
                     moveTeamToWunschList();
                 }
-            } else
-            if (((JList) obj).getName().equals("List_TeamWunschList") && ((JList) obj).getSelectedValue() != null) {
+            } else if (((JList) obj).getName().equals("List_TeamWunschList") &&
+                    ((JList) obj).getSelectedValue() != null) {
                 if (e.getClickCount() == 2) {
                     removeTeamFromWunschList();
                 }
@@ -83,14 +90,15 @@ public class TeamController extends PanelController {
     private void removeTeamFromWunschList() {
         JList jlistPool = createTeam.getPossibleTeamsForWunschList();
         JList jlistTarget = createTeam.getWunschListTeams();
-        TeamWunsch obj = (TeamWunsch) jlistTarget.getModel().getElementAt(jlistTarget.getSelectedIndex());
+        TeamWunsch obj =
+                (TeamWunsch) jlistTarget.getModel().getElementAt(jlistTarget.getSelectedIndex());
         DefaultListModel dlm = (DefaultListModel) jlistPool.getModel();
         dlm.addElement(obj.getOtherTeam());
 
         DefaultListModel dlm2 = (DefaultListModel) jlistTarget.getModel();
         dlm2.remove(jlistTarget.getSelectedIndex());
 
-        jlistPool.setSelectedIndex(dlm.getSize()-1);
+        jlistPool.setSelectedIndex(dlm.getSize() - 1);
     }
 
     private void moveTeamToWunschList() {
@@ -104,12 +112,12 @@ public class TeamController extends PanelController {
         DefaultListModel dlm2 = (DefaultListModel) jlistPool.getModel();
         dlm2.remove(jlistPool.getSelectedIndex());
 
-        jlistTarget.setSelectedIndex(dlm.getSize()-1);
+        jlistTarget.setSelectedIndex(dlm.getSize() - 1);
     }
 
     public void actionPerformed(ActionEvent e) {
-        if(isUpdateInProgress()) return; // z.zt. moeglicherweise optional
-        
+        if (isUpdateInProgress()) return; // z.zt. moeglicherweise optional
+
         JComponent obj = (JComponent) e.getSource();
         String ac = obj.getName();
         ExtendedJPanelImpl parent = SwingUtils.getExtendedJPanel(obj);
@@ -117,17 +125,21 @@ public class TeamController extends PanelController {
             JComboBox combobox = (JComboBox) obj;
             if (ac.startsWith("Combo_Liga")) {
                 if (parent == showTeams)
-                    DartComponentRegistry.getInstance().setComboBoxModel(showTeams.getSpielort(), showTeams);
+                    DartComponentRegistry.getInstance()
+                            .setComboBoxModel(showTeams.getSpielort(), showTeams);
                 if (parent == createTeam) {
-                    DartComponentRegistry.getInstance().setTableModel(createTeam.getJTable1(), createTeam);
-                    DartComponentRegistry.getInstance().setListModel(createTeam.getPossibleTeamsForWunschList(), createTeam);
+                    DartComponentRegistry.getInstance()
+                            .setTableModel(createTeam.getJTable1(), createTeam);
+                    DartComponentRegistry.getInstance()
+                            .setListModel(createTeam.getPossibleTeamsForWunschList(), createTeam);
                 }
             } else if (ac.equals("Combo_WunschListLigaklasse")) {
-                DartComponentRegistry.getInstance().setListModel(createTeam.getPossibleTeamsForWunschList(), createTeam);
-            } else if(parent == createTeam && ac.equals("Combo_WunschArten")) {
+                DartComponentRegistry.getInstance()
+                        .setListModel(createTeam.getPossibleTeamsForWunschList(), createTeam);
+            } else if (parent == createTeam && ac.equals("Combo_WunschArten")) {
                 // die Wunschart beim gew?hlten Item anpassen
                 Object[] wuensche = createTeam.getWunschListTeams().getSelectedValues();
-                if(wuensche != null) for (Object aWuensche : wuensche) {
+                if (wuensche != null) for (Object aWuensche : wuensche) {
                     TeamWunsch wunsch = (TeamWunsch) aWuensche;
                     wunsch.setWunschArt(
                             TeamWunsch.valueOf(String.valueOf(combobox.getSelectedItem())));
@@ -135,22 +147,32 @@ public class TeamController extends PanelController {
                 createTeam.getWunschListTeams().repaint();
             }
         } else if (obj instanceof JButton) {
-            if (ac.equals("neu")) {
+            if ("neu".equals(ac)) {
                 createTeam.newModelEntity();
                 createTeam.clearTextAreas();
                 mainApp.setMessage("Neues Team");
                 mainApp.commitRefresh(this);
-            } else if (ac.equals("speichern")) {
+            } else if ("speichern".equals(ac)) {
                 new SaveThreadWorker(createTeam, mainApp).execute();
                 mainApp.commitRefresh(this);
                 createTeam.setTextfieldFocus();
-            } else if (ac.equals("abbrechen"))
+            } else if ("abbrechen".equals(ac))
                 mainApp.removeInternalFrame(parent.getName());
-            else if (ac.equals("sortieren")) {
-                DartComponentRegistry.getInstance().setTableModel(showTeams.getPanelTable(), showTeams);
+            else if ("sortieren".equals(ac)) {
+                DartComponentRegistry.getInstance()
+                        .setTableModel(showTeams.getPanelTable(), showTeams);
                 mainApp.setTaskbarTask("Teams sortiert");
-            } else if (ac.equals("löschen")) {
+            } else if ("löschen".equals(ac)) {
                 new DeleteThreadWorker(this, showTeams, mainApp).execute();
+            } else if ("infos".equals(ac)) {
+                ServiceFactory.runAsTransaction(new Runnable() {
+                    public void run() {
+                        Ligateam team = (Ligateam) createTeam.getModelEntity();
+                        String infoText =
+                                ServiceFactory.get(LigateamService.class).queryTeamInfos(team);
+                        SwingUtils.createOkDialog(mainApp, infoText, "Infos zu " + team.getTeamName());
+                    }
+                });
             }
         }
     }
@@ -171,6 +193,7 @@ public class TeamController extends PanelController {
                 panel.getPanelController().refreshAndWait(panel);
         }
     }
+
     public void keyTyped(KeyEvent e) {
     }
 
