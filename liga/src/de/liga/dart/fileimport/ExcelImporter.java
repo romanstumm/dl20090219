@@ -59,13 +59,40 @@ public class ExcelImporter extends ExcelIO {
                     throw new DartException("Die Tabelle " + table + " fehlt in der Excel Datei!");
                 }
             }
+            HSSFSheet seqSheet = wb.getSheet(SHEET_SEQUENCES);
+            if (seqSheet != null) {
+                readSheet(seqSheet, SHEET_SEQUENCES);
+            } else {
+                throw new DartException(
+                        "Die Tabelle " + SHEET_SEQUENCES + " fehlt in der Excel Datei!");
+            }
             deleteAllData();
             writeAllData();
+            writeSequences();
         } finally {
             fileIn.close();
             if (progressIndicator != null) {
                 progressIndicator.showProgress(0, "");
             }
+        }
+    }
+
+    private void writeSequences() throws SQLException {
+        List<Map<String, String>> sheetData = excelData.get(SHEET_SEQUENCES);
+//        String[] headers = sheetHeaders.get(SHEET_SEQUENCES);
+//        String[] types = sheetTypes.get(SHEET_SEQUENCES);
+
+        PreparedStatement stmt = jdbcConnection.prepareStatement("select setval(?, ?, false)");
+        try {
+            for (Map<String, String> dataMap : sheetData) {
+                String seqName = dataMap.get("SEQUENCE");
+                String seqVal = dataMap.get("NEXTVAL");
+                stmt.setString(1, seqName);
+                stmt.setLong(2, Long.parseLong(seqVal));
+                stmt.execute();
+            }
+        } finally {
+            stmt.close();
         }
     }
 
@@ -115,6 +142,12 @@ public class ExcelImporter extends ExcelIO {
                 stmt.setNull(i, Types.INTEGER);
             } else {
                 stmt.setInt(i, Integer.parseInt(colValue));
+            }
+        } else if ("bigint".equals(type)) {
+            if (colValue == null || colValue.length() == 0) {
+                stmt.setNull(i, Types.BIGINT);
+            } else {
+                stmt.setLong(i, Long.parseLong(colValue));
             }
         } else if ("time".equals(type)) {   // 19:00:00
             if (colValue == null || colValue.length() == 0) {

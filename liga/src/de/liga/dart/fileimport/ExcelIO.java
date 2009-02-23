@@ -15,6 +15,8 @@ public abstract class ExcelIO implements DataExchanger {
     private static final Log log = LogFactory.getLog(ExcelIO.class);
     protected ProgressIndicator progressIndicator;
     private boolean success;
+
+    protected static final String SHEET_SEQUENCES = "sequences";
     /**
      * tables for excel export/import in sequence
      */
@@ -28,6 +30,16 @@ public abstract class ExcelIO implements DataExchanger {
             "ligateam",
             "ligateamspiel",
             "ligateamwunsch"};
+
+    protected static final String[] SEQUENCES = {
+            "automatenaufsteller_aufstellerid_seq",
+            "liga_ligaid_seq",
+            "ligagruppe_gruppenid_seq",
+            "ligaklasse_klassenid_seq",
+            "ligateam_ligateamid_seq",
+            "ligateamspiel_spielid_seq",
+            "ligateamwunsch_wunschid_seq",
+            "spielort_spielortid_seq"};
 
     public boolean start() {
         ServiceFactory.runAsTransaction(new Runnable() {

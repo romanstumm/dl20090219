@@ -49,7 +49,11 @@ public class ExcelExporter extends ExcelIO {
                 writeSheet(sheet, table);
             }
             if (progressIndicator != null) {
-                progressIndicator.showProgress(90, outFile.getName() + " speichern...");
+                progressIndicator.showProgress(90, SHEET_SEQUENCES + " speichern...");
+            }
+            writeSequences(wb.createSheet(SHEET_SEQUENCES));
+            if (progressIndicator != null) {
+                progressIndicator.showProgress(95, outFile.getName() + " speichern...");
             }
             wb.write(fileOut);
         } finally {
@@ -57,6 +61,44 @@ public class ExcelExporter extends ExcelIO {
             if (progressIndicator != null) {
                 progressIndicator.showProgress(0, "");
             }
+        }
+    }
+
+    private void writeSequences(HSSFSheet sheet) throws SQLException {
+        Statement stmt = jdbcConnection.createStatement();
+
+        // header
+        HSSFRow headerRow = sheet.createRow(0);
+        HSSFCell cell;
+        (cell = headerRow.createCell(0)).setCellValue(new HSSFRichTextString("SEQUENCE"));
+        cell.setCellStyle(styles.get(STYLE_BOLD));
+        (cell = headerRow.createCell(1)).setCellValue(new HSSFRichTextString("NEXTVAL"));
+        cell.setCellStyle(styles.get(STYLE_BOLD));
+        headerRow = sheet.createRow(1);
+        (cell = headerRow.createCell(0)).setCellValue(new HSSFRichTextString("varchar"));
+        cell.setCellStyle(styles.get(STYLE_ITALIC));
+        (cell = headerRow.createCell(1)).setCellValue(new HSSFRichTextString("bigint"));
+        cell.setCellStyle(styles.get(STYLE_ITALIC));
+
+        // data
+        int rowIdx = 2;
+        try {
+            for (String seq : SEQUENCES) {
+                String value = "";
+                ResultSet resultSet = stmt.executeQuery("select nextval('" + seq + "')");
+                try {
+                    if (resultSet.next()) {
+                        value = resultSet.getString(1);
+                    }
+                } finally {
+                    resultSet.close();
+                }
+                HSSFRow row = sheet.createRow(rowIdx++);
+                row.createCell(0).setCellValue(new HSSFRichTextString(seq));
+                row.createCell(1).setCellValue(new HSSFRichTextString(value));
+            }
+        } finally {
+            stmt.close();
         }
     }
 
