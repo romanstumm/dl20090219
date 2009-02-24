@@ -1,12 +1,12 @@
-package de.liga.dart.fileimport;
+package de.liga.dart.fileimport.vfs;
 
 /**
  * Description:   Ligaklasse einer Liga<br/>
  * User: roman
  * Date: 17.05.2008, 16:07:13
  */
-public class LITLIG {
-    long LIG_NR;
+class LITLIG {
+    long LIG_NR;   // primary key
     String LIG_NAME;
     String LIG_ZUSATZ;
     String SPO_SPORTA; // DART fix

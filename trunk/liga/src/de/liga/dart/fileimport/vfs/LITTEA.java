@@ -1,4 +1,4 @@
-package de.liga.dart.fileimport;
+package de.liga.dart.fileimport.vfs;
 
 import java.sql.Date;
 
@@ -7,7 +7,7 @@ import java.sql.Date;
  * User: roman
  * Date: 17.05.2008, 15:57:33
  */
-public class LITTEA {
+class LITTEA {
     Date SAI_NR; 
     long LIG_NR;   // Ligaklasse
     long TEA_NR;   // PK

@@ -4,7 +4,7 @@ import de.liga.dart.Application;
 import de.liga.dart.common.service.util.HibernateUtil;
 import de.liga.dart.database.AutoMigrator;
 import de.liga.dart.database.AutoMigratorFactory;
-import de.liga.dart.fileimport.DbfImporter;
+import de.liga.dart.fileimport.vfs.DbfImporter;
 import de.liga.dart.gruppen.check.Options;
 import de.liga.dart.license.Licensable;
 import de.liga.dart.license.License;
