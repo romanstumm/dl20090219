@@ -1,7 +1,8 @@
-package de.liga.dart.fileimport;
+package de.liga.dart.fileimport.vfs;
 
 import de.liga.dart.automatenaufsteller.service.AutomatenaufstellerService;
 import de.liga.dart.common.service.ServiceFactory;
+import de.liga.dart.fileimport.DbfIO;
 import de.liga.dart.model.Automatenaufsteller;
 import de.liga.dart.model.Liga;
 import de.liga.dart.model.Spielort;
@@ -23,7 +24,7 @@ public class DbfImporter extends DbfIO {
     protected String actionVerb() { return "Importiere"; }
     protected String actionName() { return "Import"; }
 
-    protected void exchangeData(Liga liga) throws SQLException {
+    protected void exchangeData(Liga liga, String path) throws SQLException {
         importAufsteller(liga);
         importSpielorte(liga);
     }

@@ -1,4 +1,4 @@
-package de.liga.dart.fileimport;
+package de.liga.dart.fileimport.vfs;
 
 /**
  * Description:  Aufsteller <br/>

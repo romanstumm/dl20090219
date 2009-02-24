@@ -1,6 +1,8 @@
 package org.en.tealEye.guiMain;
 
 import de.liga.dart.fileimport.*;
+import de.liga.dart.fileimport.vfs.DbfExporter;
+import de.liga.dart.fileimport.vfs.DbfImporter;
 import de.liga.dart.gruppen.check.ProgressIndicator;
 import de.liga.dart.exception.DartException;
 import de.liga.util.thread.ThreadManager;
@@ -114,14 +116,19 @@ public class ImportThreadWorker extends SwingWorker implements ProgressIndicator
         importer.setProgressIndicator(this);
         boolean success;
         if (chooser.getSelectedLiga() != null) {
-            success = importer.start(chooser.getSelectedLiga().getLigaName());
-            if (success) {
-                mainAppFrame.setMessage("dBase-Export für Liga " +
-                        chooser.getSelectedLiga().getLigaName() + " beendet");
-            } else {
-                mainAppFrame.setMessage("dBase-Export - nicht möglich (Fehler)!");
-                SwingUtils.createOkDialog(mainAppFrame, "Export nicht möglich (Fehler)!",
+            try {
+                success = importer.start(chooser.getSelectedLiga().getLigaName());
+                if (success) {
+                    mainAppFrame.setMessage("dBase-Export für Liga " +
+                            chooser.getSelectedLiga().getLigaName() + " beendet");
+                } else {
+                    mainAppFrame.setMessage("dBase-Export - nicht möglich (Fehler)!");
+                    SwingUtils.createOkDialog(mainAppFrame, "Export nicht möglich (Fehler)!",
                             "dBase-Export");
+                }
+            } catch (DartException ex) {
+                mainAppFrame.setMessage(ex.getMessage());
+                SwingUtils.createOkDialog(mainAppFrame, ex.getMessage(), "dBase-Export");
             }
         } else {
             success = importer.start();
@@ -152,7 +159,7 @@ public class ImportThreadWorker extends SwingWorker implements ProgressIndicator
             } else {
                 mainAppFrame.setMessage("dBase-Import - nicht möglich (Fehler)!");
                 SwingUtils.createOkDialog(mainAppFrame, "Import nicht möglich (Fehler)!",
-                            "dBase-Import");
+                        "dBase-Import");
             }
         } else {
             success = importer.start();
@@ -161,7 +168,7 @@ public class ImportThreadWorker extends SwingWorker implements ProgressIndicator
             } else {
                 mainAppFrame.setMessage("dBase-Import - nicht möglich (Fehler)!");
                 SwingUtils.createOkDialog(mainAppFrame, "Import nicht möglich (Fehler)!",
-                            "dBase-Import");
+                        "dBase-Import");
             }
         }
         return null;
@@ -187,7 +194,7 @@ public class ImportThreadWorker extends SwingWorker implements ProgressIndicator
         } catch (Exception e1) {
             mainAppFrame.setMessage("Fehler: " + e1.getMessage());
             SwingUtils.createOkDialog(mainAppFrame, "Fehler: " + e1.getMessage(),
-                            "csv-Import");
+                    "csv-Import");
         }
         return null;
     }

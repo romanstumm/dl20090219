@@ -5,6 +5,7 @@ import org.apache.commons.lang.StringUtils;
 
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.sql.Date;
 import java.text.DateFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -40,6 +41,17 @@ public class CalendarUtils {
         timeFormHHMM.setLenient(false);
         try {
             return new Time(timeFormHHMM.parse(time).getTime());
+        } catch (ParseException e) {
+            return null;
+        }
+    }
+    
+    public static Date stringToDate(String date, String format) {
+        if (StringUtils.isEmpty(date)) return null;
+        SimpleDateFormat dateFormat = new SimpleDateFormat(format);
+        dateFormat.setLenient(false);
+        try {
+            return new Date(dateFormat.parse(date).getTime());
         } catch (ParseException e) {
             return null;
         }

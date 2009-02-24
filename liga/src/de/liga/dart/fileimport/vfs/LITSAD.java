@@ -1,4 +1,4 @@
-package de.liga.dart.fileimport;
+package de.liga.dart.fileimport.vfs;
 
 import java.sql.Date;
 
@@ -7,8 +7,8 @@ import java.sql.Date;
  * User: roman
  * Date: 17.05.2008, 16:02:50
  */
-public class LITSAD {
-    Date SAI_NR;
+class LITSAD {
+    Date SAI_NR;  // Saison Nr (Date), z.b. 01.01.2009
     long LIG_NR; // Ligaklase.PK
     int SAI_POSNR; // 1-8
     long TEA_NR;   // Team.PK

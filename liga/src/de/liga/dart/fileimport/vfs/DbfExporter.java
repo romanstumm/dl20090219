@@ -1,13 +1,21 @@
-package de.liga.dart.fileimport;
+package de.liga.dart.fileimport.vfs;
 
 import de.liga.dart.common.service.ServiceFactory;
+import de.liga.dart.fileimport.DbfIO;
 import de.liga.dart.gruppen.service.GruppenService;
 import de.liga.dart.model.*;
+import de.liga.dart.exception.DartException;
 import de.liga.util.CalendarUtils;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.FileFilter;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Description:  Datenexport von Gruppen und Teams in die Altanwendung (.dbf files) <br/>
@@ -15,28 +23,51 @@ import java.util.List;
  * Date: 17.05.2008, 14:44:13
  */
 public class DbfExporter extends DbfIO {
+    private static final Log log = LogFactory.getLog(DbfExporter.class);
+
     private List<LITLIG> ligList;
     private long maxLigId;
     private int maxTeamID;
     private long spielfreiLOK_NR = -1;
+    private Date myCurrentSaison;
 
-    protected String actionVerb() { return "Exportiere"; }
-    protected String actionName() { return "Export"; } 
+    protected String actionVerb() {
+        return "Exportiere";
+    }
 
-    protected void exchangeData(Liga liga) throws SQLException {
+    protected String actionName() {
+        return "Export";
+    }
+
+    protected void exchangeData(Liga liga, String path) throws SQLException {
         // delete from LITSAD
         Statement stmt = connection.createStatement();
         stmt.execute("DELETE FROM \"LITSAD.DBF\"");
-
-        maxLigId = readMaxLigID(stmt);
-        maxTeamID = 0; // readMaxTeamID(stmt);
-        ligList = readLigList(stmt);
-
         GruppenService service = ServiceFactory.get(GruppenService.class);
-        List<Ligagruppe> gruppen = service.findGruppen(liga, null);
-        // alle Gruppen / Teams durchgehen (auch Spielfrei einfügen)
-        stmt.execute("DELETE FROM \"LITTEA.DBF\"");
-        stmt.close();
+        List<Ligagruppe> gruppen;
+        try {
+
+            // ermittele aktuelle Saison
+            ResultSet resultSet = stmt.executeQuery("SELECT ANW_SAISON FROM \"LITANW.DBF\"");
+            try {
+                if (resultSet.next()) {
+                    myCurrentSaison = resultSet.getDate(1);
+                }
+            } finally {
+                resultSet.close();
+            }
+            if (myCurrentSaison == null)
+                throw new DartException("Kann aktuelle Saison nicht auslesen.");
+            // ermittele die primary keys
+            maxLigId = readMaxLigID(stmt);
+            maxTeamID = 0; // readMaxTeamID(stmt);
+            ligList = readLigList(stmt);
+            gruppen = service.findGruppen(liga, null);
+            // alle Gruppen / Teams durchgehen (auch Spielfrei einfügen)
+            stmt.execute("DELETE FROM \"LITTEA.DBF\"");
+        } finally {
+            stmt.close();
+        }
 
         // INSERT INTO LITTEA (UPDATE Ligateam.externeId)
         String teamInsert = "INSERT INTO \"LITTEA.DBF\" " +
@@ -85,13 +116,30 @@ public class DbfExporter extends DbfIO {
             ligInsertStmt.close();
             sadInsertStmt.close();
             teamInsertStmt.close();
+            deleteIndexFiles(path);
+        }
+    }
+
+    private void deleteIndexFiles(String path) {
+        File dir = new File(path);
+        File[] indexFiles = dir.listFiles(new FilenameFilter() {
+            public boolean accept(File dir, String name) {
+                return name.toUpperCase().endsWith(".MDX");
+            }
+        });
+        for (File each : indexFiles) {
+            if (each.delete()) {
+                log.info(each.getPath() + " wurde gelöscht.");
+            } else {
+                log.warn(each.getPath() + " konnte nicht gelöscht werden!");
+            }
         }
     }
 
     private LITSAD writeLITSAD(LITTEA tea, int platzNr,
                                PreparedStatement sadInsertStmt) throws SQLException {
         LITSAD sad = new LITSAD();
-        sad.SAI_NR = new Date(System.currentTimeMillis());
+        sad.SAI_NR = myCurrentSaison;
         sad.LIG_NR = tea.LIG_NR;
         sad.SAI_POSNR = platzNr;
         sad.TEA_NR = tea.TEA_NR;
@@ -104,7 +152,7 @@ public class DbfExporter extends DbfIO {
         LITTEA tea = new LITTEA();
         tea.TEA_NR = (++maxTeamID);
         tea.LIG_NR = lig.LIG_NR;
-        tea.SAI_NR = new Date(System.currentTimeMillis());
+        tea.SAI_NR = myCurrentSaison;
         if (spiel == null || spiel.isSpielfrei()) {
             tea.TEA_NAME = "Spielfrei";
             // Spielort fuer Spielfrei finden, ggf. erzeugen
