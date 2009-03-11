@@ -28,10 +28,14 @@ public class AggregateFonts implements Fonts {
                 Integer.parseInt(props.getProperty("TableFontStyle")), Integer.parseInt(props.getProperty("TableFontSize")));
         Font formFont = new Font(props.getProperty("FormFontType"),
                 Integer.parseInt(props.getProperty("FormFontStyle")), Integer.parseInt(props.getProperty("FormFontSize")));
+        Font etiFont = new Font(props.getProperty("EtiFontType"),
+                        Integer.parseInt(props.getProperty("EtiFontStyle")), Integer.parseInt(props.getProperty("EtiFontSize")));
+
 
         fontMap.put("LabelFont", labelFont);
         fontMap.put("TableFont", tableFont);
         fontMap.put("FormFont", formFont);
+        fontMap.put("EtiFont", etiFont);
     }
 
     public Map<String, Font> getFontMap() {

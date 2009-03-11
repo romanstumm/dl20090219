@@ -71,6 +71,8 @@ public abstract class ExtJTablePanel extends ExtendedJPanelImpl {
         table.setOpaque(true);
         table.setTableHeader(getPanelTable().getTableHeader());
         table.setFillsViewportHeight(true);
+         
+
         frame.setVisible(true);
         frame.validate();
         jtable.setPreferredScrollableViewportSize(getSize());

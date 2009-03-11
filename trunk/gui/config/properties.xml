@@ -2,13 +2,16 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 <comment>properties</comment>
-<entry key="TableFontSize">11</entry>
+<entry key="TableFontSize">12</entry>
+<entry key="EtiFontStyle">1</entry>
 <entry key="FormFontType">Arial</entry>
+<entry key="EtiFontType">Bitstream Vera Sans Bold Oblique</entry>
 <entry key="LabelFontType">Arial</entry>
 <entry key="FormFontStyle">0</entry>
-<entry key="FormFontSize">10</entry>
-<entry key="LabelFontSize">10</entry>
-<entry key="TableFontType">SansSerif.plain</entry>
+<entry key="FormFontSize">12</entry>
+<entry key="EtiFontSize">12</entry>
+<entry key="LabelFontSize">12</entry>
+<entry key="TableFontType">Arial Fett</entry>
 <entry key="LabelFontStyle">0</entry>
-<entry key="TableFontStyle">0</entry>
+<entry key="TableFontStyle">1</entry>
 </properties>

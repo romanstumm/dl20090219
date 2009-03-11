@@ -13,6 +13,9 @@ public interface GuiService {
 
     void updateProps(Properties props);
 
+    void updateProperty(String key, String value);
+
+    void updateConfigFile();
 //    void updateIcons();
 
 //    void updateFonts();
