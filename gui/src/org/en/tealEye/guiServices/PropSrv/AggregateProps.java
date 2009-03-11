@@ -75,6 +75,9 @@ public class AggregateProps implements Props {
         props.setProperty("FormFontType", Props.DEFAULT_FORM_FONT_TYPE);
         props.setProperty("FormFontStyle", String.valueOf(Props.DEFAULT_FORM_FONT_STYLE));
         props.setProperty("FormFontSize", String.valueOf(Props.DEFAULT_FORM_FONT_SIZE));
+        props.setProperty("EtiFontType", Props.DEFAULT_ETI_FONT_TYPE);
+        props.setProperty("EtiFontStyle", String.valueOf(Props.DEFAULT_ETI_FONT_STYLE));
+        props.setProperty("EtiFontSize", String.valueOf(Props.DEFAULT_ETI_FONT_SIZE));
 
         try {
             FileOutputStream propOutFile =

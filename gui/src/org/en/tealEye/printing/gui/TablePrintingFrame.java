@@ -101,7 +101,7 @@ public class TablePrintingFrame extends JFrame implements ActionListener, KeyLis
         etiAnzahlLabel = new javax.swing.JLabel();
         etiAnzahl = new javax.swing.JTextField();
         jComboBox1 = new javax.swing.JComboBox();
-        jComboBox2 = new javax.swing.JComboBox(new String[]{"Horizontal", "Vertikal"});
+        jComboBox2 = new javax.swing.JComboBox(new String[]{"Hochformat", "Querformat"});
         jToolBar7 = new javax.swing.JToolBar();
         jPanel7 = new javax.swing.JPanel();
         fontFarbeLabel = new javax.swing.JLabel();
@@ -116,7 +116,7 @@ public class TablePrintingFrame extends JFrame implements ActionListener, KeyLis
         leftSide = new JTextField("10", 3);
         upperSide = new JTextField("10", 3);
         printPageNb = new JCheckBox("Seitenzahl drucken");
-        jComboBox2.setActionCommand("orientation1");
+        jComboBox2.setActionCommand("orientation");
         printPageNb.setActionCommand("printPageNum");
         leftSide.addKeyListener(this);
         upperSide.addKeyListener(this);
@@ -328,7 +328,7 @@ public class TablePrintingFrame extends JFrame implements ActionListener, KeyLis
         jPanel6.add(etiAnzahl, new java.awt.GridBagConstraints());
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(
-              new String[]{"Horizontal", "Vertikal"}));
+              new String[]{"Hochformat", "Querformat"}));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
@@ -507,7 +507,8 @@ public class TablePrintingFrame extends JFrame implements ActionListener, KeyLis
                 } else if (ac.equals("printPageNum")) {
                     if (printPageNb.isSelected()) tablePrintService.setPrintPageNum(true);
                     else tablePrintService.setPrintPageNum(false);
-                } else if (ac.equals("orientation1")) {
+                } else if (ac.equals("orientation")) {
+                    System.out.printf("boom!!!");
                     rotateAndUpdate();
                 }
             }
@@ -534,6 +535,7 @@ public class TablePrintingFrame extends JFrame implements ActionListener, KeyLis
         contentPanel.setLayout(new BorderLayout());
         contentPanel.setVisible(false);
         contentPanel.removeAll();
+        contentPanel.add(contentLabel, BorderLayout.CENTER);
         contentPanel.setVisible(true);
 
     }

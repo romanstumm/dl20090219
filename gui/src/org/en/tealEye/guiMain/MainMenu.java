@@ -19,6 +19,7 @@ public class MainMenu extends JMenuBar {
 
         JMenu dateiMenu = new JMenu("Datei");
         JMenu configMenu = new JMenu("Einstellungen");
+        JMenu tasksMenu = new JMenu("Aufgaben");
         JMenu windowsMenu = new JMenu("Fenster");
         JMenu aboutMenu = new JMenu("Über");
 
@@ -66,6 +67,17 @@ public class MainMenu extends JMenuBar {
         windowsMenu.add(new JMenuItem("Fenster Minimieren"));
         windowsMenu.add(new JMenuItem("Fenster Normalisieren"));
         windowsMenu.add(new JMenuItem("Fenster Schliessen"));
+        tasksMenu.add(new JMenuItem("Gruppe anlegen"));
+        tasksMenu.add(new JMenuItem("Team anlegen"));
+        tasksMenu.add(new JMenuItem("Spielort anlegen"));
+        tasksMenu.add(new JMenuItem("Aufsteller anlegen"));
+        tasksMenu.add(new JMenuItem("Gruppen anzeigen"));
+        tasksMenu.add(new JMenuItem("Teams anzeigen"));
+        tasksMenu.add(new JMenuItem("Spielorte anzeigen"));
+        tasksMenu.add(new JMenuItem("Aufsteller anzeigen"));
+        tasksMenu.add(new JSeparator());
+        tasksMenu.add(new JMenu("Offene Fenster"));
+
         windowsMenu.add(item = new JCheckBoxMenuItem("Hauptmenu ausblenden"));
         item.setActionCommand("CB_Hide_FloatPanel");
         windowsMenu.add(new JSeparator());
@@ -73,12 +85,15 @@ public class MainMenu extends JMenuBar {
         item.setActionCommand("MENU_Info");
         addMenuController(dateiMenu);
         addMenuController(configMenu);
+        addMenuController(tasksMenu);
         addMenuController(windowsMenu);
         addMenuController(aboutMenu);
+
         dateiMenu.getItem(0).setEnabled(false);
 
         this.add(dateiMenu);
         this.add(configMenu);
+        this.add(tasksMenu);
         this.add(windowsMenu);
         this.add(aboutMenu);
         setPrintingDisabled();

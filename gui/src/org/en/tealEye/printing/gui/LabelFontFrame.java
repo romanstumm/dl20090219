@@ -1,9 +1,15 @@
 package org.en.tealEye.printing.gui;
 
+import org.en.tealEye.guiServices.GlobalGuiService;
+import org.en.tealEye.guiServices.GuiService;
+import org.en.tealEye.guiServices.GlobalGuiServiceImpl;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * Description: <br/>
@@ -20,11 +26,11 @@ public class LabelFontFrame extends JFrame implements ActionListener {
 
     private JButton okButton;
     private JButton cancelButton;
+    private GuiService guiService = new GlobalGuiService();
 
     private final TablePrintingFrame tpf;
 
-    private Font font = new Font("Arial", Font.PLAIN, 10);
-
+    private Font font = guiService.getFontMap().get("EtiFont");
     public LabelFontFrame(TablePrintingFrame tablePrintingFrame) {
         this.setTitle("Labelschriftart");
         this.setSize(600, 200);
@@ -35,10 +41,16 @@ public class LabelFontFrame extends JFrame implements ActionListener {
     private void init() {
         fontField = new JTextArea("The Quick Brown Fox Jumps Over The Lazy Dog!");
         fontType = new JComboBox(getSystemFonts());
+            Font font = guiService.getFontMap().get("EtiFont");
+
+        fontType.setSelectedItem(font.getName());
         fontStyle =
               new JComboBox(new String[]{"normal", "fett", "italic", "fett/italic"});
+              int style = font.getStyle();
+        fontStyle.setSelectedItem(style);
         fontSize = new JComboBox(getSystemFontSizes());
-
+              int size = font.getSize();
+        fontSize.setSelectedItem(size);
         okButton = new JButton("OK");
         okButton.setSize(40, 20);
 
@@ -86,7 +98,6 @@ public class LabelFontFrame extends JFrame implements ActionListener {
         this.setVisible(true);
     }
 
-
     public String[] getSystemFonts() {
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         Font[] f = ge.getAllFonts();
@@ -110,7 +121,9 @@ public class LabelFontFrame extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(okButton)) {
             tpf.setLabelFont(font);
-            this.dispose();
+            Map<String, Font> fontMap = guiService.getFontMap();
+             guiService.updateProps(buildNewFontProperties(fontMap));
+             this.dispose();
         } else if (e.getSource().equals(cancelButton)) {
             this.dispose();
         } else if (e.getSource().equals(fontType)) {
@@ -129,5 +142,23 @@ public class LabelFontFrame extends JFrame implements ActionListener {
                   fontSize.getSelectedIndex() + 8);
             fontField.setFont(font);
         }
+    }
+
+        private Properties buildNewFontProperties(Map<String, Font> fontMap) {
+        Properties props = new Properties();
+
+        props.setProperty("LabelFontType", fontMap.get("LabelFont").getFontName());
+        props.setProperty("LabelFontStyle", String.valueOf(fontMap.get("LabelFont").getStyle()));
+        props.setProperty("LabelFontSize", String.valueOf(fontMap.get("LabelFont").getSize()));
+        props.setProperty("TableFontType", fontMap.get("TableFont").getFontName());
+        props.setProperty("TableFontStyle", String.valueOf(fontMap.get("TableFont").getStyle()));
+        props.setProperty("TableFontSize", String.valueOf(fontMap.get("TableFont").getSize()));
+        props.setProperty("FormFontType", fontMap.get("FormFont").getFontName());
+        props.setProperty("FormFontStyle", String.valueOf(fontMap.get("FormFont").getStyle()));
+        props.setProperty("FormFontSize", String.valueOf(fontMap.get("FormFont").getSize()));
+        props.setProperty("EtiFontType", font.getFontName());
+        props.setProperty("EtiFontStyle", String.valueOf(font.getStyle()));
+        props.setProperty("EtiFontSize", String.valueOf(font.getSize()));
+        return props;
     }
 }

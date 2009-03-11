@@ -16,6 +16,7 @@ import org.en.tealEye.guiMain.util.LigaklasseSelectable;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.List;
@@ -387,6 +388,8 @@ public class CreateGroup extends ExtJEditPanel implements
         groupDecline.setName("abbrechen");
         groupValidate.setName("verifizieren");
         groupNew.setName("neu");
+
+        setTableLayout();
     }
 
     @Override
@@ -530,5 +533,21 @@ public class CreateGroup extends ExtJEditPanel implements
 
     public RowTipJTable getTable() {
         return jtable;
+    }
+
+    private void setTableLayout(){
+         TableColumn column = null;
+         for(int i = 0;i<jtable.getColumnCount();i++){
+             column = jtable.getColumnModel().getColumn(i);
+             switch(i){
+                 case 0: column.setMaxWidth(30);column.setMinWidth(25);
+                 case 3: column.setMaxWidth(50);column.setMinWidth(30);
+                 case 4: column.setMaxWidth(50);column.setMinWidth(30);
+                 case 5: column.setMaxWidth(50);column.setMinWidth(30);
+                 case 6: column.setMaxWidth(50);column.setMinWidth(30);
+                 case 7: column.setMaxWidth(50);column.setMinWidth(30);
+                     jtable.setAutoResizeMode(1);
+             }
+         }
     }
 }

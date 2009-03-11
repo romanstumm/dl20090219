@@ -47,4 +47,11 @@ public abstract class GlobalGuiServiceImpl implements GuiService {
         properties.updateFile();
     }
 
+    public void updateProperty(String key, String value){
+        properties.setProperty(key, value);
+    }
+
+    public void updateConfigFile(){
+        properties.updateFile();
+    }
 }

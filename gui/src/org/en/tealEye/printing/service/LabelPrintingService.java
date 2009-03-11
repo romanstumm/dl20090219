@@ -8,6 +8,8 @@ import de.liga.dart.model.Spielort;
 import de.liga.dart.spielort.service.SpielortService;
 import de.liga.util.StringUtils;
 import org.en.tealEye.framework.BeanTableModel;
+import org.en.tealEye.guiServices.GuiService;
+import org.en.tealEye.guiServices.GlobalGuiService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -63,7 +65,8 @@ public class  LabelPrintingService extends JPanel implements LabelPrinting {
     private boolean guides;
 
     private final static Font smallFont = new Font("Arial",0,10);
-    private  Font font = new Font("Arial",0,12);
+
+    private  Font font = new GlobalGuiService().getFontMap().get("EtiFont"); 
 
     public LabelPrintingService(JTable sourceTable,int labelWidth, int labelHeight,
                                 int labelLeftBorder, int labelRightBorder, int labelsWanted)

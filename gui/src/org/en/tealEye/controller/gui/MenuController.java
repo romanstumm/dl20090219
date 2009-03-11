@@ -111,7 +111,49 @@ public class MenuController
                     mainAppFrame.showFloatingToolbar();
                 }
             }
-        }/* else if (obj instanceof JButton &&
+
+        } else if (action.equals("Gruppe anlegen")){
+            h.showPanel("CreateGroup");
+            mainAppFrame.getActiveFrame();
+            afm.activateFrameButton(mainAppFrame.getActiveFrame().getName());
+            afm.setInactiveColor();
+        }else if (action.equals("Team anlegen")){
+             h.showPanel("CreateTeam");
+            mainAppFrame.getActiveFrame();
+            afm.activateFrameButton(mainAppFrame.getActiveFrame().getName());
+            afm.setInactiveColor();
+        }else if (action.equals("Spielort anlegen")){
+             h.showPanel("CreateLocation");
+            mainAppFrame.getActiveFrame();
+            afm.activateFrameButton(mainAppFrame.getActiveFrame().getName());
+            afm.setInactiveColor();
+        }else if (action.equals("Aufsteller anlegen")){
+             h.showPanel("CreateVendor");
+            mainAppFrame.getActiveFrame();
+            afm.activateFrameButton(mainAppFrame.getActiveFrame().getName());
+            afm.setInactiveColor();
+        }else if (action.equals("Gruppen anzeigen")){
+             h.showPanel("ShowGroups");
+            mainAppFrame.getActiveFrame();
+            afm.activateFrameButton(mainAppFrame.getActiveFrame().getName());
+            afm.setInactiveColor();
+        }else if (action.equals("Teams anzeigen")){
+             h.showPanel("ShowTeams");
+            mainAppFrame.getActiveFrame();
+            afm.activateFrameButton(mainAppFrame.getActiveFrame().getName());
+            afm.setInactiveColor();
+        }else if (action.equals("Spielort anzeigen")){
+             h.showPanel("ShowLoctions");
+            mainAppFrame.getActiveFrame();
+            afm.activateFrameButton(mainAppFrame.getActiveFrame().getName());
+            afm.setInactiveColor();
+        }else if (action.equals("Aufsteller anzeigen")){
+             h.showPanel("ShowVendors");
+            mainAppFrame.getActiveFrame();
+            afm.activateFrameButton(mainAppFrame.getActiveFrame().getName());
+            afm.setInactiveColor();
+        }
+        /* else if (obj instanceof JButton &&
                 mainAppFrame.getFrameMap().containsKey(action)) {
             mainAppFrame.insertInternalFrame(action, true);
         } */
