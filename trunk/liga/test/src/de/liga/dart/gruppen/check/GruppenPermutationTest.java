@@ -65,7 +65,7 @@ public class GruppenPermutationTest extends TestCase {
     public static OGroup createGruppe(int n, int numberDays, int groupIdx) {
         OGroup group = new OGroup(n, groupIdx);
         for (int i = 0; i < 8; i++) {
-            OTeam platz = new OTeam(group, null, n + i + 10, (i % numberDays)+1);
+            OTeam platz = new OTeam(group, null, n + i + 10, (i % numberDays)+1, false);
             platz.setPosition(i + 1);
             group.getPositions().add(platz);
         }

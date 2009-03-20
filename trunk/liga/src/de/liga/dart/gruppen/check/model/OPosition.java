@@ -11,9 +11,9 @@ import java.io.Serializable;
  */
 public abstract class OPosition implements Serializable, Comparable {
     protected final OGroup group;
+    protected final boolean fixiert;
+    protected TeamStatus status = TeamStatus.FREI; // wird nur 1x vom GroupCalculator gesetzt
     protected int position; // computed, variable
-    protected boolean fixiert;
-    protected TeamStatus status;
 
     /**
      * true wenn die Position bereits in der Optimierung
@@ -22,6 +22,9 @@ public abstract class OPosition implements Serializable, Comparable {
      */
     private boolean changed = false;
 
+    public boolean isChangedOrFixiert() {
+        return changed || fixiert;
+    }
 
     public boolean isChanged() {
         return changed;
@@ -31,14 +34,6 @@ public abstract class OPosition implements Serializable, Comparable {
         this.changed = changed;
     }
 
-    /**
-     * true wenn ein Tausch dieses Teams potentiell
-     * zu Konflikten fuehren koennte.
-     * false wenn das Team auf jede Position
-     * konfliktfrei getauscht werden kann.
-     */
-    private boolean conflictPossible = true;
-
     public static final int[][] WECHSEL = {{1, 5}, {2, 6}, {3, 7}, {4, 8}};
 
     /**
@@ -47,8 +42,9 @@ public abstract class OPosition implements Serializable, Comparable {
      */
     public static final int[][] SPIELFREI_WECHSEL = {{1, 8}, {2, 7}, {3, 6}, {4, 5}};
 
-    public OPosition(OGroup group) {
+    public OPosition(OGroup group, boolean fixiert) {
         this.group = group;
+        this.fixiert = fixiert;
     }
 
     public OGroup getGroup() {
@@ -60,7 +56,7 @@ public abstract class OPosition implements Serializable, Comparable {
      * @return true when changed, false when unchanged
      */
     public boolean moveTo(int newPosition) {
-        if (fixiert || position == newPosition) return false;
+        if (isChanged() || isFixiert() || getPosition() == newPosition) return false;
 
         if (newPosition < 1 || newPosition > 8)
             throw new IllegalArgumentException(
@@ -92,17 +88,8 @@ public abstract class OPosition implements Serializable, Comparable {
     }
 
     public String toString() {
-        return "P" + position;
+        return (changed ? "^P" : "P") + position;
     }
-
-    public boolean isConflictPossible() {
-        return conflictPossible;
-    }
-
-    public void setConflictPossible(boolean conflictPossible) {
-        this.conflictPossible = conflictPossible;
-    }
-
 
     public TeamStatus getStatus() {
         return status;
@@ -117,7 +104,6 @@ public abstract class OPosition implements Serializable, Comparable {
         return fixiert;
     }
 
-    public void setFixiert(boolean fixiert) {
-        this.fixiert = fixiert;
-    }
+    public abstract boolean equals(Object o);    
+    public abstract int hashCode();
 }

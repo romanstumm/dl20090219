@@ -64,7 +64,7 @@ public class GroupCalculator {
             if (oFree.getOtherPosition() != otherFree.getPosition()) {
                 oFree.setStatus(TeamStatus.SPIELFREI_WECHSEL_SOLL);
                 otherFree.setStatus(TeamStatus.SPIELFREI_WECHSEL_SOLL);
-                current.getRating().addOption(otherFree, oFree);
+                current.getRating().addFreeOption(otherFree, oFree);
             }
             return null;
         }
@@ -218,17 +218,21 @@ public class GroupCalculator {
     protected boolean setWechselOptional(OTeam team, OTeam other, ORating rating, int expectPos) {
         if (expectPos != other.getPosition()) {
             if (Options.sortOptional) {
+//                if (team.isFixiert()) { // fixiert heiﬂt nicht, dass Wechsel nicht erkannt werden soll
+//                    team.setStatus(TeamStatus.FIXIERT_OVERRULED);
+//                } else {
+                /* if (other.isFixiert()) { // fixiert heiﬂt nicht, dass Wechsel nicht erkannt werden soll
+                  return false;
+              } else {*/
+                team.setOther(other); // ?? diese Zeile entfernen ??
                 if (team.isFixiert()) {
                     team.setStatus(TeamStatus.FIXIERT_OVERRULED);
                 } else {
-                    if (other.isFixiert()) {
-                        return false;
-                    } else {
-                        team.setOther(other); // ?? diese Zeile entfernen ??
-                        team.setStatus(TeamStatus.WECHSEL_SOLL);
-                        rating.addOption(other, team);
-                    }
+                    team.setStatus(TeamStatus.WECHSEL_SOLL);
                 }
+                rating.addTeamOption(other, team);
+//                    }
+//                }
             } else {
                 team.setStatus(TeamStatus.FREI);
             }
@@ -247,30 +251,36 @@ public class GroupCalculator {
 
     protected boolean setWechsel(OTeam team, OTeam other, ORating rating, int expectPos) {
         if (expectPos != other.getPosition()) {
+//            if (team.isFixiert()) { // fixiert heiﬂt nicht, dass Wechsel nicht erkannt werden soll
+//                team.setStatus(TeamStatus.FIXIERT_OVERRULED);
+//            } else {
+            if (Options.sortWhitelist) {
+                OWunsch wunsch = team.getWunsch(other);
+                if (wunsch != null) {
+                    if ((wunsch.getWunschArt() == WunschArt.WHITELIST_MUST)  // overrule!
+                            && wunsch.getOtherTeam().getPosition() == team.getPosition()) {
+                        team.setOther(other);
+                        team.setStatus(TeamStatus.WUNSCH_OVERRULED);
+                        other.setStatus(TeamStatus.WUNSCH_OVERRULED);
+                        return true;
+                    }
+                }
+            }
+//                if (other.isFixiert()) { // fixiert heiﬂt nicht, dass Wechsel nicht erkannt werden soll
+//                    return false;
+//                } else {
+            team.setOther(other);
+            rating.addConflict(other, team);
             if (team.isFixiert()) {
                 team.setStatus(TeamStatus.FIXIERT_OVERRULED);
             } else {
-                if (Options.sortWhitelist) {
-                    OWunsch wunsch = team.getWunsch(other);
-                    if (wunsch != null) {
-                        if ((wunsch.getWunschArt() == WunschArt.WHITELIST_MUST)  // overrule!
-                                && wunsch.getOtherTeam().getPosition() == team.getPosition()) {
-                            team.setOther(other);
-                            team.setStatus(TeamStatus.WUNSCH_OVERRULED);
-                            other.setStatus(TeamStatus.WUNSCH_OVERRULED);
-                            return true;
-                        }
-                    }
-                }
-                if (other.isFixiert()) {
-                    return false;
-                } else {
-                    team.setOther(other);
-                    rating.addConflict(other, team);
-                    team.setStatus(TeamStatus.WECHSEL_MUSS);
-                    other.setStatus(TeamStatus.WECHSEL_MUSS);
-                }
+                team.setStatus(TeamStatus.WECHSEL_MUSS);
             }
+            if(!other.isFixiert()) {
+                other.setStatus(TeamStatus.WECHSEL_MUSS);
+            }
+//                }
+//            }
         } else {
             team.setOther(other);
             if (team.getGroup().equals(other.getGroup())) {

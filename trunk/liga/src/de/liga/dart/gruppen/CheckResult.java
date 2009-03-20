@@ -53,14 +53,14 @@ public final class CheckResult {
 
     public CheckResult() {
         start();
-        outcome = Outcome.KEINE_KONFLIKTE;
+        setOutcome(Outcome.KEINE_KONFLIKTE);
     }
 
-    public void setOutcome(Outcome outcome) {
+    public final void setOutcome(Outcome outcome) {
         this.outcome = outcome;
     }
 
-    public Outcome getOutcome() {
+    public final Outcome getOutcome() {
         return outcome;
     }
 
@@ -100,7 +100,7 @@ public final class CheckResult {
         if (stop == 0) stop();
         int count = 0;
 
-        printer.println("Ergebnis: " + outcome.getInfo());
+        printer.println("Ergebnis: " + getOutcome().getInfo());
         count++;
 
         if (!conflicts.isEmpty()) {
@@ -156,17 +156,17 @@ public final class CheckResult {
         if (optimizer.getCalculationCount() ==
                 0) { // nur initialbewertung vorhanden
             if (optimizer.getInitial().isPerfect()) {
-                outcome = Outcome.KEINE_KONFLIKTE;
+                setOutcome(Outcome.KEINE_KONFLIKTE);
             } else {
-                outcome = Outcome.KONFLIKTE_GEFUNDEN;
+                setOutcome(Outcome.KONFLIKTE_GEFUNDEN);
             }
         } else { // sortierung wurde durchgeführt
             if (optimizer.getInitial().isPerfect()) {
-                outcome = Outcome.KEINE_KONFLIKTE;
+                setOutcome(Outcome.KEINE_KONFLIKTE);
             } else if (optimizer.getOptimal().isPerfect()) {
-                outcome = Outcome.KONFLIKTE_KORRIGIERT;
+                setOutcome(Outcome.KONFLIKTE_KORRIGIERT);
             } else {
-                outcome = Outcome.KONFLIKTE_NICHT_LOESBAR;
+                setOutcome(Outcome.KONFLIKTE_NICHT_LOESBAR);
             }
         }
         // Konflikte anzeigen
@@ -176,7 +176,7 @@ public final class CheckResult {
             SpielortService aservice =
                     ServiceFactory.get(SpielortService.class);
             for (OConflict conflict : optimizer.getOptimal().getRating()
-                    .getConflicts()) {
+                    .getConflictList()) {
                 StringBuilder buf = new StringBuilder();
                 if (conflict.isFree()) {
                     buf.append("Spielfrei an ").append(conflict.getPosition1().getPosition())
@@ -205,7 +205,7 @@ public final class CheckResult {
                     buf.append(conflict.getPosition1().getPosition());
                     buf.append(") ");
                     if (conflict.isWunsch()) buf.append(TeamWunsch.name(conflict.getWunschArt()));
-                    else if (conflict.isOptional()) buf.append("OPTIONAL ");
+                    else if (conflict.getPrio() != OConflict.Prio.P1) buf.append("OPTIONAL ");
                     buf.append("mit ");
                     team = teamService
                             .findLigateamById(conflict.getTeam2().getTeamId());

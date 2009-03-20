@@ -34,8 +34,7 @@ public class ModelConverter {
             List<Ligateamspiel> spiele = service.findSpieleInGruppe(lgrup);
             for (Ligateamspiel spiel : spiele) {
                 if (spiel.isSpielfrei()) {
-                    OFree free = new OFree(grup);
-                    free.setFixiert(spiel.isFixiert());
+                    OFree free = new OFree(grup, spiel.isFixiert());
                     free.setPosition(spiel.getPlatzNr());
                     grup.getPositions().add(free);
                 } else {
@@ -44,8 +43,7 @@ public class ModelConverter {
                             findOrCreatePub(setting,
                                     lteam.getSpielort());
                     OTeam team = new OTeam(grup, pub, lteam.getLigateamId(),
-                            lteam.getWochentag());
-                    team.setFixiert(spiel.isFixiert());
+                            lteam.getWochentag(), spiel.isFixiert());
                     team.setPosition(spiel.getPlatzNr());
                     team.setTime(lteam.getSpielzeit());
                     grup.getPositions().add(team);
@@ -61,7 +59,7 @@ public class ModelConverter {
                     8) { // leere Plaetze mit Spielfrei fuellen
                 for (int i = 1; i <= 8; i++) {
                     if (grup.getPosition(i) == null) {
-                        OFree free = new OFree(grup);
+                        OFree free = new OFree(grup, false);
                         free.setPosition(i);
                         grup.getPositions().add(free);
                     }

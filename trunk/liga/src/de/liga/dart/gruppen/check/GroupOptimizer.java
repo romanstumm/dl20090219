@@ -3,12 +3,10 @@ package de.liga.dart.gruppen.check;
 import de.liga.dart.gruppen.check.model.*;
 import de.liga.dart.ligateam.model.WunschArt;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
- * Description:  PrÃ¼fen und Neusortieren <br/>
+ * Description:  Prüfen und Neusortieren <br/>
  * User: roman
  * Date: 18.11.2007, 11:07:31
  */
@@ -18,7 +16,7 @@ public final class GroupOptimizer extends GroupCalculator {
 
     private ProgressIndicator progressIndicator;
     /**
-     * aktuelle Anzahl durchgefï¿½hrter Berechnungen
+     * aktuelle Anzahl durchgef?hrter Berechnungen
      */
     private long calculationCount;
     /**
@@ -70,8 +68,8 @@ public final class GroupOptimizer extends GroupCalculator {
         return calculationCount;
     }
 
-    public void optimize(OConflict parentConflict) throws OptimizerNotification {
-        if (isStopSignaled()) return;
+    public boolean optimize(OConflict parentConflict) throws OptimizerNotification {
+        if (isStopSignaled()) return true;
         try {
             calculationDepth++;
             calculationCount++;
@@ -81,56 +79,74 @@ public final class GroupOptimizer extends GroupCalculator {
                 log.info(calculationDepth + "> Calculating (" + calculationCount + ") ...");
             }
             // neue bewertung durchfuehren
-            if (parentConflict != null) {
-                calculate();
-                if (current.isBetterThan(optimal)) {
-                    optimal = current.deepCopy();
-                    showProgress("Noch " + optimal.getRating().getConflictCount() + " Konflikte" + (
-                            (optimal.getRating().getOptionalCount() == 0) ? "..." :
-                                    " und " + optimal.getRating().getOptionalCount() +
-                                            " WÃ¼nsche..."));
-                    if (log.isInfoEnabled()) log.info("At " + calculationDepth + ", " +
-                            calculationCount + " found setting: " + optimal);
-                    if (Options.optimizedRecusionExit) {
-                        throw new OptimizerNotification(); // use exception to exit from recursion-stack
-                    }
-                }
-            }
-
+            decideBetterSetting(parentConflict);
             if (current.isPerfect()) {
                 setStopSignaled(true);
-                return; // alles klar, nichts zu optimieren
+                return true; // alles klar, nichts zu optimieren
             }
             // wenn conflict nicht geloest, zurueck nach oben
-            if (parentConflict != null && current.getRating().getConflicts()
-                    .contains(parentConflict)) {
-                if (log.isInfoEnabled()) log.info("At " + calculationDepth + ", " +
-                        calculationCount + " not resolved: " + parentConflict + " within " +
-                        current.getRating().getConflicts());
-                return; // hat fuer dieses Problem nichts gebracht
+            if (parentConflict != null && current.getRating().hasConflict(parentConflict)) {
+                if (log.isDebugEnabled()) log.debug("At " + calculationDepth + "> (" +
+                        calculationCount + ") not resolved: " + parentConflict + " within " +
+                        current.getRating().getConflictList());
+                return false; // hat fuer dieses Problem nichts gebracht, nächstes Problem versuchen
             }
 
-            // nur den ersten konflikt lÃ¶sen...
-            // zuerst "harte" Konflikte, zweitrangig Optionale WÃ¼nsche zu erfÃ¼llen versuchen
-            OConflict conflict = null, optional = null;
-            for (OConflict each : current.getRating().getConflicts()) {
-                if (each.isOptional() && optional == null) {
-                    optional = each; // merke 1. optionalen Wunsch
-                } else if (!each.isOptional()) {
-                    conflict = each; // Abbruch bei 1. harten Konflikt
-                    break;
-                }
-            }
             if (!mayRecurseDeeper()) {
-                return;
+                return true;
             }
-            if (conflict != null) {
-                changeAndOptimize(conflict);
-            } else if (optional != null) {
-                changeAndOptimize(optional);
-            }
+            // nur den ersten konflikt lösen...
+            // zuerst die wichtigeren Konflikte, dann die nächst wichtigen (nach Prio)
+            List<OConflict> candidates = current.getRating().getConflictListCopy();
+            boolean triedToOptimize;
+            do {
+                OConflict next = null;
+                for (OConflict each : candidates) {
+                    if (next == null) {
+                        next = each;
+                    } else if (each.getPrio().value() < next.getPrio().value()) {
+                        next = each;
+                    }
+                    if (next.getPrio() == OConflict.Prio.P1) { // Abbruch bei 1. harten Konflikt
+                        break;
+                    }
+                }
+                if (next != null) {
+                    triedToOptimize = changeAndOptimize(next);
+                    if (!triedToOptimize) {
+                        // der geht nicht, nicht mehr probieren, anderen auswaehlen
+                        candidates.remove(next);
+                    }
+                } else {
+                    triedToOptimize = true;
+                }
+            } while (!triedToOptimize);
+            return true;
         } finally {
             calculationDepth--;
+        }
+    }
+
+    /**
+     * neue bewertung durchfuehren, besseres Setting behalten
+     * @param parentConflict
+     * @throws OptimizerNotification
+     */
+    private void decideBetterSetting(OConflict parentConflict) throws OptimizerNotification {
+        if (parentConflict != null) {
+            calculate();
+            if (current.isBetterThan(optimal)) {
+                optimal = current.deepCopy();
+                showProgress("Noch " + optimal.getRating().getConflictCount() + " Konflikte" + (
+                        (optimal.getRating().getOptionalCount() == 0) ? "..." :
+                                " und " + optimal.getRating().getOptionalCount() +
+                                        " Wünsche..."));
+                if (log.isInfoEnabled()) log.info("At " + calculationDepth + "> (" +
+                        calculationCount + ") found setting: " + optimal);
+                if (Options.optimizedRecusionExit) {
+                    throw new OptimizerNotification(); // use exception to exit from recursion-stack
+                }
+            }
         }
     }
 
@@ -141,10 +157,11 @@ public final class GroupOptimizer extends GroupCalculator {
         return !(Options.maxRecursionDepth > 0 && calculationDepth >= Options.maxRecursionDepth);
     }
 
-    protected void changeAndOptimize(OConflict conflict) throws OptimizerNotification {
-        if (conflict.getPosition1().isChanged()) return; // bereits getauscht
-        if (conflict.getPosition2().isChanged()) return; // bereits getauscht
-
+    private boolean changeAndOptimize(OConflict conflict) throws OptimizerNotification {
+        if (conflict.getPosition1().isChangedOrFixiert() && 
+            conflict.getPosition2().isChangedOrFixiert()) {
+            return false; // beide bereits getauscht - nicht nochmal versuchen
+        }
         final List<OChangeSuggestion> suggestions;
         if (conflict.isWunsch()) { // tausche um Wunsch zu erfuellen
             suggestions = computeWunschSuggestions(conflict);
@@ -155,7 +172,7 @@ public final class GroupOptimizer extends GroupCalculator {
                 suggestions = computeTeamWechselSuggestions(conflict);
             }
         }
-        executeSuggestions(suggestions, conflict);
+        return executeSuggestions(suggestions, conflict);
     }
 
     private List<OChangeSuggestion> computeTeamWechselSuggestions(OConflict conflict) {
@@ -235,22 +252,26 @@ public final class GroupOptimizer extends GroupCalculator {
         return suggestions;
     }
 
-    private void executeSuggestions(List<OChangeSuggestion> suggestions, OConflict conflict)
+    private boolean executeSuggestions(List<OChangeSuggestion> suggestions, OConflict conflict)
             throws OptimizerNotification {
         Collections.sort(suggestions);
 
+        boolean triedToOptimize = false;
         for (OChangeSuggestion suggestion : suggestions) {
             if (!suggestion.isIgnore()) {
                 OChangeOption c1 = suggestion.getOption1();
                 OChangeOption c2 = suggestion.getOption2();
-                c1.execute(conflict.getPosition1());
-                c2.execute(conflict.getPosition2());
-                optimize(conflict);
-                if (isStopSignaled()) return;
-                c1.undo(conflict.getPosition1());
-                c2.undo(conflict.getPosition2());
+                boolean t1 = c1.execute(conflict.getPosition1());
+                boolean t2 = c2.execute(conflict.getPosition2());
+                if(t1 || t2) {
+                    triedToOptimize = optimize(conflict);
+                }
+                if (isStopSignaled()) return true;
+                if(t1) c1.undo(conflict.getPosition1());
+                if(t2) c2.undo(conflict.getPosition2());
             }
         }
+        return triedToOptimize;
     }
 
     private void showProgress(String message) {

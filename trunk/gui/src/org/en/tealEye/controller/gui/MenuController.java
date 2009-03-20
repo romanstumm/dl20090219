@@ -16,11 +16,14 @@ import org.en.tealEye.guiPanels.applicationLogicPanels.AboutFrame;
 import org.en.tealEye.printing.controller.PrintingController;
 
 import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Description: <br/>
@@ -28,16 +31,28 @@ import java.awt.event.MouseListener;
  * Date: 14.11.2007
  * Time: 03:15:34
  */
-public class MenuController
-        implements ActionListener, MouseListener, GuiController {
+public class MenuController implements ActionListener, MouseListener, GuiController {
 
     private final MainAppFrame mainAppFrame;
-    private ActiveFrameMenu afm;
     private final Hypervisor h;
+    private final Map<String, String> actionPanelMap = new HashMap(8);
+    private ActiveFrameMenu afm;
 
     public MenuController(MainAppFrame mainAppFrame, Hypervisor h) {
         this.mainAppFrame = mainAppFrame;
         this.h = h;
+        initActionPanelMap();
+    }
+
+    private void initActionPanelMap() {
+        actionPanelMap.put("Gruppe anlegen", "CreateGroup");
+        actionPanelMap.put("Team anlegen", "CreateTeam");
+        actionPanelMap.put("Spielort anlegen", "CreateLocation");
+        actionPanelMap.put("Aufsteller anlegen", "CreateVendor");
+        actionPanelMap.put("Gruppen anzeigen", "ShowGroups");
+        actionPanelMap.put("Teams anzeigen", "ShowTeams");
+        actionPanelMap.put("Spielorte anzeigen", "ShowLocations");
+        actionPanelMap.put("Aufsteller anzeigen", "ShowVendors");
     }
 
     public String getFrameTitle(String frameName) {
@@ -87,7 +102,8 @@ public class MenuController
                 LigateamService service = ServiceFactory.get(LigateamService.class);
                 service.deleteAllLigateamWunsch(chooser.getSelectedLiga());
                 if (chooser.getSelectedLiga() != null) {
-                    mainAppFrame.setMessage("Sonderwünsche von Liga " + chooser.getSelectedLiga().getLigaName() + " gelöscht");
+                    mainAppFrame.setMessage("Sonderwünsche von Liga " +
+                            chooser.getSelectedLiga().getLigaName() + " gelöscht");
                 } else {
                     mainAppFrame.setMessage("Sonderwünsche aller Ligen gelöscht");
                 }
@@ -112,76 +128,37 @@ public class MenuController
                 }
             }
 
-        } else if (action.equals("Gruppe anlegen")){
-            h.showPanel("CreateGroup");
-            mainAppFrame.getActiveFrame();
-            afm.activateFrameButton(mainAppFrame.getActiveFrame().getName());
-            afm.setInactiveColor();
-        }else if (action.equals("Team anlegen")){
-             h.showPanel("CreateTeam");
-            mainAppFrame.getActiveFrame();
-            afm.activateFrameButton(mainAppFrame.getActiveFrame().getName());
-            afm.setInactiveColor();
-        }else if (action.equals("Spielort anlegen")){
-             h.showPanel("CreateLocation");
-            mainAppFrame.getActiveFrame();
-            afm.activateFrameButton(mainAppFrame.getActiveFrame().getName());
-            afm.setInactiveColor();
-        }else if (action.equals("Aufsteller anlegen")){
-             h.showPanel("CreateVendor");
-            mainAppFrame.getActiveFrame();
-            afm.activateFrameButton(mainAppFrame.getActiveFrame().getName());
-            afm.setInactiveColor();
-        }else if (action.equals("Gruppen anzeigen")){
-             h.showPanel("ShowGroups");
-            mainAppFrame.getActiveFrame();
-            afm.activateFrameButton(mainAppFrame.getActiveFrame().getName());
-            afm.setInactiveColor();
-        }else if (action.equals("Teams anzeigen")){
-             h.showPanel("ShowTeams");
-            mainAppFrame.getActiveFrame();
-            afm.activateFrameButton(mainAppFrame.getActiveFrame().getName());
-            afm.setInactiveColor();
-        }else if (action.equals("Spielort anzeigen")){
-             h.showPanel("ShowLoctions");
-            mainAppFrame.getActiveFrame();
-            afm.activateFrameButton(mainAppFrame.getActiveFrame().getName());
-            afm.setInactiveColor();
-        }else if (action.equals("Aufsteller anzeigen")){
-             h.showPanel("ShowVendors");
-            mainAppFrame.getActiveFrame();
-            afm.activateFrameButton(mainAppFrame.getActiveFrame().getName());
-            afm.setInactiveColor();
+        } else if (actionPanelMap.containsKey(action)) {
+            h.showPanel(actionPanelMap.get(action));
+            if (afm != null) {
+                afm.activateFrameButton(mainAppFrame.getActiveFrame());
+                afm.setInactiveColor();
+            }
         }
         /* else if (obj instanceof JButton &&
-                mainAppFrame.getFrameMap().containsKey(action)) {
-            mainAppFrame.insertInternalFrame(action, true);
-        } */
+               mainAppFrame.getFrameMap().containsKey(action)) {
+           mainAppFrame.insertInternalFrame(action, true);
+       } */
     }
 
     public void mouseClicked(MouseEvent e) {
         Object obj = e.getSource();
         if (obj instanceof JTree) {
             JTree tree = (JTree) e.getSource();
-            if (tree.getSelectionPath() == null) return; // fixed NPE
-            String path = tree.getSelectionPath().toString();
-            String name = null;
-            if (path.contains("Aufsteller anlegen")) name = "CreateVendor";
-            if (path.contains("Team anlegen")) name = "CreateTeam";
-            if (path.contains("Gruppe anlegen")) name = "CreateGroup";
-            if (path.contains("Spielort anlegen")) name = "CreateLocation";
-            if (path.contains("Aufsteller anzeigen")) name = "ShowVendors";
-            if (path.contains("Teams anzeigen")) name = "ShowTeams";
-            if (path.contains("Gruppen anzeigen")) name = "ShowGroups";
-            if (path.contains("Spielorte anzeigen")) name = "ShowLocations";
+            if (tree.getLastSelectedPathComponent() == null) return; // fixed NPE
+            String action = (String)
+                    ((DefaultMutableTreeNode) tree.getLastSelectedPathComponent()).getUserObject();
+            String name = actionPanelMap.get(action);
             if (name != null) h.showPanel(name);
         }
         if (obj instanceof JLabel) {
             //mainAppFrame.insertInternalFrame(((JLabel)obj).getName(), true);
             h.showPanel(((JLabel) obj).getName());
             mainAppFrame.getActiveFrame();
-            afm.activateFrameButton(mainAppFrame.getActiveFrame().getName());
-            afm.setInactiveColor();
+            if (afm != null) {
+                afm.activateFrameButton(mainAppFrame.getActiveFrame());
+                afm.setInactiveColor();
+            }
         }
     }
 
@@ -193,7 +170,7 @@ public class MenuController
             label.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
 
-        }        // do nothing
+        }   
     }
 
     public void mouseReleased(MouseEvent e) {
@@ -202,7 +179,7 @@ public class MenuController
             JLabel label = (JLabel) obj;
             label.setForeground(Color.BLUE);
             label.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        }        // do nothing
+        }
     }
 
     public void mouseEntered(MouseEvent e) {
@@ -220,7 +197,7 @@ public class MenuController
             JLabel label = (JLabel) obj;
             label.setForeground(Color.BLACK);
             label.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-            afm.setInactiveColor();
+            if (afm != null) afm.setInactiveColor();
         }
     }
 

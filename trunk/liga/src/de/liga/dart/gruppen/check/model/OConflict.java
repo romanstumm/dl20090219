@@ -10,31 +10,55 @@ import java.util.Arrays;
  * User: roman
  * Date: 19.12.2007, 21:01:39
  */
-public class OConflict implements Serializable {
+public class OConflict implements Serializable, Comparable {
+    public static enum Prio {
+        /**
+         * ganz wichtig
+         */
+        P1,
+        /**
+         * noch ziemlich wichtig
+         */
+        P2,
+        /**
+         * nicht ganz unwichtig
+         */
+        P3;
+
+        public int value() {
+            return ordinal();
+        }
+    }
+
     private final OPosition[] positions;
     private final OWunsch wunsch;
-    private final boolean optional;
+    private final Prio prio;
 
     public OConflict(OWunsch derUnerfuellteWunsch, OTeam team2) {
         positions = new OTeam[]{derUnerfuellteWunsch.getOtherTeam(), team2};
         wunsch = derUnerfuellteWunsch;
-        optional = (wunsch.getWunschArt() == WunschArt.BLACKLIST_SHALL ||
-                wunsch.getWunschArt() == WunschArt.WHITELIST_SHALL);
+        if (wunsch.getWunschArt() == WunschArt.BLACKLIST_SHALL ||
+                wunsch.getWunschArt() == WunschArt.WHITELIST_SHALL) {
+            prio = Prio.P2;
+        } else {
+            prio = Prio.P1;
+        }
     }
 
     public OConflict(OTeam team1, OTeam team2) {
-        this(team1, team2, false);
+        this(team1, team2, Prio.P1);
     }
 
     /**
      * entweder *beide* vom Typ Team oder *beide* vom Typ Free!!
+     *
      * @param team1
      * @param team2
      * @param optional
      */
-    public OConflict(OPosition team1, OPosition team2, boolean optional) {
+    public OConflict(OPosition team1, OPosition team2, Prio prio) {
         positions = new OPosition[]{team1, team2};
-        this.optional = optional;
+        this.prio = prio;
         wunsch = null;
     }
 
@@ -62,8 +86,12 @@ public class OConflict implements Serializable {
         return positions;
     }
 
-    public boolean isOptional() {
-        return optional;
+    public Prio getPrio() {
+        return prio;
+    }
+
+    private boolean isOptional() {
+        return prio != Prio.P1;
     }
 
     public boolean isWunsch() {
@@ -75,7 +103,30 @@ public class OConflict implements Serializable {
     }
 
     public String toString() {
-        return (isOptional() ? "~" : "!") + ": " + positions[0] + "+" + positions[1];
+        return (isOptional() ? "[~" : "[!") + ":" + positions[0] + "+" + positions[1] + "]";
+    }
+
+    /**
+     * Für nach Priorität aufsteigende Sortierung.
+     * Bei gleicher Prio, wird nach GroupId,
+     * bei gleicher Group nach Position sortiert
+     * @param o
+     * @return
+     */
+    public int compareTo(Object o) {
+        OConflict other = (OConflict) o;
+        int result;
+        result = getPrio().value() - other.getPrio().value();
+        if (result == 0) {
+            long diff = (getPosition1().getGroup().getGroupId() -
+                    other.getPosition1().getGroup().getGroupId());
+            if (diff < 0) result = -1;
+            else if (diff > 0) result = 1;
+            if (result == 0) {
+                result = getPosition1().getPosition() - other.getPosition1().getPosition();
+            }
+        }
+        return result;
     }
 
     public boolean equals(Object o) {
@@ -84,7 +135,7 @@ public class OConflict implements Serializable {
 
         OConflict oConflict = (OConflict) o;
 
-        if (optional != oConflict.optional) return false;
+        if (prio != oConflict.getPrio()) return false;
         if (!Arrays.equals(positions, oConflict.positions)) return false;
         return !(wunsch != null ? !wunsch.equals(oConflict.wunsch) : oConflict.wunsch != null);
     }
@@ -93,7 +144,8 @@ public class OConflict implements Serializable {
         int result;
         result = Arrays.hashCode(positions);
         result = 31 * result + (wunsch != null ? wunsch.hashCode() : 0);
-        result = 31 * result + (optional ? 1 : 0);
+        result = 31 * result + prio.hashCode();
         return result;
     }
+
 }

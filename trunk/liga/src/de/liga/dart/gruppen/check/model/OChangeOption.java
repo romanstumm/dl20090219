@@ -46,9 +46,12 @@ public class OChangeOption implements Serializable {
     }
 
     /** den tausch durchfuehren */
-    public void execute(OPosition team) {
-        if (team.moveTo(toPosition)) {
-            team.setChanged(true);
+    public boolean execute(OPosition pos) {
+        if (pos.moveTo(toPosition)) {
+            pos.setChanged(true);
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -56,8 +59,8 @@ public class OChangeOption implements Serializable {
      * den tausch rueckgaengig machen, d.h.
      * auf die vorige Position setzen
      */
-    public void undo(OPosition team) {
-        team.moveTo(fromPosition);
-        team.setChanged(false);
+    public void undo(OPosition pos) {
+        pos.moveTo(fromPosition);
+        pos.setChanged(false);
     }
 }

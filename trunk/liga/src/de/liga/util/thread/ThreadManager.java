@@ -47,6 +47,7 @@ public class ThreadManager {
      *      {@inheritDoc}
      */
     public void addThread(Thread t) {
+        if(t == null) return;
         if (!this.threads.contains(t)) {
             log.info("Adding thread " + t.getName() + " to list");
             this.threads.add(t);
