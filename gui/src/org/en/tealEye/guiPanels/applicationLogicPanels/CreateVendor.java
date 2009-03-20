@@ -444,4 +444,10 @@ public class CreateVendor extends ExtJEditPanel implements LigaSelectable, Actio
     public Class getModelClass() {
         return Automatenaufsteller.class;
     }
+
+    @Override
+    public void clearTextAreas() {
+        super.clearTextAreas();    // call super!
+        getAufstellerName().requestFocus();
+    }
 }
