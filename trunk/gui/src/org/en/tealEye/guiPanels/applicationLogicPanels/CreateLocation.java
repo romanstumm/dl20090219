@@ -11,9 +11,12 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.util.Calendar;
 
 
-/** @author Stephan */
+/**
+ * @author Stephan
+ */
 public class CreateLocation extends ExtJEditPanel implements LigaSelectable, ActionListener {
     private JButton locationNew;
     private JComboBox locationLiga;
@@ -530,7 +533,7 @@ public class CreateLocation extends ExtJEditPanel implements LigaSelectable, Act
         } else {
             StringBuilder buf = new StringBuilder();
             buf.append("Stammkneipe von ").append(ort.getLigateams().size())
-                  .append(" Teams.\n");
+                    .append(" Teams.\n");
             int i = 1;
             for (Ligateam team : ort.getLigateams()) {
                 buf.append(team.getTeamName());
@@ -538,7 +541,7 @@ public class CreateLocation extends ExtJEditPanel implements LigaSelectable, Act
                 buf.append(team.getLiga().getLigaName());
                 buf.append(" ");
                 buf.append(team.getGruppeKlasse());
-                if(team.getLigateamspiel() != null) {
+                if (team.getLigateamspiel() != null) {
                     buf.append(" Platz: ").append(team.getLigateamspiel().getPlatzNr());
                 }
                 buf.append(")");
@@ -553,10 +556,24 @@ public class CreateLocation extends ExtJEditPanel implements LigaSelectable, Act
         }
     }
 
-
     @Override
     public void clearTextAreas() {
         super.clearTextAreas();   // call super!
         getLabelTeamsAnzahl().setText("");
+        Spielort ort = (Spielort) getModelEntity();
+        if (ort != null) {
+            getAutomatenAnzahl().setText(String.valueOf(ort.getAutomatenAnzahl()));
+            getFreierTagName().setSelectedItem(ort.getFreierTagName());
+        }
+        getSpielortName().requestFocus();
+    }
+
+    @Override
+    public void newModelEntity() {
+        super.newModelEntity();    // call super!
+        // set defaults
+        Spielort ort = (Spielort) getModelEntity();
+        ort.setAutomatenAnzahl(1);
+        ort.setFreierTag(Calendar.MONDAY);
     }
 }
