@@ -19,12 +19,6 @@ import java.util.Map;
 public class Hypervisor implements HypervisorAPI {
     private static final Log log = LogFactory.getLog(Hypervisor.class);
 
-    public static final int CREATE_GROUP_CONTROLLER = 0;
-    public static final int SHOW_GROUPS_CONTROLLER = 4;
-    public static final int LOCATION_CONTROLLER = 1;
-    public static final int TEAM_CONTROLLER = 2;
-    public static final int VENDOR_CONTROLLER = 3;
-
     private final Map<String, ExtendedJPanelImpl> panelMapping =
             new HashMap<String, ExtendedJPanelImpl>();
 
@@ -71,34 +65,12 @@ public class Hypervisor implements HypervisorAPI {
         panelMapping.remove(name);
     }
 
-    public void postPropertyChange(ExtendedJPanelImpl p) {
-        switch (getController(p.getName())) {
-
-        }
-
-    }
-
     public void registerBareWorkerThread(TransactionWorker ta) {
         ts.registerBareWorkerThread(ta);
     }
 
     public void startBareWorkerThread(String name) {
         ts.startBareWorkerThread(name);
-    }
-
-    public int getController(String name) {
-        if (name.equals("CreateGroup")) {
-            return CREATE_GROUP_CONTROLLER;
-        } else if (name.equals("ShowGroups")) {
-            return SHOW_GROUPS_CONTROLLER;
-        } else if (name.equals("CreateLocation") || name.equals("ShowLocations")) {
-            return LOCATION_CONTROLLER;
-        } else if (name.equals("CreateTeam") || name.equals("ShowTeams")) {
-            return TEAM_CONTROLLER;
-        } else if (name.equals("CreateVendor") || name.equals("ShowVendors")) {
-            return VENDOR_CONTROLLER;
-        }
-        return 0;
     }
 
     public void registerNewPanel(ExtendedJPanelImpl threadedClass) {

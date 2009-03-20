@@ -18,8 +18,8 @@ public class OFree extends OPosition implements Serializable {
      * hier nur moeglich: {@link TeamStatus#SPIELFREI_WECHSEL_SOLL} oder {@link TeamStatus#FREI}
      */
 
-    public OFree(OGroup group) {
-        super(group);
+    public OFree(OGroup group, boolean fixiert) {
+        super(group, fixiert);
     }
 
     public boolean isFree() {
@@ -27,7 +27,7 @@ public class OFree extends OPosition implements Serializable {
     }
 
     public String toString() {
-        return super.toString() + "=[/]";
+        return super.toString() + "G" + getGroup().getGroupId() + "=[/]";
     }
 
     public OFree getOther() {
@@ -44,5 +44,17 @@ public class OFree extends OPosition implements Serializable {
             if (getPosition() == wechsel[1]) return wechsel[0];
         }
         throw new IllegalStateException(); // keine gueltige Position, sollte nie bis hierhin kommen!
+    }
+
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OPosition oPosition = (OPosition) o;
+        if (position != oPosition.position) return false;
+        return group.equals(oPosition.group);
+    }
+
+    public int hashCode() {
+        return (group != null ? group.hashCode() : 0);
     }
 }

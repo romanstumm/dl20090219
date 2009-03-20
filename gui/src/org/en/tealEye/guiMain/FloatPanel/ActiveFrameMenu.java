@@ -54,28 +54,28 @@ public class ActiveFrameMenu extends TitleBarPanel {
 
     public void addFrameButton(String frameName) {
         Vector<String> v = new Vector<String>();
-        if(buttonVector != null){
+        if (buttonVector != null) {
 
-        for(JLabel label : buttonVector){
-            v.addElement(label.getText());
+            for (JLabel label : buttonVector) {
+                v.addElement(label.getText());
+            }
         }
-        }
-        if(!v.contains(frameName)){
-        String title = menuController.getFrameTitle(frameName);
-        JLabel button = new JLabel();
-        buttonMap.put(frameName, button);
-        buttonVector.add(button);
-        button.addMouseListener(menuController);
-        button.setName(frameName);
-        String subTitle;
-        if (title.contains("/")) {
-            subTitle = title.substring(0, title.lastIndexOf("/"));
-            button.setText(subTitle);
-        } else button.setText(title);
-        button.setPreferredSize(new Dimension(200, 20));
-        button.setMinimumSize(new Dimension(200, 20));
-        button.setMaximumSize(new Dimension(200, 20));
-        makeButton();
+        if (!v.contains(frameName)) {
+            String title = menuController.getFrameTitle(frameName);
+            JLabel button = new JLabel();
+            buttonMap.put(frameName, button);
+            buttonVector.add(button);
+            button.addMouseListener(menuController);
+            button.setName(frameName);
+            String subTitle;
+            if (title.contains("/")) {
+                subTitle = title.substring(0, title.lastIndexOf("/"));
+                button.setText(subTitle);
+            } else button.setText(title);
+            button.setPreferredSize(new Dimension(200, 20));
+            button.setMinimumSize(new Dimension(200, 20));
+            button.setMaximumSize(new Dimension(200, 20));
+            makeButton();
         }
 
     }
@@ -114,12 +114,21 @@ public class ActiveFrameMenu extends TitleBarPanel {
         buttonPanel.revalidate();
     }
 
-    public void activateFrameButton(String activeFrameName) {
+    public void activateFrameButton(JInternalFrame activeFrame) {
+        if (activeFrame != null) {
+            activateFrameButton(activeFrame.getName());
+        }
+    }
+
+    private void activateFrameButton(String activeFrameName) {
 //        String s = buttonMap.get(activeFrameName).getText();
         //String sub = s.replaceFirst("<<<<","");
         //buttonMap.get(activeFrameName).setText(s + " <<<<");
-        buttonMap.get(activeFrameName).setForeground(Color.BLUE);
-        activeButtonName = activeFrameName;
+        JLabel button = buttonMap.get(activeFrameName);
+        if (button != null) {
+            button.setForeground(Color.BLUE);
+            activeButtonName = activeFrameName;
+        }
         //buttonVector.elementAt(buttonMap.get(activeFrameName)).setText(s + " <<<<");        
     }
 
@@ -146,4 +155,5 @@ public class ActiveFrameMenu extends TitleBarPanel {
             }
         }
     }
+
 }

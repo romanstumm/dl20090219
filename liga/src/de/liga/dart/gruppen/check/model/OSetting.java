@@ -60,11 +60,16 @@ public class OSetting implements Serializable {
     }
 
     public boolean isBetterThan(OSetting other) {
-        boolean better = rating.getConflictCount() <
-                other.getRating().getConflictCount();
+        final boolean better;
         if (rating.getConflictCount() == other.getRating().getConflictCount()) {
-            better = rating.getOptionalCount() <
-                    other.getRating().getOptionalCount();
+            if (rating.getTeamOptionalCount() == other.getRating().getTeamOptionalCount()) {
+                // Prio 3
+                better = rating.getFreeOptionalCount() < other.getRating().getFreeOptionalCount();
+            } else { // Prio 2
+                better = rating.getTeamOptionalCount() < other.getRating().getTeamOptionalCount();
+            }
+        } else { // Prio 1
+            better = rating.getConflictCount() < other.getRating().getConflictCount();
         }
         return better;
     }
@@ -131,10 +136,10 @@ public class OSetting implements Serializable {
     }
 
     public void resetChangedState() {
-      for(OGroup group : getGroups()) {
-          for(OPosition position : group.getPositions()) {
-              position.setChanged(false);
-          }
-      }
+        for (OGroup group : getGroups()) {
+            for (OPosition position : group.getPositions()) {
+                position.setChanged(false);
+            }
+        }
     }
 }

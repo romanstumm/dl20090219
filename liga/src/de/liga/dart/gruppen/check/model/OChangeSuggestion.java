@@ -28,6 +28,13 @@ public class OChangeSuggestion implements Serializable, Comparable {
     }
 
     private boolean canIgnore(final OChangeOption option, final OPosition pos) {
+        /**
+         * Hinweis: isChanged darf hier nicht beruecksichtigt werden, da dies
+         * durch den Optimizer abgefragt wird und sich auch noch ändern kann,
+         * nachdem die ChangeSuggestion berechnet wurde. Daher zunaechst alle
+         * Suggestions berechnen, auch wenn die hier vorgeschlagenen Positionen
+         * ggf. bereits einmal geändert wurden. 
+         */
         if (pos.isFixiert() || option.getFromPosition() == option.getToPosition()) return true;
 
         // ignorieren, wenn Team an Zielposition der Wechselpartner in der Besetzung ist...
@@ -74,7 +81,7 @@ public class OChangeSuggestion implements Serializable, Comparable {
         if (!ignore2) {
             prio += 10;
         }
-        return prio;
+        return prio == 0 ? 1000 : prio;
     }
 
     public int compareTo(Object o) {

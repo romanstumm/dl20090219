@@ -25,8 +25,8 @@ public class OTeam extends OPosition implements Serializable {
     private Set<OWunsch> unerfuellteWuensche = new HashSet(1);
 
     public OTeam(OGroup group, OPub pub, long ligateamId,
-                 int wochentag) {
-        super(group);
+                 int wochentag, boolean fixiert) {
+        super(group, fixiert);
         this.teamId = ligateamId;
         this.day = wochentag;
         this.pub = pub;

@@ -508,7 +508,7 @@ public class TablePrintingFrame extends JFrame implements ActionListener, KeyLis
                     if (printPageNb.isSelected()) tablePrintService.setPrintPageNum(true);
                     else tablePrintService.setPrintPageNum(false);
                 } else if (ac.equals("orientation")) {
-                    System.out.printf("boom!!!");
+//                    System.out.printf("boom!!!");
                     rotateAndUpdate();
                 }
             }
