@@ -50,6 +50,7 @@ public final class CheckResult {
     private List<String> conflicts = new ArrayList();
     private long start, stop;
     private boolean stoppedByUserInteraction;
+    private String fatalError;
 
     public CheckResult() {
         start();
@@ -58,6 +59,15 @@ public final class CheckResult {
 
     public final void setOutcome(Outcome outcome) {
         this.outcome = outcome;
+    }
+
+    public void setFatalError(String fatalError) {
+        this.fatalError = fatalError;
+        setOutcome(Outcome.KONFLIKTE_NICHT_LOESBAR);
+    }
+
+    public String getFatalError() {
+        return fatalError;
     }
 
     public final Outcome getOutcome() {
@@ -97,8 +107,15 @@ public final class CheckResult {
     }
 
     public void print(PrintStream printer, int limit) {
-        if (stop == 0) stop();
+        if (fatalError != null) {
+            printer.println("Ein Programmfehler ist aufgetreten!");
+            printer.println("Fehlerursache: ");
+            printer.println(fatalError);
+            printer.println("\nBitte den Fehler melden.");
+            return;
+        }
         int count = 0;
+        if (stop == 0) stop();
 
         printer.println("Ergebnis: " + getOutcome().getInfo());
         count++;

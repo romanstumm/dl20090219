@@ -60,7 +60,15 @@ public class CheckThreadWorker extends TransactionWorker {
 
         Thread thread = new ManagedThread(new Runnable() {
             public void run() {
-                sortierer.start();
+                try {
+                    sortierer.start();
+                } catch (RuntimeException ex) {  // NullPointerEx, ClassCastEx, ...
+                    sortierer.getCheckResult().setFatalError(ex.getLocalizedMessage());
+                    throw ex;
+                } catch(Error ex) {  // StackOverflow, OutofMemory ...
+                    sortierer.getCheckResult().setFatalError(ex.getLocalizedMessage());
+                    throw ex;
+                }
             }
         });
         thread.start();
@@ -82,11 +90,11 @@ public class CheckThreadWorker extends TransactionWorker {
         CheckResult result = sortierer.getCheckResult();
         mainApp.setMessage(result.toString());
         if (SwingUtils.createYesNoDialog(editPanel,
-                 result.toStringWithLimit(30) + " \nAufstellung speichern?",
+                result.toStringWithLimit(30) + " \nAufstellung speichern?",
                 "Sortierung beendet")) {
             sortierer.saveAufstellung();
             Ligagruppe gruppe = (Ligagruppe) editPanel.getModelEntity();
-            mainApp.setMessage("Aufstellung \"" + gruppe + "\" gespeichert.");           
+            mainApp.setMessage("Aufstellung \"" + gruppe + "\" gespeichert.");
             if (gruppe.getGruppenId() > 0) {
                 gruppe = ServiceFactory.get(GruppenService.class)
                         .findLigagruppeById(gruppe.getGruppenId());

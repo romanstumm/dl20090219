@@ -88,6 +88,7 @@ public class ThreadManager {
         log.info("Preparing to kill " + killList.size() + " thread(s)...");
 
         for (Thread t : killList) {
+            if(t == null) continue;
             log.info("Interrupting Thread " + t.getName());
 
             try {

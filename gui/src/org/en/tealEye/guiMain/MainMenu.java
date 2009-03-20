@@ -56,7 +56,7 @@ public class MainMenu extends JMenuBar {
         // - - - - - - - - - - - -
         dateiMenu.add(new JMenuItem("Beenden"));
 
-        aboutMenu.add(item = new JMenuItem("Über dieses Programm"));
+        aboutMenu.add(item = new JMenuItem("Credits..."));
         item.setActionCommand("MENU_About");
 
         configMenu.add(item = new JMenuItem("Grundeinstellungen"));
@@ -80,8 +80,8 @@ public class MainMenu extends JMenuBar {
 
         windowsMenu.add(item = new JCheckBoxMenuItem("Hauptmenu ausblenden"));
         item.setActionCommand("CB_Hide_FloatPanel");
-        windowsMenu.add(new JSeparator());
-        windowsMenu.add(item = new JMenuItem("Info über Ligaverwaltung..."));
+        aboutMenu.add(new JSeparator());
+        aboutMenu.add(item = new JMenuItem("Info über Ligaverwaltung..."));
         item.setActionCommand("MENU_Info");
         addMenuController(dateiMenu);
         addMenuController(configMenu);
