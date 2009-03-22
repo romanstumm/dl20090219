@@ -135,8 +135,9 @@ public final class GroupOptimizer extends GroupCalculator {
     private void decideBetterSetting(OConflict parentConflict) throws OptimizerNotification {
         if (parentConflict != null) {
             calculate();
-            if (optimal == null || current.isBetterThan(optimal)) {
-                if (optimal == null) {
+            boolean showProgressOnly = optimal == null;
+            if (showProgressOnly || current.isBetterThan(optimal)) {
+                if (showProgressOnly) {
                     optimal = initial;
                 } else {
                     optimal = current.deepCopy();
@@ -145,10 +146,12 @@ public final class GroupOptimizer extends GroupCalculator {
                         (optimal.getRating().getOptionalCount() == 0) ? "..." :
                                 " und " + optimal.getRating().getOptionalCount() +
                                         " Wünsche..."));
-                if (log.isInfoEnabled()) log.info("At " + calculationDepth + "> (" +
-                        calculationCount + ") found setting: " + optimal);
-                if (Options.optimizedRecusionExit) {
-                    throw new OptimizerNotification(); // use exception to exit from recursion-stack
+                if (!showProgressOnly) {
+                    if (log.isInfoEnabled()) log.info("At " + calculationDepth + "> (" +
+                            calculationCount + ") found setting: " + optimal);
+                    if (Options.optimizedRecusionExit) {
+                        throw new OptimizerNotification(); // use exception to exit from recursion-stack
+                    }
                 }
             }
         }
