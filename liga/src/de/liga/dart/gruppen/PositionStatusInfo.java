@@ -9,13 +9,13 @@ import java.io.Serializable;
  * Time: 18:53:47 <br/>
  * Copyright: Agimatec GmbH
  */
-public class TeamStatusInfo implements Serializable {
-    private final TeamStatus teamStatus;
+public class PositionStatusInfo implements Serializable {
+    private final PositionStatus status;
     private final String info;
 
 
-    public TeamStatusInfo(TeamStatus teamStatus, String info) {
-        this.teamStatus = teamStatus;
+    public PositionStatusInfo(PositionStatus positionStatus, String info) {
+        this.status = positionStatus;
         this.info = (info == null ? "" : info);
     }
 
@@ -23,15 +23,15 @@ public class TeamStatusInfo implements Serializable {
         return info;
     }
 
-    public TeamStatus getTeamStatus() {
-        return teamStatus;
+    public PositionStatus getStatus() {
+        return status;
     }
 
     public String toString() {
         if (info.length() > 0) {
-            return teamStatus.getToolTip() + info;
+            return status.getToolTip() + info;
         } else {
-            return teamStatus.getToolTip();
+            return status.getToolTip();
         }
     }
 }

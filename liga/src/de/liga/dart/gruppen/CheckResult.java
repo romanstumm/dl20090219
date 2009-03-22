@@ -32,7 +32,7 @@ public final class CheckResult {
         KONFLIKTE_KORRIGIERT(
                 "Alle Konflikte korrigiert!"), // War nicht OK, ist jetzt aber OK, weil korrigiert
         KONFLIKTE_NICHT_LOESBAR(
-                "Nicht korrigierbare Konflikte!"); // Nicht OK, Korrektur nicht moeglich
+                "Nicht korrigierbare Konflikte!"); // Nicht OK, vollständige Korrektur nicht moeglich
 
         private final String info;
 
@@ -192,9 +192,12 @@ public final class CheckResult {
         if (!optimizer.getOptimal().isPerfect()) {
             SpielortService aservice =
                     ServiceFactory.get(SpielortService.class);
+            int index = 1;
             for (OConflict conflict : optimizer.getOptimal().getRating()
                     .getConflictList()) {
                 StringBuilder buf = new StringBuilder();
+                buf.append(index++);
+                buf.append(". ");
                 if (conflict.isFree()) {
                     buf.append("Spielfrei an ").append(conflict.getPosition1().getPosition())
                             .append(" und ").append(conflict.getPosition2().getPosition())
@@ -242,6 +245,7 @@ public final class CheckResult {
             OSetting initial = optimizer.getInitial();
             OSetting optimal = optimizer.getOptimal();
             int groupIndex = 0;
+            int index = 1;
             for (OGroup group : initial.getGroups()) {
                 boolean conflictInGroup = false;
                 for (OPosition pos : group.sortedPositions()) {
@@ -261,6 +265,8 @@ public final class CheckResult {
                             Ligateam lteam =
                                     teamService.findLigateamById(
                                             oteam.getTeamId());
+                            buf.append(index++);
+                            buf.append(". ");
                             buf.append(lteam.getTeamName());
                             buf.append(": ");
                             buf.append(pos.getPosition());

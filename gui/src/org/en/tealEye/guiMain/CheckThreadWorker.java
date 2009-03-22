@@ -71,6 +71,9 @@ public class CheckThreadWorker extends TransactionWorker {
                 }
             }
         });
+        // damit der Abbrechen-Button ggf. etwas schneller reagiert
+        //noinspection CallToThreadSetPriority
+        thread.setPriority(Thread.NORM_PRIORITY-1); // etwas unter NORM
         thread.start();
 
         final ProgressDialog progressDialog = new ProgressDialog();

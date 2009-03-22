@@ -85,8 +85,7 @@ public class MenuController implements ActionListener, MouseListener, GuiControl
                     Application.APPLICATION_NAME + " " + Application.APPLICATION_VERSION +
                             "\nAutoren: Stephan Pudras (pudras@gmx.net), Roman Stumm (roman.stumm@gmx.de)" +
                             "\nGruppensortierung und Verwaltung von Dartligen (2007-2009)" +
-                            "\nLizenz: " + mainAppFrame.getLicense().getInfoMessage() +
-                            "\nWebsite: --",
+                            "\nLizenz: " + mainAppFrame.getLicense().getInfoMessage(),
                     "Info über...");
         } else if (action.equals("Beenden")) {
             // und tschuess...

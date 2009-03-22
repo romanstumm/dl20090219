@@ -19,7 +19,7 @@
 
     <logger name="de">
         <level value="WARN"/>
-        <!--<level value="INFO"/>-->
+        <!--<level value="DEBUG"/>-->
     </logger>
 
     <logger name="org.hibernate">

@@ -18,8 +18,8 @@ public class OChangeSuggestion implements Serializable, Comparable {
         this.option1 = option1;
         this.option2 = option2;
         if (conflict == null || conflict.isWunsch()) {
-            ignore1 = option1.getFromPosition() == option1.getToPosition();
-            ignore2 = option2.getFromPosition() == option2.getToPosition();
+            ignore1 = option1.isStayOnPosition();
+            ignore2 = option2.isStayOnPosition();
         } else {
             ignore1 = canIgnore(option1, conflict.getPosition1());
             ignore2 = canIgnore(option2, conflict.getPosition2());
@@ -35,7 +35,7 @@ public class OChangeSuggestion implements Serializable, Comparable {
          * Suggestions berechnen, auch wenn die hier vorgeschlagenen Positionen
          * ggf. bereits einmal geändert wurden. 
          */
-        if (pos.isFixiert() || option.getFromPosition() == option.getToPosition()) return true;
+        if (pos.isFixiert() || option.isStayOnPosition()) return true;
 
         // ignorieren, wenn Team an Zielposition der Wechselpartner in der Besetzung ist...
         // ... und hier kein Wunschkonflikt zur Lösung anliegt.
@@ -63,6 +63,15 @@ public class OChangeSuggestion implements Serializable, Comparable {
 
     public boolean isIgnore() {
         return ignore1 && ignore2;
+    }
+
+    public boolean canExecute(OConflict conflict) {
+        return !isIgnore() // wenn nicht total sinnlos...
+                // ... und jede Seite soll und kann bewegt werden
+                && (option1.isStayOnPosition() || !conflict.getPosition1().isChanged() ||
+                !conflict.getPosition1().isFixiert())
+                && (option2.isStayOnPosition() || !conflict.getPosition2().isChanged() ||
+                !conflict.getPosition2().isFixiert());
     }
 
     /**
