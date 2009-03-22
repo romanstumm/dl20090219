@@ -3,7 +3,7 @@ package de.liga.dart.gruppen.service;
 import de.liga.dart.common.service.Service;
 import de.liga.dart.exception.DartException;
 import de.liga.dart.gruppen.CheckResult;
-import de.liga.dart.gruppen.TeamStatusInfo;
+import de.liga.dart.gruppen.PositionStatusInfo;
 import de.liga.dart.gruppen.check.model.OSetting;
 import de.liga.dart.model.*;
 
@@ -123,7 +123,7 @@ public interface GruppenService extends Service {
      * @param gruppe
      * @return
      */
-    TeamStatusInfo[] getTeamStatus(Ligagruppe gruppe);
+    PositionStatusInfo[] getStatus(Ligagruppe gruppe);
 
     /**
      * ggf. zum Drucken der Gruppen: 

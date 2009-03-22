@@ -1,6 +1,6 @@
 package de.liga.dart.gruppen.check.model;
 
-import de.liga.dart.gruppen.TeamStatus;
+import de.liga.dart.gruppen.PositionStatus;
 
 import java.io.Serializable;
 
@@ -12,7 +12,7 @@ import java.io.Serializable;
 public abstract class OPosition implements Serializable, Comparable {
     protected final OGroup group;
     protected final boolean fixiert;
-    protected TeamStatus status = TeamStatus.FREI; // wird nur 1x vom GroupCalculator gesetzt
+    protected PositionStatus status = PositionStatus.FREI; // wird nur 1x vom GroupCalculator gesetzt
     protected int position; // computed, variable
 
     /**
@@ -91,14 +91,13 @@ public abstract class OPosition implements Serializable, Comparable {
         return (changed ? "^P" : "P") + position;
     }
 
-    public TeamStatus getStatus() {
+    public PositionStatus getStatus() {
         return status;
     }
 
-    public void setStatus(TeamStatus status) {
+    public void setStatus(PositionStatus status) {
         this.status = status;
     }
-
 
     public boolean isFixiert() {
         return fixiert;

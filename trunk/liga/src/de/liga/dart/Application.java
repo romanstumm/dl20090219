@@ -2,5 +2,5 @@ package de.liga.dart;
 
 public interface Application {
     String APPLICATION_NAME = "Ligaverwaltung";
-    String APPLICATION_VERSION = "2.2.6";
+    String APPLICATION_VERSION = "2.3.0";
 }

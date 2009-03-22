@@ -8,7 +8,7 @@ import de.liga.dart.exception.ValidationMessage;
 import static de.liga.dart.exception.ValidationReason.MISSING;
 import static de.liga.dart.exception.ValidationReason.WRONG;
 import de.liga.dart.gruppen.CheckResult;
-import de.liga.dart.gruppen.TeamStatusInfo;
+import de.liga.dart.gruppen.PositionStatusInfo;
 import de.liga.dart.gruppen.check.model.*;
 import de.liga.dart.ligateam.model.TeamWunsch;
 import de.liga.dart.ligateam.service.LigateamService;
@@ -277,7 +277,7 @@ public class GruppenServiceImpl extends AbstractService implements GruppenServic
         delete(gruppe);
     }
 
-    public TeamStatusInfo[] getTeamStatus(Ligagruppe gruppe) {
+    public PositionStatusInfo[] getStatus(Ligagruppe gruppe) {
         GruppenChecker checker = new GruppenChecker(this);
         OGroup group = checker.getGroup(gruppe);
         if (group != null) {
@@ -287,12 +287,12 @@ public class GruppenServiceImpl extends AbstractService implements GruppenServic
         }
     }
 
-    private TeamStatusInfo[] createStatusInfo(OGroup group) {
-        TeamStatusInfo[] status = new TeamStatusInfo[group.getPositions().size()];
+    private PositionStatusInfo[] createStatusInfo(OGroup group) {
+        PositionStatusInfo[] status = new PositionStatusInfo[group.getPositions().size()];
         int i = 0;
         LigateamService teamService = ServiceFactory.get(LigateamService.class);
         for (OPosition pos : group.sortedPositions()) {
-            final TeamStatusInfo info;
+            final PositionStatusInfo info;
             if (pos.isTeam()) {
                 OTeam other = ((OTeam) pos).getOther();
                 OTeam team = (OTeam)pos;
@@ -315,16 +315,16 @@ public class GruppenServiceImpl extends AbstractService implements GruppenServic
                                 otherTeam.getGruppeKlasse());
                     }
                 }
-                info = new TeamStatusInfo(pos.getStatus(), text.toString());
+                info = new PositionStatusInfo(pos.getStatus(), text.toString());
             } else if (pos.isFree()) {
                 OFree other = ((OFree) pos).getOther();
                 String text = "";
                 if (other != null) {
                     text = ". Paarung mit Position " + other.getPosition();
                 }
-                info = new TeamStatusInfo(pos.getStatus(), text);
+                info = new PositionStatusInfo(pos.getStatus(), text);
             } else {
-                info = new TeamStatusInfo(pos.getStatus(), "");
+                info = new PositionStatusInfo(pos.getStatus(), "");
             }
             status[i++] = info;
         }

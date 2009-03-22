@@ -36,7 +36,6 @@ public final class GroupOptimizer extends GroupCalculator {
     public GroupOptimizer(OSetting initial) {
         super(initial);
         this.initial = initial;
-        optimal = initial;
         if (log.isInfoEnabled()) log.info("Initial setting: " + initial);
     }
 
@@ -57,7 +56,7 @@ public final class GroupOptimizer extends GroupCalculator {
     }
 
     public OSetting getOptimal() {
-        return optimal;
+        return optimal == null ? initial : optimal;
     }
 
     public OSetting getInitial() {
@@ -129,14 +128,19 @@ public final class GroupOptimizer extends GroupCalculator {
 
     /**
      * neue bewertung durchfuehren, besseres Setting behalten
+     *
      * @param parentConflict
      * @throws OptimizerNotification
      */
     private void decideBetterSetting(OConflict parentConflict) throws OptimizerNotification {
         if (parentConflict != null) {
             calculate();
-            if (current.isBetterThan(optimal)) {
-                optimal = current.deepCopy();
+            if (optimal == null || current.isBetterThan(optimal)) {
+                if (optimal == null) {
+                    optimal = initial;
+                } else {
+                    optimal = current.deepCopy();
+                }
                 showProgress("Noch " + optimal.getRating().getConflictCount() + " Konflikte" + (
                         (optimal.getRating().getOptionalCount() == 0) ? "..." :
                                 " und " + optimal.getRating().getOptionalCount() +
@@ -158,8 +162,8 @@ public final class GroupOptimizer extends GroupCalculator {
     }
 
     private boolean changeAndOptimize(OConflict conflict) throws OptimizerNotification {
-        if (conflict.getPosition1().isChangedOrFixiert() && 
-            conflict.getPosition2().isChangedOrFixiert()) {
+        if (conflict.getPosition1().isChangedOrFixiert() &&
+                conflict.getPosition2().isChangedOrFixiert()) {
             return false; // beide bereits getauscht - nicht nochmal versuchen
         }
         final List<OChangeSuggestion> suggestions;
@@ -258,17 +262,17 @@ public final class GroupOptimizer extends GroupCalculator {
 
         boolean triedToOptimize = false;
         for (OChangeSuggestion suggestion : suggestions) {
-            if (!suggestion.isIgnore()) {
+            if (suggestion.canExecute(conflict)) {
                 OChangeOption c1 = suggestion.getOption1();
                 OChangeOption c2 = suggestion.getOption2();
                 boolean t1 = c1.execute(conflict.getPosition1());
                 boolean t2 = c2.execute(conflict.getPosition2());
-                if(t1 || t2) {
+                if (t1 || t2) {
                     triedToOptimize = optimize(conflict);
                 }
                 if (isStopSignaled()) return true;
-                if(t1) c1.undo(conflict.getPosition1());
-                if(t2) c2.undo(conflict.getPosition2());
+                if (t1) c1.undo(conflict.getPosition1());
+                if (t2) c2.undo(conflict.getPosition2());
             }
         }
         return triedToOptimize;

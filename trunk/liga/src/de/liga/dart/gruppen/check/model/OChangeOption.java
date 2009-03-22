@@ -24,6 +24,10 @@ public class OChangeOption implements Serializable {
         return fromPosition;
     }
 
+    public boolean isStayOnPosition() {
+        return fromPosition == toPosition;
+    }
+
 
     public boolean equals(Object o) {
         if (this == o) return true;

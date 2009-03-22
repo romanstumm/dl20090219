@@ -74,7 +74,7 @@ public class SaveThreadWorker extends TransactionWorker {
                         service.setSpielfreiIntoGruppe(gruppe, platzNr + 1, fixiert);
                     }
                 }
-                jPanel.updatePanel(gruppe);   // noewendig um z.B. den TeamStatus neu anzuzeigen!
+                jPanel.updatePanel(gruppe);   // notwendig um z.B. den PositionStatus neu anzuzeigen!
             } else if (jPanel.getModelEntity() instanceof Ligateam) {
                 CreateTeam createTeam = (CreateTeam) jPanel;
                 Ligateam team = (Ligateam) createTeam.getModelEntity();

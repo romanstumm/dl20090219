@@ -1,7 +1,7 @@
 package org.en.tealEye.guiPanels.applicationLogicPanels;
 
 import de.liga.dart.common.service.ServiceFactory;
-import de.liga.dart.gruppen.TeamStatusInfo;
+import de.liga.dart.gruppen.PositionStatusInfo;
 import de.liga.dart.gruppen.service.GruppenService;
 import de.liga.dart.model.*;
 import de.liga.util.CalendarUtils;
@@ -32,7 +32,7 @@ public class CreateGroup extends ExtJEditPanel implements
     public static final int C_SPIELZEIT = 4;
     public static final int C_SPIELFREI = 5;
     public static final int C_FIXIERT = 6;
-    public static final int C_TEAMSTATUS = 7;
+    public static final int C_POSSTATUS = 7;
 
     private RowTipJTable jtable;
 
@@ -406,8 +406,8 @@ public class CreateGroup extends ExtJEditPanel implements
             DartComponentRegistry.getInstance().setComboBoxModel(getLigaklasse(), this);
             getLiga().setSelectedItem(liga);
             getLigaklasse().setSelectedItem(ligaklasse);
-            TeamStatusInfo[] status =
-                    ServiceFactory.get(GruppenService.class).getTeamStatus(gruppe);
+            PositionStatusInfo[] status =
+                    ServiceFactory.get(GruppenService.class).getStatus(gruppe);
             for (int platzNr = 0; platzNr < 8; platzNr++) {
                 Ligateamspiel spiel = gruppe.findSpiel(spiele, platzNr + 1);
                 updateSpielInTable(spiel != null ? spiel.getLigateam() : null, spiel, platzNr,
@@ -426,12 +426,12 @@ public class CreateGroup extends ExtJEditPanel implements
      * @param status  - darf null sein
      */
     public void updateSpielInTable(Ligateam team, Ligateamspiel spiel, int platzNr,
-                                   TeamStatusInfo[] status) {
+                                   PositionStatusInfo[] status) {
         if (status == null) {
-            jtable.setValueAt(null, platzNr, C_TEAMSTATUS);
+            jtable.setValueAt(null, platzNr, C_POSSTATUS);
             jtable.setToolTipText(platzNr, null);
         } else {
-            jtable.setValueAt(status[platzNr].getTeamStatus().getInfo(), platzNr, C_TEAMSTATUS);
+            jtable.setValueAt(status[platzNr].getStatus().getInfo(), platzNr, C_POSSTATUS);
             // Tooltip spezifisch für die Zeile oder Zelle "Status", nicht fuer Spalte
             jtable.setToolTipText(platzNr, status[platzNr].toString());
         }
@@ -456,7 +456,7 @@ public class CreateGroup extends ExtJEditPanel implements
     }
 
     public void removeTeamInTable(int platzNr) {
-        jtable.setValueAt(null, platzNr, C_TEAMSTATUS);
+        jtable.setValueAt(null, platzNr, C_POSSTATUS);
         jtable.setToolTipText(platzNr, null);
         jtable.setValueAt(null, platzNr, C_TEAMNAME);
         jtable.setValueAt(null, platzNr, C_SPIELORT);
@@ -522,7 +522,7 @@ public class CreateGroup extends ExtJEditPanel implements
         public boolean isCellEditable(int rowIndex, int vColIndex) {
             return !(vColIndex == C_NR || vColIndex == C_TEAMNAME
                     || vColIndex == C_SPIELORT || vColIndex == C_SPIELTAG
-                    || vColIndex == C_SPIELZEIT || vColIndex == C_TEAMSTATUS);
+                    || vColIndex == C_SPIELZEIT || vColIndex == C_POSSTATUS);
         }
     }
 

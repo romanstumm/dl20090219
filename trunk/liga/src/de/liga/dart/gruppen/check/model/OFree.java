@@ -1,6 +1,6 @@
 package de.liga.dart.gruppen.check.model;
 
-import de.liga.dart.gruppen.TeamStatus;
+import de.liga.dart.gruppen.PositionStatus;
 
 import java.io.Serializable;
 
@@ -14,8 +14,8 @@ public class OFree extends OPosition implements Serializable {
     private OFree other;
 
     /**
-     * als TeamStatus sind
-     * hier nur moeglich: {@link TeamStatus#SPIELFREI_WECHSEL_SOLL} oder {@link TeamStatus#FREI}
+     * als PositionStatus sind
+     * hier nur moeglich: {@link PositionStatus#C_SPIELFREI_WECHSEL_SOLL} oder {@link PositionStatus#FREI}
      */
 
     public OFree(OGroup group, boolean fixiert) {
