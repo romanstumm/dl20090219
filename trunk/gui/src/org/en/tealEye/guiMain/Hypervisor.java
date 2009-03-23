@@ -45,6 +45,7 @@ public class Hypervisor implements HypervisorAPI {
 
         try {
             ExtendedJPanelImpl panel = newPanelClass.newInstance();
+            panel.setHypervisor(this);
             panelMapping.put(panel.getName(), panel);
         } catch (Exception e) {
             log.error("", e);

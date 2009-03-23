@@ -3,7 +3,9 @@ package org.en.tealEye.guiExt.ExtPanel;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.en.tealEye.controller.PanelController;
+import org.en.tealEye.controller.gui.MainController;
 import org.en.tealEye.guiMain.DartComponentRegistry;
+import org.en.tealEye.guiMain.Hypervisor;
 
 import javax.swing.*;
 import javax.swing.table.JTableHeader;
@@ -29,6 +31,7 @@ public class ExtendedJPanelImpl extends JPanel implements ExtendedJPanel {
     private Map<String, Font> fontMap;
     private PanelController controller;
     private JTable JTable;
+    private Hypervisor h;
 
     public ExtendedJPanelImpl() {
         super();
@@ -64,6 +67,10 @@ public class ExtendedJPanelImpl extends JPanel implements ExtendedJPanel {
 
     public Map<String, Font> getFontMap() {
         return this.fontMap;
+    }
+
+    public void setHypervisor(Hypervisor h){
+        this.h = h;
     }
 
     protected void createCollectionModel(Component c) {
@@ -115,7 +122,10 @@ public class ExtendedJPanelImpl extends JPanel implements ExtendedJPanel {
                     field.setAccessible(true);
                     Object value = field.get(this);
                     if (value instanceof Component) {
-                        found.add((Component) value);
+
+                        Component comp = (Component)value;
+                        comp.addKeyListener(new MainController(h));
+                        found.add(comp);
                     }
                 } catch (IllegalAccessException e) {
                     log.error("cannot find component", e);

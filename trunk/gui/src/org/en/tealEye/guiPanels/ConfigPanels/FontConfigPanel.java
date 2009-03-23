@@ -7,6 +7,7 @@
 package org.en.tealEye.guiPanels.ConfigPanels;
 
 import org.en.tealEye.guiExt.ExtPanel.ExtendedJPanelImpl;
+import org.en.tealEye.guiServices.GlobalGuiService;
 
 import javax.swing.*;
 import java.awt.*;
@@ -66,15 +67,7 @@ public class FontConfigPanel extends ExtendedJPanelImpl implements ActionListene
         fontConfigDecline = new javax.swing.JButton();
 
 //edit
-        labelFontType.addActionListener(this);
-        labelFontStyle.addActionListener(this);
-        labelFontSize.addActionListener(this);
-        formFontType.addActionListener(this);
-        formFontStyle.addActionListener(this);
-        formFontSize.addActionListener(this);
-        tableFontType.addActionListener(this);
-        tableFontStyle.addActionListener(this);
-        tableFontSize.addActionListener(this);
+
 
         fontConfigAccept.addActionListener(al);
         fontConfigDecline.addActionListener(al);
@@ -280,6 +273,18 @@ public class FontConfigPanel extends ExtendedJPanelImpl implements ActionListene
         gridBagConstraints.weighty = 0.1;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         add(buttonPanel, gridBagConstraints);
+
+        setComboBoxes();
+        
+        labelFontType.addActionListener(this);
+        labelFontStyle.addActionListener(this);
+        labelFontSize.addActionListener(this);
+        formFontType.addActionListener(this);
+        formFontStyle.addActionListener(this);
+        formFontSize.addActionListener(this);
+        tableFontType.addActionListener(this);
+        tableFontStyle.addActionListener(this);
+        tableFontSize.addActionListener(this);
     }// </editor-fold>
 
 
@@ -380,6 +385,24 @@ public class FontConfigPanel extends ExtendedJPanelImpl implements ActionListene
 
     protected void updateInternalMap() {
         editableFontMap = this.getFontMap();
+    }
+
+    private void setComboBoxes(){
+        GlobalGuiService service = new GlobalGuiService();
+        Font tempFont = service.getFontMap().get("LabelFont");
+        labelFontType.setSelectedItem(tempFont.getName());
+        labelFontStyle.setSelectedIndex(tempFont.getStyle());
+        labelFontSize.setSelectedItem(String.valueOf(tempFont.getSize()));
+        Font tempFont1 = service.getFontMap().get("FormFont");
+        formFontType.setSelectedItem(tempFont1.getName());
+        formFontStyle.setSelectedIndex(tempFont1.getStyle());
+        formFontSize.setSelectedItem(String.valueOf(tempFont1.getSize()));
+        Font tempFont2 = service.getFontMap().get("TableFont");
+        tableFontType.setSelectedItem(tempFont2.getName());
+        tableFontStyle.setSelectedIndex(tempFont2.getStyle());
+        tableFontSize.setSelectedItem(String.valueOf(tempFont2.getSize()));
+
+
     }
 }
 

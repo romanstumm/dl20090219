@@ -19,11 +19,12 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.List;
 
 
 public class CreateGroup extends ExtJEditPanel implements
-        LigaSelectable, LigaklasseSelectable {
+        LigaSelectable, LigaklasseSelectable, KeyListener {
 
     public static final int C_NR = 0;
     public static final int C_TEAMNAME = 1; // enthält das Ligateam
@@ -74,6 +75,7 @@ public class CreateGroup extends ExtJEditPanel implements
         setName("CreateGroup");
         setTitle("Gruppe bearbeiten");
         initComponents();
+        
     }
 
     private void initComponents() {
@@ -510,6 +512,18 @@ public class CreateGroup extends ExtJEditPanel implements
         return tableModel;
     }
 
+    public void keyTyped(KeyEvent e) {
+        System.out.println("Hallo");
+    }
+
+    public void keyPressed(KeyEvent e) {
+        System.out.println("Hallo");
+    }
+
+    public void keyReleased(KeyEvent e) {
+        System.out.println("Hallo");
+    }
+
     public class TModel extends DefaultTableModel {
 
         public Class getColumnClass(int columnIndex) {
@@ -541,7 +555,7 @@ public class CreateGroup extends ExtJEditPanel implements
              column = jtable.getColumnModel().getColumn(i);
              switch(i){
                  case 0: column.setMaxWidth(30);column.setMinWidth(25);
-                 case 3: column.setMaxWidth(50);column.setMinWidth(30);
+                 case 3: column.setMaxWidth(100);column.setMinWidth(80);
                  case 4: column.setMaxWidth(50);column.setMinWidth(30);
                  case 5: column.setMaxWidth(50);column.setMinWidth(30);
                  case 6: column.setMaxWidth(50);column.setMinWidth(30);

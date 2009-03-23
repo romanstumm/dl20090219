@@ -9,6 +9,7 @@ import de.liga.dart.gruppen.check.Options;
 import de.liga.dart.license.Licensable;
 import de.liga.dart.license.License;
 import org.en.tealEye.framework.SwingUtils;
+import org.en.tealEye.controller.gui.MainController;
 
 import javax.swing.*;
 import java.io.FileNotFoundException;
