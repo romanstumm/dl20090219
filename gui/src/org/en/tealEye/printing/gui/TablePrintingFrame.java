@@ -6,6 +6,8 @@ import org.en.tealEye.printing.controller.WindowController;
 import org.en.tealEye.printing.service.*;
 
 import javax.swing.*;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.event.ActionEvent;
@@ -14,7 +16,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 
-public class TablePrintingFrame extends JFrame implements ActionListener, KeyListener {
+public class TablePrintingFrame extends JFrame implements ActionListener, KeyListener, ChangeListener {
 
 
     private final JTable sourceTable;
@@ -30,6 +32,9 @@ public class TablePrintingFrame extends JFrame implements ActionListener, KeyLis
     private JTextField upperSide;
     private JCheckBox printPageNb;
     private JComboBox jComboBox2;
+    private JSpinner etiZeilenAbstandSpinner;
+    private int initialLineSpaceInt = 1;
+    private JLabel etiZeilenAbstandSpinnerLabel;
 
 
     public TablePrintingFrame(PrintingController pControl, JTable sourceTable,
@@ -50,11 +55,13 @@ public class TablePrintingFrame extends JFrame implements ActionListener, KeyLis
             tablePrintService = new GroupTablePrintingService(sourceTable);
         if (mode.equals("etikett")) {
             labelPrinting = new LabelPrintingService(sourceTable,
-                  Integer.parseInt(etiBreite.getText()),
-                  Integer.parseInt(etiHoehe.getText()),
-                  Integer.parseInt(etiRandSeite.getText()),
-                  Integer.parseInt(etiRandOben.getText()),
-                  Integer.parseInt(etiAnzahl.getText()));
+                  Integer.parseInt(etiBreite.getValue().toString()),
+                  Integer.parseInt(etiHoehe.getValue().toString()),
+                  Integer.parseInt(etiRandSeite.getValue().toString()),
+                  Integer.parseInt(etiRandOben.getValue().toString()),
+                  Integer.parseInt(etiAnzahl.getValue().toString()),
+                  Integer.parseInt(etiZeilenAbstandSpinner.getValue().toString())
+            );
             setLabelValues();
             pagesNeeded = labelPrinting.getAllPagesNeeded();
             labelPrinting.setGuides(true);
@@ -90,16 +97,16 @@ public class TablePrintingFrame extends JFrame implements ActionListener, KeyLis
         jPanel5 = new javax.swing.JPanel();
         etiHoeheLabel = new javax.swing.JLabel();
         etiBreiteLabel = new javax.swing.JLabel();
-        etiHoehe = new javax.swing.JTextField();
+        etiHoehe = new javax.swing.JSpinner();
         etiRandObenLabel = new javax.swing.JLabel();
-        etiBreite = new javax.swing.JTextField();
-        etiRandOben = new javax.swing.JTextField();
+        etiBreite = new javax.swing.JSpinner();
+        etiRandOben = new javax.swing.JSpinner();
         etiRandUntenLabel = new javax.swing.JLabel();
-        etiRandSeite = new javax.swing.JTextField();
+        etiRandSeite = new javax.swing.JSpinner();
         jToolBar6 = new javax.swing.JToolBar();
         jPanel6 = new javax.swing.JPanel();
         etiAnzahlLabel = new javax.swing.JLabel();
-        etiAnzahl = new javax.swing.JTextField();
+        etiAnzahl = new javax.swing.JSpinner();
         jComboBox1 = new javax.swing.JComboBox();
         jComboBox2 = new javax.swing.JComboBox(new String[]{"Hochformat", "Querformat"});
         jToolBar7 = new javax.swing.JToolBar();
@@ -123,11 +130,21 @@ public class TablePrintingFrame extends JFrame implements ActionListener, KeyLis
         jComboBox2.addActionListener(this);
         printPageNb.addActionListener(this);
 
-        etiHoehe.setText("37");
-        etiBreite.setText("70");
-        etiRandSeite.setText("10");
-        etiRandOben.setText("10");
-        etiAnzahl.setText("18");
+        etiHoehe.setModel(new SpinnerNumberModel(37,1,100,1));
+        etiBreite.setModel(new SpinnerNumberModel(70,1,100,1));
+        etiRandSeite.setModel(new SpinnerNumberModel(10,1,100,1));
+        etiRandOben.setModel(new SpinnerNumberModel(10,1,100,1));
+        etiAnzahl.setModel(new SpinnerNumberModel(18,1,100,1));
+
+        etiHoehe.addChangeListener(this);
+        etiBreite.addChangeListener(this);
+        etiRandSeite.addChangeListener(this);
+        etiRandOben.addChangeListener(this);
+        etiAnzahl.addChangeListener(this);
+
+        etiZeilenAbstandSpinner = new JSpinner(new SpinnerNumberModel(initialLineSpaceInt,1,100,1));
+        etiZeilenAbstandSpinnerLabel = new JLabel("Zeilenabstand");
+        etiZeilenAbstandSpinner.addChangeListener(this);
 
         etiHoehe.addKeyListener(this);
         etiBreite.addKeyListener(this);
@@ -272,7 +289,7 @@ public class TablePrintingFrame extends JFrame implements ActionListener, KeyLis
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 10);
         jPanel5.add(etiBreiteLabel, gridBagConstraints);
 
-        etiHoehe.setPreferredSize(new java.awt.Dimension(30, 20));
+        etiHoehe.setPreferredSize(new java.awt.Dimension(40, 20));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
@@ -286,13 +303,13 @@ public class TablePrintingFrame extends JFrame implements ActionListener, KeyLis
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 10);
         jPanel5.add(etiRandObenLabel, gridBagConstraints);
 
-        etiBreite.setPreferredSize(new java.awt.Dimension(30, 20));
+        etiBreite.setPreferredSize(new java.awt.Dimension(40, 20));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
         jPanel5.add(etiBreite, gridBagConstraints);
 
-        etiRandOben.setPreferredSize(new java.awt.Dimension(30, 20));
+        etiRandOben.setPreferredSize(new java.awt.Dimension(40, 20));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 0;
@@ -306,11 +323,25 @@ public class TablePrintingFrame extends JFrame implements ActionListener, KeyLis
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 10);
         jPanel5.add(etiRandUntenLabel, gridBagConstraints);
 
-        etiRandSeite.setPreferredSize(new java.awt.Dimension(30, 20));
+        etiRandSeite.setPreferredSize(new java.awt.Dimension(40, 20));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 1;
         jPanel5.add(etiRandSeite, gridBagConstraints);
+
+        etiZeilenAbstandSpinner.setPreferredSize(new java.awt.Dimension(40, 20));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        //gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.gridy = 3;
+        jPanel5.add(etiZeilenAbstandSpinner, gridBagConstraints);
+
+        
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridwidth = 1;
+        gridBagConstraints.gridy = 3;
+        jPanel5.add(etiZeilenAbstandSpinnerLabel, gridBagConstraints);
 
         jToolBar5.add(jPanel5);
 
@@ -324,7 +355,7 @@ public class TablePrintingFrame extends JFrame implements ActionListener, KeyLis
         gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 10);
         jPanel6.add(etiAnzahlLabel, gridBagConstraints);
 
-        etiAnzahl.setPreferredSize(new java.awt.Dimension(30, 20));
+        etiAnzahl.setPreferredSize(new java.awt.Dimension(40, 20));
         jPanel6.add(etiAnzahl, new java.awt.GridBagConstraints());
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(
@@ -391,16 +422,16 @@ public class TablePrintingFrame extends JFrame implements ActionListener, KeyLis
     /** @param args the command line arguments */
 
     // Variablendeklaration - nicht modifizieren
-    private javax.swing.JTextField etiAnzahl;
+    private JSpinner etiAnzahl;
     private javax.swing.JLabel etiAnzahlLabel;
-    private javax.swing.JTextField etiBreite;
+    private JSpinner etiBreite;
     private javax.swing.JLabel etiBreiteLabel;
-    private javax.swing.JTextField etiHoehe;
+    private JSpinner etiHoehe;
     private javax.swing.JLabel etiHoeheLabel;
-    private javax.swing.JTextField etiRandOben;
-    private javax.swing.JLabel etiRandObenLabel;
-    private javax.swing.JTextField etiRandSeite;
-    private javax.swing.JLabel etiRandUntenLabel;
+    private JSpinner etiRandOben;
+    private JLabel etiRandObenLabel;
+    private JSpinner etiRandSeite;
+    private JLabel etiRandUntenLabel;
     private javax.swing.JButton fontType;
     private javax.swing.JLabel fontFarbeLabel;
     private javax.swing.JButton jButton1;
@@ -523,7 +554,7 @@ public class TablePrintingFrame extends JFrame implements ActionListener, KeyLis
                   new ImageIcon(tablePrintService.getPaintingCanvas(pageIndex)));
         }
         if (labelPrinting != null && tablePrintService == null) {
-            labelPrinting.setLabelCount(Integer.parseInt(etiAnzahl.getText()));
+            labelPrinting.setLabelCount(Integer.parseInt(etiAnzahl.getValue().toString()));
             BufferedImage canvas = labelPrinting.getPaintingCanvas(pageIndex);
             if (canvas != null) {
                 contentLabel = new JLabel(new ImageIcon(canvas));
@@ -590,11 +621,12 @@ public class TablePrintingFrame extends JFrame implements ActionListener, KeyLis
     }
 
     private void setLabelValues() {
-        labelPrinting.setLabelCount(Integer.parseInt(etiAnzahl.getText()));
-        labelPrinting.setLabelSideBorder(Integer.parseInt(etiRandSeite.getText()));
-        labelPrinting.setLabelUpperBorder(Integer.parseInt(etiRandOben.getText()));
-        labelPrinting.setLabelHeight(Integer.parseInt(etiHoehe.getText()));
-        labelPrinting.setLabelWidth(Integer.parseInt(etiBreite.getText()));
+        labelPrinting.setLabelCount(Integer.parseInt(etiAnzahl.getValue().toString()));
+        labelPrinting.setLabelSideBorder(Integer.parseInt(etiRandSeite.getValue().toString()));
+        labelPrinting.setLabelUpperBorder(Integer.parseInt(etiRandOben.getValue().toString()));
+        labelPrinting.setLabelHeight(Integer.parseInt(etiHoehe.getValue().toString()));
+        labelPrinting.setLabelWidth(Integer.parseInt(etiBreite.getValue().toString()));
+        labelPrinting.setEtiZeilenAbstand(Integer.parseInt(etiZeilenAbstandSpinner.getValue().toString()));
         pagesNeeded = labelPrinting.getAllPagesNeeded();
 
     }
@@ -612,5 +644,41 @@ public class TablePrintingFrame extends JFrame implements ActionListener, KeyLis
         } else if (labelPrinting != null) {
             pagesNeeded = labelPrinting.getAllPagesNeeded();
         }
+    }
+
+    public void stateChanged(ChangeEvent e) {
+        JSpinner spinner = (JSpinner) e.getSource();
+        int i = Integer.parseInt(spinner.getValue().toString());
+
+            if(spinner.equals(etiAnzahl)){
+             setLabelValues();
+                pagesNeeded = 0;
+                pagesNeeded = labelPrinting.getAllPagesNeeded();
+                labelPrinting.repaintCanvas(pageIndex);
+                pageIndex = 0;
+                loadPreview();
+            }else if(spinner.equals(etiBreite)){
+                setLabelValues();
+                labelPrinting.repaintCanvas(pageIndex);
+                loadPreview();
+            }else if(spinner.equals(etiHoehe)){
+                setLabelValues();
+                labelPrinting.repaintCanvas(pageIndex);
+                loadPreview();
+            }else if(spinner.equals(etiRandOben)){
+                setLabelValues();
+                labelPrinting.repaintCanvas(pageIndex);
+                loadPreview();
+            }else if(spinner.equals(etiRandSeite)){
+                setLabelValues();
+                labelPrinting.repaintCanvas(pageIndex);
+                loadPreview();
+            }else if(spinner.equals(etiZeilenAbstandSpinner)){
+                setLabelValues();
+                labelPrinting.repaintCanvas(pageIndex);
+                loadPreview();                
+            }else{
+            }
+
     }
 }

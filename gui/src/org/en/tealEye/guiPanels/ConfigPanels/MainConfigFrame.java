@@ -110,7 +110,7 @@ public class MainConfigFrame extends JFrame implements TreeSelectionListener, Ac
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
-        private Properties buildNewFontProperties(Map<String, Font> fontMap) {
+    private Properties buildNewFontProperties(Map<String, Font> fontMap) {
         Properties props = new Properties();
 
         props.setProperty("LabelFontType", fontMap.get("LabelFont").getFontName());
@@ -124,7 +124,7 @@ public class MainConfigFrame extends JFrame implements TreeSelectionListener, Ac
         props.setProperty("FormFontSize", String.valueOf(fontMap.get("FormFont").getSize()));
         props.setProperty("EtiFontType", fontMap.get("EtiFont").getFontName());
         props.setProperty("EtiFontStyle", String.valueOf(fontMap.get("EtiFont").getStyle()));
-        props.setProperty("EtiFontSize", String.valueOf(fontMap.get("EtiFormFont").getSize()));
+        props.setProperty("EtiFontSize", String.valueOf(fontMap.get("EtiFont").getSize()));
         return props;
     }
 }

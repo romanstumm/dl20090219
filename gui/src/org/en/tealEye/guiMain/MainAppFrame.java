@@ -9,6 +9,7 @@ import org.apache.commons.logging.LogFactory;
 import org.en.tealEye.controller.*;
 import org.en.tealEye.controller.gui.MenuController;
 import org.en.tealEye.controller.gui.WindowController;
+import org.en.tealEye.controller.gui.MainController;
 import org.en.tealEye.guiExt.ExtPanel.ExtJTablePanel;
 import org.en.tealEye.guiExt.ExtPanel.ExtendedJPanelImpl;
 import org.en.tealEye.guiExt.TitleBarPanel;
@@ -23,6 +24,8 @@ import org.en.tealEye.guiServices.GuiService;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyListener;
+import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
@@ -55,8 +58,7 @@ public class MainAppFrame extends Component implements Licensable, ProgressIndic
     private JInternalFrame activeFrame;
     private MainMenu mainMenu;
     private ActiveFrameInfo activeFrameInfo;
-
-    private final Hypervisor h;
+    public final Hypervisor h;
     private License license;
 
     public MainAppFrame() {
@@ -68,7 +70,6 @@ public class MainAppFrame extends Component implements Licensable, ProgressIndic
         this.teamController = new TeamController(this, h);
         this.locationController = new LocationController(this, h);
         this.vendorController = new VendorController(this, h);
-
         task = new TaskbarConstr();
         addPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
@@ -108,6 +109,7 @@ public class MainAppFrame extends Component implements Licensable, ProgressIndic
         floatingToolbar.addPanelComponent(activeFrameMenu);
         floatingToolbar
                 .addPanelComponent(activeFrameInfo = new ActiveFrameInfo());
+        floatingToolbar.addKeyListener(new MainController(h));
         return floatingToolbar;
     }
 
@@ -117,6 +119,7 @@ public class MainAppFrame extends Component implements Licensable, ProgressIndic
 
     private JMenuBar constructMainMenu() {
         this.mainMenu = new MainMenu(menuController);
+        mainMenu.addKeyListener(new MainController(h));
         return mainMenu;
     }
 
@@ -132,11 +135,12 @@ public class MainAppFrame extends Component implements Licensable, ProgressIndic
                 .add(constructFloatingMenuEnvironment(), BorderLayout.WEST);
         jFrame.getContentPane()
                 .add(constructTaskbarEnvironment(), BorderLayout.SOUTH);
-        this.addKeyListener(teamController);
         desktop.setDragMode(JDesktopPane.LIVE_DRAG_MODE);
         jFrame.addWindowListener(windowController);
+        jFrame.addKeyListener(new MainController(h));
         jFrame.setVisible(true);
         jFrame.validate();
+        jFrame.requestFocus();
         return jFrame;
     }
 

@@ -47,10 +47,10 @@ public class LabelFontFrame extends JFrame implements ActionListener {
         fontStyle =
               new JComboBox(new String[]{"normal", "fett", "italic", "fett/italic"});
               int style = font.getStyle();
-        fontStyle.setSelectedItem(style);
+        fontStyle.setSelectedIndex(style);
         fontSize = new JComboBox(getSystemFontSizes());
               int size = font.getSize();
-        fontSize.setSelectedItem(size);
+        fontSize.setSelectedItem(String.valueOf(size));
         okButton = new JButton("OK");
         okButton.setSize(40, 20);
 
@@ -144,7 +144,7 @@ public class LabelFontFrame extends JFrame implements ActionListener {
         }
     }
 
-        private Properties buildNewFontProperties(Map<String, Font> fontMap) {
+    private Properties buildNewFontProperties(Map<String, Font> fontMap) {
         Properties props = new Properties();
 
         props.setProperty("LabelFontType", fontMap.get("LabelFont").getFontName());

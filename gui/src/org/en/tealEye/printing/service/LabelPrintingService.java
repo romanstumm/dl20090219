@@ -63,13 +63,16 @@ public class  LabelPrintingService extends JPanel implements LabelPrinting {
     private int hLabelCount;
     private int vLabelCount;
     private boolean guides;
+    private int etiZeilenAbstand;
 
-    private final static Font smallFont = new Font("Arial",0,10);
+    private  Font font = new GlobalGuiService().getFontMap().get("EtiFont");
+    private final Font smallFont = new Font(font.getName(),font.getStyle(),font.getSize()-6);
 
-    private  Font font = new GlobalGuiService().getFontMap().get("EtiFont"); 
+
+   // private  Font font = new GlobalGuiService().getFontMap().get("EtiFont"); 
 
     public LabelPrintingService(JTable sourceTable,int labelWidth, int labelHeight,
-                                int labelLeftBorder, int labelRightBorder, int labelsWanted)
+                                int labelLeftBorder, int labelRightBorder, int labelsWanted, int etiZeilenAbstand)
     {
        this.labelHeight = labelHeight;
        this.labelWidth = labelWidth;
@@ -79,7 +82,7 @@ public class  LabelPrintingService extends JPanel implements LabelPrinting {
        this.labelsWanted = labelsWanted;
        this.labelsNeeded = labelsWanted;
        this.pagesNeeded = utils.getPagesPerLabel(utils.getLabelsPerPage(this.labelWidth, this.labelHeight),labelsWanted);
-
+       this.etiZeilenAbstand = etiZeilenAbstand;
        sievePrintableData();
        setLabelValues();
        this.setSize((int)paperWidth,(int)paperHeight);
@@ -131,19 +134,29 @@ public class  LabelPrintingService extends JPanel implements LabelPrinting {
                     g2.setColor(Color.BLACK);
                     g2.setFont(font);
                     g2.drawString(entries[0],(int)(labelWidth*ScaleX*x+(padX*ScaleX)),(int)(labelHeight*ScaleY*y+(fontHeight)+(padY*ScaleY)));
-                    g2.drawString(entries[1],(int)(labelWidth*ScaleX*x+(padX*ScaleX)),(int)(labelHeight*ScaleY*y+(fontHeight*2)+(padY*ScaleY)));
-                    g2.drawString(entries[2],(int)(labelWidth*ScaleX*x+(padX*ScaleX)),(int)(labelHeight*ScaleY*y+(fontHeight*3)+(padY*ScaleY)));
-                    g2.drawString(entries[3],(int)(labelWidth*ScaleX*x+(padX*ScaleX)),(int)(labelHeight*ScaleY*y+(fontHeight*4)+(padY*ScaleY)));
-                    g2.drawString(entries[4],(int)(labelWidth*ScaleX*x+(padX*ScaleX)),(int)(labelHeight*ScaleY*y+(fontHeight*5)+(padY*ScaleY)));
+                        if(entries[1].matches("")){
+                            g2.drawString(entries[2],(int)(labelWidth*ScaleX*x+(padX*ScaleX)),(int)(labelHeight*ScaleY*y+(fontHeight*2)+(padY*ScaleY))+etiZeilenAbstand);
+                            g2.drawString(entries[4],(int)(labelWidth*ScaleX*x+(padX*ScaleX)),(int)(labelHeight*ScaleY*y+(fontHeight*3)+(padY*ScaleY))+etiZeilenAbstand*2);
+                        }else{
+                            g2.drawString(entries[1],(int)(labelWidth*ScaleX*x+(padX*ScaleX)),(int)(labelHeight*ScaleY*y+(fontHeight*2)+(padY*ScaleY))+etiZeilenAbstand);
+                            g2.drawString(entries[2],(int)(labelWidth*ScaleX*x+(padX*ScaleX)),(int)(labelHeight*ScaleY*y+(fontHeight*3)+(padY*ScaleY))+etiZeilenAbstand*2);
+                          //g2.drawString(entries[3],(int)(labelWidth*ScaleX*x+(padX*ScaleX)),(int)(labelHeight*ScaleY*y+(fontHeight*4)+(padY*ScaleY))+etiZeilenAbstand*4);
+                            g2.drawString(entries[4],(int)(labelWidth*ScaleX*x+(padX*ScaleX)),(int)(labelHeight*ScaleY*y+(fontHeight*4)+(padY*ScaleY))+etiZeilenAbstand*3);
+                    }
                     if(!entries[5].equals("count1")){
-                        g2.setFont(smallFont);
-                        g2.drawString(entries[5], (float) ((int)(labelWidth*ScaleX*x+((labelWidth*ScaleX)/1))-50+(padX*ScaleX)), (float) ((int)(labelHeight*ScaleY*y+(fontHeight))+(padY)));
-                        g2.setFont(font);
+                        addLocationCount(g2,x,y);
                     }
                     labelsNeeded--;
             }
     }
            this.pageIndex++;
+    }
+
+
+    private void addLocationCount(Graphics2D g2, int x, int y){
+        g2.setFont(smallFont);
+        System.out.println(g2.getFont());
+        g2.drawString(entries[5], (float) ((int)(labelWidth*ScaleX*x+((labelWidth*ScaleX)/1))-50+(padX*ScaleX)), (float) ((int)(labelHeight*ScaleY*y+(fontHeight))+(padY)));
     }
 
     private void sievePrintableData(){
@@ -245,6 +258,10 @@ public class  LabelPrintingService extends JPanel implements LabelPrinting {
 
     public void setLabelFont(Font font){
         this.font = font;
+    }
+
+    public void setEtiZeilenAbstand(int i){
+        etiZeilenAbstand = i;
     }
 
     public void repaintCanvas(int pageNum) {
