@@ -95,7 +95,8 @@ public class MainAppFrame extends Component implements Licensable, ProgressIndic
         gbc.fill = GridBagConstraints.BOTH;
         jPanel.add(desktop, gbc);
         desktop.setBackground(Color.GRAY);
-
+        desktop.addKeyListener(new MainController(h));
+        desktop.requestFocusInWindow();
         return jPanel;
     }
 
