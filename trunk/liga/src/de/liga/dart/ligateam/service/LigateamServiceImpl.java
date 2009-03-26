@@ -153,9 +153,9 @@ public class LigateamServiceImpl extends AbstractService implements LigateamServ
     public void deleteLigateam(Ligateam team, boolean validate)
             throws DartException, DartValidationException {
         if (team.getLigateamId() > 0) {
-            // needed for wunschlist deletion!
-            // !!alternative implementation for save() below!!
-            getSession().refresh(team);
+            // reload: needed for wunschlist deletion!
+            team = findLigateamById(team.getLigateamId());
+            if(team == null) return;
             if (validate) {
                 if (team.getLigateamspiel() != null) {
                     throw new DartValidationException("Löschen verhindert: \"" + team.getTeamName()

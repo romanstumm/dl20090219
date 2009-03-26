@@ -55,6 +55,7 @@ public class PrintingDialogFrame extends javax.swing.JFrame {
 
         buttonGroup1.add(auswahlRadio);
         etikettenRadio.setText("Etiketten drucken");
+        etikettenRadio.setMnemonic('E');
         etikettenRadio.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         etikettenRadio.setMargin(new java.awt.Insets(0, 0, 0, 0));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -67,6 +68,7 @@ public class PrintingDialogFrame extends javax.swing.JFrame {
 
         buttonGroup1.add(gruppenRadio);
         auswahlRadio.setText("Auswahl drucken");
+        auswahlRadio.setMnemonic('w');
         auswahlRadio.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         auswahlRadio.setMargin(new java.awt.Insets(0, 0, 0, 0));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -79,6 +81,7 @@ public class PrintingDialogFrame extends javax.swing.JFrame {
 
         buttonGroup1.add(etikettenRadio);
         gruppenRadio.setText("Gruppentabellen drucken");
+        gruppenRadio.setMnemonic('G');
         gruppenRadio.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         gruppenRadio.setMargin(new java.awt.Insets(0, 0, 0, 0));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -98,6 +101,7 @@ public class PrintingDialogFrame extends javax.swing.JFrame {
 
         buttonGroup1.add(alleRadio);
         alleRadio.setText("Alles drucken");
+        alleRadio.setMnemonic('A');
         alleRadio.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         alleRadio.setMargin(new java.awt.Insets(0, 0, 0, 0));
         gridBagConstraints = new java.awt.GridBagConstraints();

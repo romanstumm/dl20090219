@@ -75,7 +75,7 @@ public class CreateGroup extends ExtJEditPanel implements
         setName("CreateGroup");
         setTitle("Gruppe bearbeiten");
         initComponents();
-        
+
     }
 
     private void initComponents() {
@@ -497,12 +497,12 @@ public class CreateGroup extends ExtJEditPanel implements
     private DefaultTableModel buildTableModel() {
         TModel tableModel = new TModel();
         tableModel.addColumn("Nr.");
-        tableModel.addColumn("Teamname");
+        tableModel.addColumn("Team");
         tableModel.addColumn("Spielort");
-        tableModel.addColumn("Spieltag");
-        tableModel.addColumn("Spielzeit");
-        tableModel.addColumn("Spielfrei");
-        tableModel.addColumn("Fixiert");
+        tableModel.addColumn("Tag");
+        tableModel.addColumn("Zeit");
+        tableModel.addColumn("Frei");
+        tableModel.addColumn("Fix");
         tableModel.addColumn("Status");
 
         for (int i = 1; i < 9; i++) {
@@ -549,19 +549,43 @@ public class CreateGroup extends ExtJEditPanel implements
         return jtable;
     }
 
-    private void setTableLayout(){
-         TableColumn column = null;
-         for(int i = 0;i<jtable.getColumnCount();i++){
-             column = jtable.getColumnModel().getColumn(i);
-             switch(i){
-                 case 0: column.setMaxWidth(30);column.setMinWidth(25);
-                 case 3: column.setMaxWidth(100);column.setMinWidth(80);
-                 case 4: column.setMaxWidth(50);column.setMinWidth(30);
-                 case 5: column.setMaxWidth(50);column.setMinWidth(30);
-                 case 6: column.setMaxWidth(50);column.setMinWidth(30);
-                 case 7: column.setMaxWidth(50);column.setMinWidth(30);
-                     jtable.setAutoResizeMode(1);
-             }
-         }
+    private void setTableLayout() {
+        TableColumn column = null;
+        for (int i = 0; i < jtable.getColumnCount(); i++) {
+            column = jtable.getColumnModel().getColumn(i);
+            switch (i) {
+                case 0: // nr
+                    column.setMaxWidth(30);
+                    column.setMinWidth(10);
+                    break;
+                case 1: // team
+                    column.setMinWidth(50);
+                    break;
+                case 2: // ort
+                    column.setMinWidth(50);
+                    break;
+                case 3: // tag
+                    column.setMaxWidth(100);
+                    column.setMinWidth(30);
+                    break;
+                case 4: // zeit
+                    column.setMaxWidth(45);
+                    column.setMinWidth(20);
+                    break;
+                case 5: // spielfrei
+                    column.setMaxWidth(40);
+                    column.setMinWidth(20);
+                    break;
+                case 6: // fixiert
+                    column.setMaxWidth(40);
+                    column.setMinWidth(20);
+                    break;
+                case 7: // status
+                    column.setMaxWidth(50);
+                    column.setMinWidth(20);
+                    break;
+            }
+        }
+        jtable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
     }
 }

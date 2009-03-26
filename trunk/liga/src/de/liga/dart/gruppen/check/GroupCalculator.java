@@ -41,9 +41,6 @@ public class GroupCalculator {
                     ((OFree) pos).setOther(null);
                     pos.setStatus(PositionStatus.FREI);
                 }
-                if(pos.isFixiert()) {
-                    pos.setChanged(true);
-                }
             }
         }
         for (OGroup group : current.getGroups()) {

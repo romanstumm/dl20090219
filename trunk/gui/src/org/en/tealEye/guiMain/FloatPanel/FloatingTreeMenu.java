@@ -35,7 +35,7 @@ public class FloatingTreeMenu extends TitleBarPanel {
         DefaultMutableTreeNode view = new DefaultMutableTreeNode("Einträge Anzeigen", true);
         top.add(edit);
         top.add(view);
-        
+
         JTree tree = new JTree(top);
         tree.setCellRenderer(new MyRenderer());
         tree.setRootVisible(true);
