@@ -33,7 +33,7 @@ public class TablePrintingFrame extends JFrame implements ActionListener, KeyLis
     private JCheckBox printPageNb;
     private JComboBox jComboBox2;
     private JSpinner etiZeilenAbstandSpinner;
-    private int initialLineSpaceInt = 1;
+    private int initialLineSpaceInt = 5;
     private JLabel etiZeilenAbstandSpinnerLabel;
 
 

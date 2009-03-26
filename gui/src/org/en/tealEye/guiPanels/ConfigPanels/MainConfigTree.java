@@ -38,9 +38,10 @@ public class MainConfigTree extends ExtendedJPanelImpl {
         tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 
         DefaultMutableTreeNode configFonts = new DefaultMutableTreeNode("Schriftarten", false);
-        DefaultMutableTreeNode configDB = new DefaultMutableTreeNode("Datenbank", false);
+//        DefaultMutableTreeNode configDB = new DefaultMutableTreeNode("Datenbank", false);
         top.add(configFonts);
-        top.add(configDB);
+//        top.add(configDB);
+        tree.expandRow(0);
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc;
         gbc = new GridBagConstraints();
