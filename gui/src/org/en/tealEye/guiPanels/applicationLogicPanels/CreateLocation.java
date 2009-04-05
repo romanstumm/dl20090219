@@ -329,8 +329,9 @@ public class CreateLocation extends ExtJEditPanel implements LigaSelectable, Act
         formularPanel.add(fieldAutomatenAnzahl, gridBagConstraints);
 
         labelTeamsAnzahl = new JTextArea();
-        labelTeamsAnzahl.setRows(4);
-        labelTeamsAnzahl.setColumns(60);
+        labelTeamsAnzahl.setSize(900,350);
+//        labelTeamsAnzahl.setRows(10);
+//        labelTeamsAnzahl.setColumns(100);
         labelTeamsAnzahl.setWrapStyleWord(true);
         labelTeamsAnzahl.setLineWrap(true);
         labelTeamsAnzahl.setEditable(false);
@@ -338,7 +339,7 @@ public class CreateLocation extends ExtJEditPanel implements LigaSelectable, Act
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 13;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.weightx = 0.9;
+        gridBagConstraints.weightx = 1;
         gridBagConstraints.insets = new java.awt.Insets(1, 10, 1, 2);
         formularPanel.add(labelTeamsAnzahl, gridBagConstraints);
 

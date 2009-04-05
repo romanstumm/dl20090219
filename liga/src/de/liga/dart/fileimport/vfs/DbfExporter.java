@@ -16,6 +16,7 @@ import java.io.FileFilter;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Description:  Datenexport von Gruppen und Teams in die Altanwendung (.dbf files) <br/>
@@ -175,7 +176,8 @@ public class DbfExporter extends DbfIO {
 
     private long getOrCreateLokNr(Spielort spielort) throws SQLException {
         // wenn Spielort.externeId nicht vorhanden: insert Spielort!
-        if (spielort.getExterneId() != null) {
+        if (spielort.getExterneId() != null && spielort.getExterneId().length() > 0
+                && StringUtils.isNumeric(spielort.getExterneId()) ) {
             return Long.parseLong(spielort.getExterneId());
         } else { // erzeuge spielort (fehlte bisher in Altdaten)
             long lokId = findNextLogID();

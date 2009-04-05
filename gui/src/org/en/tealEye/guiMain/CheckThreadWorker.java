@@ -11,6 +11,8 @@ import org.en.tealEye.framework.ProgressDialog;
 import org.en.tealEye.framework.SwingUtils;
 import org.en.tealEye.framework.TransactionWorker;
 import org.en.tealEye.guiPanels.applicationLogicPanels.CreateGroup;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -22,6 +24,7 @@ import java.awt.event.ActionListener;
  * Time: 20:09:34
  */
 public class CheckThreadWorker extends TransactionWorker {
+    private static final Log log = LogFactory.getLog(CheckThreadWorker.class);
     private final CreateGroup editPanel;
     private final MainAppFrame mainApp;
 
@@ -54,7 +57,7 @@ public class CheckThreadWorker extends TransactionWorker {
         return null;
     }
 
-    private void optimize(Liga liga) throws InterruptedException {
+    private void optimize(final Liga liga) throws InterruptedException {
         final GruppenSortierer sortierer =
                 ServiceFactory.get(GruppenService.class).createSortierer(liga);
 
@@ -63,9 +66,11 @@ public class CheckThreadWorker extends TransactionWorker {
                 try {
                     sortierer.start();
                 } catch (RuntimeException ex) {  // NullPointerEx, ClassCastEx, ...
+                    log.error("Fehler beim Sortieren von " + liga, ex);
                     sortierer.getCheckResult().setFatalError(ex.getLocalizedMessage());
                     throw ex;
                 } catch(Error ex) {  // StackOverflow, OutofMemory ...
+                    log.error("Fehler beim Sortieren von " + liga, ex);
                     sortierer.getCheckResult().setFatalError(ex.getLocalizedMessage());
                     throw ex;
                 }

@@ -15,6 +15,8 @@ import org.en.tealEye.framework.TransactionWorker;
 import org.en.tealEye.guiExt.ExtPanel.ExtJEditPanel;
 import org.en.tealEye.guiPanels.applicationLogicPanels.CreateGroup;
 import org.en.tealEye.guiPanels.applicationLogicPanels.CreateTeam;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -27,7 +29,7 @@ import java.util.List;
  * Time: 07:17:23
  */
 public class SaveThreadWorker extends TransactionWorker {
-
+    private static final Log log = LogFactory.getLog(SaveThreadWorker.class);
     private ExtJEditPanel jPanel = null;
     private final MainAppFrame mainApp;
 
@@ -100,6 +102,7 @@ public class SaveThreadWorker extends TransactionWorker {
         } catch (DartValidationException ex) {
             mainApp.setMessage(ex.getMessages().toString());
         } catch (DartException ex) {
+            log.error(null, ex);
             mainApp.setMessage(ex.getMessage());
         }
         mainApp.showProgress(100, "");
