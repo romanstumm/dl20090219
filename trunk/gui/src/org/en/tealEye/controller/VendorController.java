@@ -8,6 +8,8 @@ import org.en.tealEye.guiExt.ExtPanel.ExtendedJPanelImpl;
 import org.en.tealEye.guiMain.*;
 import org.en.tealEye.guiPanels.applicationLogicPanels.CreateVendor;
 import org.en.tealEye.guiPanels.applicationLogicPanels.ShowVendors;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -22,7 +24,7 @@ import java.util.Collection;
  * Time: 00:32:34
  */
 public class VendorController extends PanelController {
-
+    private static final Log log = LogFactory.getLog(VendorController.class);
 
     private CreateVendor createVendor;
     private ShowVendors showVendors;
@@ -50,7 +52,7 @@ public class VendorController extends PanelController {
 //                    instance.get();
                 } catch (Exception e1) {
                     mainApp.setTaskbarTask("WindowFehler: " + e1.getMessage());
-                    //log.error(e1.getMessage(), e1);
+                    log.error(e1.getMessage(), e1);
                 }
             }
         }

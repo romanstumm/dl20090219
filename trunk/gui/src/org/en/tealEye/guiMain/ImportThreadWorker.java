@@ -8,6 +8,8 @@ import de.liga.dart.exception.DartException;
 import de.liga.util.thread.ThreadManager;
 import org.en.tealEye.framework.LigaChooser;
 import org.en.tealEye.framework.SwingUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.swing.*;
 import java.io.File;
@@ -22,6 +24,7 @@ import java.io.FileNotFoundException;
  * Copyright: Agimatec GmbH
  */
 public class ImportThreadWorker extends SwingWorker implements ProgressIndicator {
+    private static final Log log = LogFactory.getLog(ImportThreadWorker.class);
     private static File REMEMBER_DIR = new File(".");
 
     private final IO_ACTION action;
@@ -72,6 +75,7 @@ public class ImportThreadWorker extends SwingWorker implements ProgressIndicator
                     mainAppFrame.setMessage("Excel-Export - nicht möglich (Fehler)!");
                 }
             } catch (DartException ex) {
+                log.error(null, ex);
                 mainAppFrame.setMessage(ex.getMessage());
                 SwingUtils.createOkDialog(mainAppFrame, ex.getMessage(), "Excel-Export");
             }
@@ -98,6 +102,7 @@ public class ImportThreadWorker extends SwingWorker implements ProgressIndicator
                             "Excel-Import");
                 }
             } catch (DartException ex) {
+                log.error(null, ex);
                 mainAppFrame.setMessage(ex.getMessage());
                 SwingUtils.createOkDialog(mainAppFrame, ex.getMessage(), "Excel-Import");
             }
@@ -127,6 +132,7 @@ public class ImportThreadWorker extends SwingWorker implements ProgressIndicator
                             "dBase-Export");
                 }
             } catch (DartException ex) {
+                log.error(null, ex);
                 mainAppFrame.setMessage(ex.getMessage());
                 SwingUtils.createOkDialog(mainAppFrame, ex.getMessage(), "dBase-Export");
             }
@@ -192,6 +198,7 @@ public class ImportThreadWorker extends SwingWorker implements ProgressIndicator
                 }
             }
         } catch (Exception e1) {
+            log.error(null, e1);
             mainAppFrame.setMessage("Fehler: " + e1.getMessage());
             SwingUtils.createOkDialog(mainAppFrame, "Fehler: " + e1.getMessage(),
                     "csv-Import");

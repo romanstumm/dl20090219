@@ -8,6 +8,8 @@ import org.en.tealEye.guiExt.ExtPanel.ExtendedJPanelImpl;
 import org.en.tealEye.guiMain.*;
 import org.en.tealEye.guiPanels.applicationLogicPanels.CreateLocation;
 import org.en.tealEye.guiPanels.applicationLogicPanels.ShowLocations;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -16,6 +18,7 @@ import java.awt.event.MouseEvent;
 import java.util.Collection;
 
 public class LocationController extends PanelController {
+    private static final Log log = LogFactory.getLog(LocationController.class);
 
     private CreateLocation createLocation;
     private ShowLocations showLocations;
@@ -41,7 +44,7 @@ public class LocationController extends PanelController {
                     instance.execute();
                 } catch (Exception e1) {
                     mainApp.setTaskbarTask("WindowFehler: " + e1.getMessage());
-                    //log.error(e1.getMessage(), e1);
+                    log.error(e1.getMessage(), e1);
                 }
             }
         }

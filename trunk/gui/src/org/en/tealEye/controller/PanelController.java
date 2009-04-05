@@ -66,7 +66,7 @@ public abstract class PanelController
             instance.execute();
         } catch (Exception e1) {
             //mainApp.setTaskbarTask("WindowFehler: " + e1.getMessage());
-            //log.error(e1.getMessage(), e1);
+            log.error(e1.getMessage(), e1);
         }
     }
 

@@ -6,6 +6,8 @@ import de.liga.dart.model.Ligateam;
 import de.liga.dart.model.Spielort;
 import de.liga.dart.common.service.ServiceFactory;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.en.tealEye.framework.BeanTableModel;
 import org.en.tealEye.framework.SwingUtils;
 import org.en.tealEye.framework.TransactionWorker;
@@ -31,6 +33,7 @@ import java.util.List;
  * Time: 00:31:55
  */
 public class TeamController extends PanelController {
+    private static final Log log = LogFactory.getLog(TeamController.class);
 
     private CreateTeam createTeam;
     private ShowTeams showTeams;
@@ -63,7 +66,7 @@ public class TeamController extends PanelController {
 //                        instance.get();
                     } catch (Exception e1) {
                         mainApp.setTaskbarTask("WindowFehler: " + e1.getMessage());
-                        //log.error(e1.getMessage(), e1);
+                        log.error(e1.getMessage(), e1);
                     }
                 }
             } else if (((JTable) obj).getName().equals("Table_SpielortProLiga")) {

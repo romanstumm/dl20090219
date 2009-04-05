@@ -17,6 +17,8 @@ import org.en.tealEye.framework.TransactionWorker;
 import org.en.tealEye.framework.SwingUtils;
 import org.en.tealEye.guiExt.ExtPanel.ExtJTablePanel;
 import org.en.tealEye.guiExt.ExtPanel.ShowTablePanel;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.util.List;
 
@@ -27,7 +29,7 @@ import java.util.List;
  * Time: 17:43:21
  */
 public class DeleteThreadWorker extends TransactionWorker {
-
+    private static final Log log = LogFactory.getLog(DeleteThreadWorker.class);
     private ExtJTablePanel jPanel = null;
     private final MainAppFrame mainApp;
     private final PanelController controller;
@@ -92,6 +94,7 @@ public class DeleteThreadWorker extends TransactionWorker {
                 mainApp.setMessage(ex.getMessages().toString());
             }
         } catch (DartException ex) {
+            log.error(null, ex);
             mainApp.setMessage(ex.getMessage());
         }
         mainApp.showProgress(100, "");
