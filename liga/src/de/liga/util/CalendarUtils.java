@@ -57,6 +57,12 @@ public class CalendarUtils {
         }
     }
 
+    public static String dateToString(java.util.Date date, String format) {
+        if (date == null) return null;
+        SimpleDateFormat dateFormat = new SimpleDateFormat(format);
+        return dateFormat.format(date);
+    }
+
     /**
      * database time formatted string -> Time
      * @param time
