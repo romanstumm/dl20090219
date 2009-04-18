@@ -6,6 +6,7 @@ import de.liga.dart.fileimport.vfs.DbfImporter;
 import de.liga.dart.gruppen.check.ProgressIndicator;
 import de.liga.dart.exception.DartException;
 import de.liga.util.thread.ThreadManager;
+import de.liga.util.CalendarUtils;
 import org.en.tealEye.framework.LigaChooser;
 import org.en.tealEye.framework.SwingUtils;
 import org.apache.commons.logging.Log;
@@ -15,6 +16,8 @@ import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.FileNotFoundException;
+import java.io.FileFilter;
+import java.util.Date;
 
 /**
  * Description: <br/>
@@ -62,10 +65,14 @@ public class ImportThreadWorker extends SwingWorker implements ProgressIndicator
         final JFileChooser fc = new JFileChooser(REMEMBER_DIR);
         fc.setDialogTitle("Daten in Exceldatei sichern");
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        fc.setSelectedFile(new File("liga-" +
+                CalendarUtils.dateToString(new Date(), "yyyy-MM-dd HH-mm-ss") + ".xls"));
         int returnVal = fc.showSaveDialog(mainAppFrame);
-        if (fc.getSelectedFile() != null) REMEMBER_DIR = fc.getSelectedFile();
+
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fc.getSelectedFile();
+            setRememberDir(file);
+            file = ensureSuffix(file, ".xls");
             DataExchanger exporter = new ExcelExporter(file);
             exporter.setProgressIndicator(this);
             try {
@@ -83,12 +90,31 @@ public class ImportThreadWorker extends SwingWorker implements ProgressIndicator
         return null;
     }
 
+    private File ensureSuffix(File file, String suffix) {
+        if (!file.getName().toLowerCase().endsWith(suffix.toLowerCase())) {
+            String name = file.getName();
+            int suff = name.lastIndexOf('.');
+            if(suff>0) {
+                name = name.substring(0, suff);
+            }
+            file = new File(file.getParent(), name + suffix);
+        }
+        return file;
+    }
+
+    private void setRememberDir(File file) {
+        if (file != null) {
+            REMEMBER_DIR = file;
+            REMEMBER_DIR = REMEMBER_DIR.getParentFile();
+        }
+    }
+
     private Object doExcelImport() throws FileNotFoundException {
         final JFileChooser fc = new JFileChooser(REMEMBER_DIR);
         fc.setDialogTitle("Daten aus Exceldatei wiederherstellen");
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
         int returnVal = fc.showOpenDialog(mainAppFrame);
-        if (fc.getSelectedFile() != null) REMEMBER_DIR = fc.getSelectedFile();
+        setRememberDir(fc.getSelectedFile());
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fc.getSelectedFile();
             try {
@@ -187,7 +213,7 @@ public class ImportThreadWorker extends SwingWorker implements ProgressIndicator
             fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
             fc.setApproveButtonToolTipText("Spalten durch ; getrennt?");
             int returnVal = fc.showOpenDialog(mainAppFrame);
-            if (fc.getSelectedFile() != null) REMEMBER_DIR = fc.getSelectedFile();
+            setRememberDir(fc.getSelectedFile());
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 File checkit1 = new File(fc.getSelectedFile(), "LITAUF.csv");
                 File checkit2 = new File(fc.getSelectedFile(), "LITLOK.csv");
