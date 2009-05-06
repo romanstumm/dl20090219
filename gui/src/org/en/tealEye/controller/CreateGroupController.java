@@ -9,6 +9,7 @@ import de.liga.dart.model.Ligateam;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.en.tealEye.framework.SwingUtils;
+import org.en.tealEye.framework.PopupBase;
 import org.en.tealEye.guiExt.ExtPanel.ExtJTablePanel;
 import org.en.tealEye.guiExt.ExtPanel.ExtendedJPanelImpl;
 import org.en.tealEye.guiExt.ExtPanel.JListExt;
@@ -134,11 +135,28 @@ public class CreateGroupController extends PanelController {
         final Object obj = e.getSource();
         if (obj instanceof JTable) {
             JTable jtable = (JTable) obj;
-            if (jtable.equals(createGroup.getTable())) {
+            if(e.getButton() == MouseEvent.BUTTON3){
+                    int y = e.getY();
+                    int row = Math.round(y / ((JTable) obj).getRowHeight());
+
+                    ((JTable) obj).setRowSelectionInterval(row,row);
+                    PopupBase pum = new PopupBase(mainApp.getMenuController(), this,e.getComponent(),e.getX(),e.getY(),4);
+                    this.setPopupSource(((JTable) obj));
+            }
+            else if (jtable.equals(createGroup.getTable()) && e.getClickCount() == 2) {
                 handleClickInTable(jtable);
             }
         } else if (obj instanceof JListExt) {
-            if (ALTDown || e.getClickCount() == 2) {
+
+            if(e.getButton() == MouseEvent.BUTTON3){
+                     int y = e.getY();
+                     int row = ((JListExt) obj).locationToIndex(e.getPoint());
+
+                    ((JListExt) obj).setSelectedIndex(row);
+                    PopupBase pum = new PopupBase(mainApp.getMenuController(), this,e.getComponent(),e.getX(),e.getY(),0);
+            }
+
+            else if (ALTDown || e.getClickCount() == 2) {
                 Object item =
                         createGroup.getLigateamsNochFrei().getSelectedValue();
                 Ligateam team = (Ligateam) item;

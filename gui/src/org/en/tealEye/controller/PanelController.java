@@ -26,12 +26,20 @@ import java.beans.PropertyChangeListener;
  */
 public abstract class PanelController
         implements MouseListener, ActionListener, PropertyChangeListener, KeyListener {
-    private static final Log log = LogFactory.getLog(PanelController.class);
+    protected static final Log log = LogFactory.getLog(PanelController.class);
     private boolean updateInProgress;
     protected final MainAppFrame mainApp;
+    private JComponent popupSource;
 
     protected PanelController(MainAppFrame mainApp) {
         this.mainApp = mainApp;
+    }
+
+    public JComponent getPopupSource(){
+        return popupSource;
+    }
+    protected void setPopupSource(JComponent popupSource){
+        this.popupSource = popupSource;
     }
 
     public void mousePressed(MouseEvent e) {
