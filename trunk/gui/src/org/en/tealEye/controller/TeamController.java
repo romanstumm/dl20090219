@@ -11,6 +11,7 @@ import org.apache.commons.logging.LogFactory;
 import org.en.tealEye.framework.BeanTableModel;
 import org.en.tealEye.framework.SwingUtils;
 import org.en.tealEye.framework.TransactionWorker;
+import org.en.tealEye.framework.PopupBase;
 import org.en.tealEye.guiExt.ExtPanel.ExtJEditPanel;
 import org.en.tealEye.guiExt.ExtPanel.ExtJTablePanel;
 import org.en.tealEye.guiExt.ExtPanel.ExtendedJPanelImpl;
@@ -22,6 +23,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.*;
 import java.util.Collection;
 import java.util.Map;
 import java.util.List;
@@ -70,15 +72,35 @@ public class TeamController extends PanelController {
                     }
                 }
             } else if (((JTable) obj).getName().equals("Table_SpielortProLiga")) {
+                if (e.getButton() == MouseEvent.BUTTON3) {
+                     int y = e.getY();
+                     int row = Math.round(y / ((JTable) obj).getRowHeight());
+
+                    ((JTable) obj).setRowSelectionInterval(row,row);
+                    PopupBase pum = new PopupBase(mainApp.getMenuController(), this,e.getComponent(),e.getX(),e.getY(),3);
+                    this.setPopupSource(((JTable) obj));
+                }
+            } else if (((JTable) obj).getName().equals("Table_SpielortProLiga")) {
                 if (e.getClickCount() == 2) {
                     CreateTeam panel = (CreateTeam) mainApp.getPanelMap().get("CreateTeam");
                     panel.setSpielortTextField();
                 }
             }
         } else if (obj instanceof JList) {
+            ((JList) obj).requestFocus();
+            
             if (((JList) obj).getName().equals("List_possibleTeamsForWunschList") &&
                     ((JList) obj).getSelectedValue() != null) {
-                if (e.getClickCount() == 2) {
+                if (e.getButton() == MouseEvent.BUTTON3) {
+
+                     int y = e.getY();
+                     int row = ((JList) obj).locationToIndex(e.getPoint());
+
+                    ((JList) obj).setSelectedIndex(row);
+                    PopupBase pum = new PopupBase(mainApp.getMenuController(), this,e.getComponent(),e.getX(),e.getY(),0);
+                   // this.setPopupSource(((JList) obj));
+                }
+                else if (e.getClickCount() == 2) {
                     moveTeamToWunschList();
                 }
             } else if (((JList) obj).getName().equals("List_TeamWunschList") &&

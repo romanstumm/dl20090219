@@ -411,6 +411,10 @@ public class MainAppFrame extends Component implements Licensable, ProgressIndic
             }
         }
     }
+
+    public MenuController getMenuController(){
+        return menuController;
+    }
 }
 
 

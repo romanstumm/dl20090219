@@ -6,22 +6,21 @@ import de.liga.dart.common.service.ServiceFactory;
 import de.liga.dart.ligateam.service.LigateamService;
 import org.en.tealEye.framework.LigaChooser;
 import org.en.tealEye.framework.SwingUtils;
+import org.en.tealEye.framework.TransactionWorker;
+import org.en.tealEye.framework.BeanTableModel;
 import org.en.tealEye.guiMain.FloatPanel.ActiveFrameMenu;
-import org.en.tealEye.guiMain.Hypervisor;
-import org.en.tealEye.guiMain.IO_ACTION;
-import org.en.tealEye.guiMain.ImportThreadWorker;
-import org.en.tealEye.guiMain.MainAppFrame;
+import org.en.tealEye.guiMain.*;
 import org.en.tealEye.guiPanels.ConfigPanels.MainConfigFrame;
 import org.en.tealEye.guiPanels.applicationLogicPanels.AboutFrame;
+import org.en.tealEye.guiPanels.helpSystem.core.HelpMain;
 import org.en.tealEye.printing.controller.PrintingController;
+import org.en.tealEye.guiExt.ExtPanel.ExtJEditPanel;
+import org.en.tealEye.controller.PanelController;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,16 +30,19 @@ import java.util.Map;
  * Date: 14.11.2007
  * Time: 03:15:34
  */
-public class MenuController implements ActionListener, MouseListener, GuiController {
+public class MenuController extends PanelController {
 
     private final MainAppFrame mainAppFrame;
     private final Hypervisor h;
     private final Map<String, String> actionPanelMap = new HashMap(8);
     private ActiveFrameMenu afm;
+    private PanelController pC;
 
     public MenuController(MainAppFrame mainAppFrame, Hypervisor h) {
+        super(mainAppFrame);
         this.mainAppFrame = mainAppFrame;
         this.h = h;
+        this.pC = pC;
         initActionPanelMap();
     }
 
@@ -133,7 +135,51 @@ public class MenuController implements ActionListener, MouseListener, GuiControl
                 afm.activateFrameButton(mainAppFrame.getActiveFrame());
                 afm.setInactiveColor();
             }
+
         }
+             else if(action.startsWith("MENU_help")){
+                new HelpMain();
+            }else if(action.startsWith("MENU_index")){
+
+            }else if(action.startsWith("pum_EditTeam")){
+                JPanel p = h.showPanel("CreateTeam");
+               /* Object obje = ((JList)pC.getPopupSource()).getSelectedValue();
+                try {
+                    TransactionWorker work = new EditThreadWorker(
+                            this, (ExtJEditPanel) p, obje, mainAppFrame);
+                    work.addPropertyChangeListener(this);
+                    work.execute();
+                } catch (Exception e1) {
+                    mainApp.setTaskbarTask("WindowFehler: " + e1.getMessage());
+                    log.error(e1.getMessage(), e1);
+                }   */
+            }else if(action.startsWith("pum_EditLocation")){
+                JPanel p = h.showPanel("CreateLocation");
+                Object obje = ((BeanTableModel) ((JTable)pC.getPopupSource()).getModel())
+                            .getObject(((JTable)pC.getPopupSource()).getSelectedRow());
+                try {
+                    TransactionWorker work = new EditThreadWorker(
+                            this, (ExtJEditPanel) p, obje, mainAppFrame);
+                    work.addPropertyChangeListener(this);
+                    work.execute();
+                } catch (Exception e1) {
+                    mainApp.setTaskbarTask("WindowFehler: " + e1.getMessage());
+                    log.error(e1.getMessage(), e1);
+                }
+            }else if(action.startsWith("pum_EditVendor")){
+                JPanel p = h.showPanel("CreateVendor");
+                Object obje = ((BeanTableModel) ((JTable)pC.getPopupSource()).getModel())
+                            .getObject(((JTable)pC.getPopupSource()).getSelectedRow());
+                try {
+                    TransactionWorker work = new EditThreadWorker(
+                            this, (ExtJEditPanel) p, obje, mainAppFrame);
+                    work.addPropertyChangeListener(this);
+                    work.execute();
+                } catch (Exception e1) {
+                    mainApp.setTaskbarTask("WindowFehler: " + e1.getMessage());
+                    log.error(e1.getMessage(), e1);
+                }
+            }
         /* else if (obj instanceof JButton &&
                mainAppFrame.getFrameMap().containsKey(action)) {
            mainAppFrame.insertInternalFrame(action, true);
@@ -200,11 +246,31 @@ public class MenuController implements ActionListener, MouseListener, GuiControl
         }
     }
 
+    protected void initiateRefreshEvent() {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
     public void setActiveFrameMenu(ActiveFrameMenu afm) {
         this.afm = afm;
     }
 
     public void setActiveFrameName(String name) {
         afm.setActiveButtonName(name);
+    }
+
+    public void keyTyped(KeyEvent e) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void keyPressed(KeyEvent e) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void keyReleased(KeyEvent e) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void setPanelController(PanelController pC){
+        this.pC = pC;
     }
 }
