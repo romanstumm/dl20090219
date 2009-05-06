@@ -74,6 +74,18 @@ public class LocationController extends PanelController {
                 mainApp.setTaskbarTask("Spielorte sortiert");
             } else if (ac.equals("löschen")) {
                 new DeleteThreadWorker(this, showLocations, mainApp).execute();
+            } else if (ac.equals("btLocationReference")) {
+                JPanel p = h.showPanel("CreateVendor");
+                Object obje = createLocation.getLocationVendor();
+                try {
+                    TransactionWorker instance = new EditThreadWorker(
+                            this, (ExtJEditPanel) p, obje, mainApp);
+                    instance.addPropertyChangeListener(this);
+                    instance.execute();
+                } catch (Exception e1) {
+                    mainApp.setTaskbarTask("WindowFehler: " + e1.getMessage());
+                    log.error(e1.getMessage(), e1);
+                }
             }
         }
     }
