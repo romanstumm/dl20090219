@@ -11,6 +11,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.*;
 import java.util.Calendar;
 
 
@@ -22,8 +23,10 @@ public class CreateLocation extends ExtJEditPanel implements LigaSelectable, Act
     private JComboBox locationLiga;
     private final JLabel locationLigaLabel = new JLabel("Liga");
     private JTextArea labelTeamsAnzahl;
+    private JButton btLocationReference;
 
     public CreateLocation() {
+
 
         setName("CreateLocation");
         setTitle("Spielort bearbeiten");
@@ -77,6 +80,7 @@ public class CreateLocation extends ExtJEditPanel implements LigaSelectable, Act
         locationNew = new JButton();
         locationLiga = new JComboBox();
         setLayout(new java.awt.GridBagLayout());
+        btLocationReference = new JButton("Aufsteller bearbeiten");
 
         setMinimumSize(new java.awt.Dimension(400, 400));
         setPreferredSize(new java.awt.Dimension(600, 600));
@@ -106,6 +110,7 @@ public class CreateLocation extends ExtJEditPanel implements LigaSelectable, Act
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 0.9;
@@ -115,6 +120,7 @@ public class CreateLocation extends ExtJEditPanel implements LigaSelectable, Act
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 0.9;
@@ -126,6 +132,9 @@ public class CreateLocation extends ExtJEditPanel implements LigaSelectable, Act
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 2;
+
+
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 0.9;
         gridBagConstraints.insets = new java.awt.Insets(1, 10, 1, 2);
@@ -134,6 +143,7 @@ public class CreateLocation extends ExtJEditPanel implements LigaSelectable, Act
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 0.9;
@@ -143,6 +153,7 @@ public class CreateLocation extends ExtJEditPanel implements LigaSelectable, Act
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 0.9;
@@ -152,6 +163,7 @@ public class CreateLocation extends ExtJEditPanel implements LigaSelectable, Act
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 0.9;
@@ -161,6 +173,7 @@ public class CreateLocation extends ExtJEditPanel implements LigaSelectable, Act
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 0.9;
@@ -170,6 +183,7 @@ public class CreateLocation extends ExtJEditPanel implements LigaSelectable, Act
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 8;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 0.9;
@@ -179,6 +193,7 @@ public class CreateLocation extends ExtJEditPanel implements LigaSelectable, Act
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 0.9;
@@ -194,10 +209,21 @@ public class CreateLocation extends ExtJEditPanel implements LigaSelectable, Act
         gridBagConstraints.insets = new java.awt.Insets(1, 10, 1, 2);
         formularPanel.add(locationVendorNum, gridBagConstraints);
 
+        btLocationReference.setName("btLocationReference");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 11;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 0.1;
+        gridBagConstraints.insets = new java.awt.Insets(1, 10, 1, 2);
+        formularPanel.add(btLocationReference, gridBagConstraints);
+
+
         locationDayOff.setModel(new DefaultComboBoxModel(CalendarUtils.getWeekdays()));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 9;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 0.9;
         gridBagConstraints.insets = new java.awt.Insets(1, 10, 1, 2);
@@ -207,6 +233,7 @@ public class CreateLocation extends ExtJEditPanel implements LigaSelectable, Act
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 10;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 0.9;
         gridBagConstraints.insets = new java.awt.Insets(1, 10, 1, 2);
@@ -318,11 +345,13 @@ public class CreateLocation extends ExtJEditPanel implements LigaSelectable, Act
         gridBagConstraints.weightx = 0.1;
         gridBagConstraints.insets = new java.awt.Insets(1, 2, 1, 2);
         formularPanel.add(locationLigaLabel, gridBagConstraints);
+
         fieldAutomatenAnzahl.setMinimumSize(new java.awt.Dimension(30, 20));
         fieldAutomatenAnzahl.setPreferredSize(new java.awt.Dimension(30, 20));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 12;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 0.9;
         gridBagConstraints.insets = new java.awt.Insets(1, 10, 1, 2);
@@ -338,6 +367,7 @@ public class CreateLocation extends ExtJEditPanel implements LigaSelectable, Act
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 13;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1;
         gridBagConstraints.insets = new java.awt.Insets(1, 10, 1, 2);
@@ -576,5 +606,9 @@ public class CreateLocation extends ExtJEditPanel implements LigaSelectable, Act
         Spielort ort = (Spielort) getModelEntity();
         ort.setAutomatenAnzahl(1);
         ort.setFreierTag(Calendar.MONDAY);
+    }
+
+    public Object getLocationVendor() {
+        return locationVendorNum.getSelectedItem();
     }
 }
