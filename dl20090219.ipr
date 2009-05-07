@@ -32,6 +32,7 @@
       <entry name="?*.dtd" />
       <entry name="?*.tld" />
       <entry name="?*.sql" />
+      <entry name="?*.groovy" />
     </wildcardResourcePatterns>
   </component>
   <component name="DataSourceManagerImpl" />
@@ -480,7 +481,36 @@
       </value>
     </option>
   </component>
-  <component name="libraryTable" />
+  <component name="libraryTable">
+    <library name="groovy1.6.2">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/liga/test/lib/groovy/asm-util-2.2.3.jar!/" />
+        <root url="jar://$PROJECT_DIR$/liga/test/lib/groovy/asm-2.2.3.jar!/" />
+        <root url="jar://$PROJECT_DIR$/liga/test/lib/groovy/bsf-2.4.0.jar!/" />
+        <root url="jar://$PROJECT_DIR$/liga/test/lib/groovy/asm-analysis-2.2.3.jar!/" />
+        <root url="jar://$PROJECT_DIR$/liga/test/lib/groovy/commons-cli-1.2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/liga/test/lib/groovy/asm-tree-2.2.3.jar!/" />
+        <root url="jar://$PROJECT_DIR$/liga/test/lib/groovy/groovy-1.6.2.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="hibernate3.3.1">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/liga/lib/hibernate3.3.1/antlr-2.7.6.jar!/" />
+        <root url="jar://$PROJECT_DIR$/liga/lib/hibernate3.3.1/dom4j-1.6.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/liga/lib/hibernate3.3.1/ehcache-1.2.3.jar!/" />
+        <root url="jar://$PROJECT_DIR$/liga/lib/hibernate3.3.1/hibernate-cglib-repack-2.1_3.jar!/" />
+        <root url="jar://$PROJECT_DIR$/liga/lib/hibernate3.3.1/hibernate3.jar!/" />
+        <root url="jar://$PROJECT_DIR$/liga/lib/hibernate3.3.1/javassist-3.4.GA.jar!/" />
+        <root url="jar://$PROJECT_DIR$/liga/lib/hibernate3.3.1/jta-1.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/liga/lib/hibernate3.3.1/slf4j-api-1.5.6.jar!/" />
+        <root url="jar://$PROJECT_DIR$/liga/lib/hibernate3.3.1/slf4j-log4j12-1.5.6.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+  </component>
   <component name="uidesigner-configuration">
     <option name="INSTRUMENT_CLASSES" value="true" />
     <option name="COPY_FORMS_RUNTIME_TO_OUTPUT" value="true" />
