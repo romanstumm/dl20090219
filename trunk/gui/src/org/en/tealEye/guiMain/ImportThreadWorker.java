@@ -3,6 +3,7 @@ package org.en.tealEye.guiMain;
 import de.liga.dart.fileimport.*;
 import de.liga.dart.fileimport.vfs.DbfExporter;
 import de.liga.dart.fileimport.vfs.DbfImporter;
+import de.liga.dart.fileimport.vfs.rangliste.RanglisteExporter;
 import de.liga.dart.gruppen.check.ProgressIndicator;
 import de.liga.dart.exception.DartException;
 import de.liga.util.thread.ThreadManager;
@@ -53,12 +54,55 @@ public class ImportThreadWorker extends SwingWorker implements ProgressIndicator
                     return doExcelExport();
                 case ExcelImport:
                     return doExcelImport();
+                case ExcelRangliste:
+                    return doExcelRangliste();
                 default:
                     return null; // unknown action
             }
         } finally {
             ThreadManager.getInstance().removeThread(Thread.currentThread());
         }
+    }
+
+    private Object doExcelRangliste() {
+         LigaChooser chooser =
+                new LigaChooser("vfs-Rangliste erstellen. 1. Liga wählen", mainAppFrame,
+                        LigaChooser.SELECTION_MODE_LIGA);
+        if (!chooser.choose() || chooser.getSelectedLiga() == null) {
+            mainAppFrame.setMessage("Rangliste - Abbruch, keine Liga gewählt!");
+            return null;
+        }
+        final JFileChooser fc = new JFileChooser(REMEMBER_DIR);
+        fc.setDialogTitle("vfs-Rangliste erstellen. 2. Name der Exceldatei angeben");
+        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        fc.setSelectedFile(new File("rangliste-" + chooser.getSelectedLiga().getLigaName() + ".xls"));
+        int returnVal = fc.showSaveDialog(mainAppFrame);
+
+        File file = null;
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            file = fc.getSelectedFile();
+            setRememberDir(file);
+            file = ensureSuffix(file, ".xls");
+        }
+        if(file == null) {
+            mainAppFrame.setMessage("Rangliste - Abbruch, keine Exceldatei gewählt!");
+            return null;
+        }
+        RanglisteExporter exporter = new RanglisteExporter(file);
+        exporter.setProgressIndicator(this);
+        boolean success;
+        if (chooser.getSelectedLiga() != null) {
+            success = exporter.start(chooser.getSelectedLiga().getLigaName());
+            if (success) {
+                mainAppFrame.setMessage("Rangliste für Liga " +
+                        chooser.getSelectedLiga().getLigaName() + " gespeichert in " + file.getPath());
+            } else {
+                mainAppFrame.setMessage("Rangliste - nicht möglich (Fehler)!");
+                SwingUtils.createOkDialog(mainAppFrame, "Rangliste nicht möglich (Fehler)!",
+                        "Rangliste-Export");
+            }
+        }
+        return null;
     }
 
     private Object doExcelExport() throws IOException {

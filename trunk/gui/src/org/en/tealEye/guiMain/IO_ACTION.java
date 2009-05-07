@@ -6,5 +6,5 @@ package org.en.tealEye.guiMain;
  * Date: 17.05.2008, 15:01:56
  */
 public enum IO_ACTION {
-    DBaseImport, DBaseExport, ExcelExport, ExcelImport, CsvImport
+    DBaseImport, DBaseExport, ExcelExport, ExcelImport, CsvImport, ExcelRangliste
 }

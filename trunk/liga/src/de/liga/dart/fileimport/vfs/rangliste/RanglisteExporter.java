@@ -55,6 +55,7 @@ public class RanglisteExporter implements DataExchanger {
             dbfImport.setProgressIndicator(indicator);
             dbfImport.start(liganame);
             // RanglisteExporter: compute data zum seriendruck-export
+            indicator.showProgress(70, "Sortiere " + liganame + " ...");
             List<VfsLiga> ligen = sortLigen(dbfImport);
             List<VfsTeam> rangListe = computeRaenge(dbfImport, ligen);
             ExcelExportErgebnis exporter = new ExcelExportErgebnis(outFile, rangListe);
@@ -63,6 +64,7 @@ public class RanglisteExporter implements DataExchanger {
             return true;
         } catch (Exception e) {
             log.error("Fehler beim Export der Rangliste für " + liganame, e);
+            indicator.showProgress(0, "");
             return false;
         }
     }
