@@ -10,7 +10,7 @@ import java.sql.Date;
 class LITTEA {
     Date SAI_NR; 
     long LIG_NR;   // Ligaklasse
-    long TEA_NR;   // PK
+    long TEA_NR;   // TEA_NR,N,5,0 PK
     String TEA_NAME;
     long LOK_NR;   // Spielort.externe ID
     //String TEA_KAPIT;

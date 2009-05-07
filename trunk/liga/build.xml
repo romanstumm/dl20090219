@@ -46,6 +46,8 @@
                 <include name="**/*.xml"/>
             </fileset>
             <fileset dir="config">
+                <exclude name="log4j.xml"/>
+                <exclude name="vfs-rang-config.xml"/>
                 <exclude name="settings.properties"/>
             </fileset>
         </jar>
