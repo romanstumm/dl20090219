@@ -11,6 +11,6 @@ class LITSAD {
     Date SAI_NR;  // Saison Nr (Date), z.b. 01.01.2009
     long LIG_NR; // Ligaklase.PK
     int SAI_POSNR; // 1-8
-    long TEA_NR;   // Team.PK
+    long TEA_NR;   // TEA_NR,N,5,0 Team.PK
     String SPI_NR; // P0 fix
 }

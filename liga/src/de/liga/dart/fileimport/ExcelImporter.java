@@ -217,6 +217,7 @@ public class ExcelImporter extends ExcelIO {
         if (dataMap != null) {
             String version = dataMap.get("version");
             if (version != null) {
+                // kompatible Versionen hier prüfen
                 if (!version.equals(Application.APPLICATION_VERSION) &&
                     !version.startsWith("2.2.") && !version.startsWith("2.3.")) {
                     throw new DartException(

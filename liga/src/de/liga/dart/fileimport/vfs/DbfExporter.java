@@ -30,7 +30,6 @@ public class DbfExporter extends DbfIO {
     private long maxLigId;
     private int maxTeamID;
     private long spielfreiLOK_NR = -1;
-    private Date myCurrentSaison;
 
     protected String actionVerb() {
         return "Exportiere";
@@ -47,18 +46,8 @@ public class DbfExporter extends DbfIO {
         GruppenService service = ServiceFactory.get(GruppenService.class);
         List<Ligagruppe> gruppen;
         try {
+            readCurrentSaison(stmt);
 
-            // ermittele aktuelle Saison
-            ResultSet resultSet = stmt.executeQuery("SELECT ANW_SAISON FROM \"LITANW.DBF\"");
-            try {
-                if (resultSet.next()) {
-                    myCurrentSaison = resultSet.getDate(1);
-                }
-            } finally {
-                resultSet.close();
-            }
-            if (myCurrentSaison == null)
-                throw new DartException("Kann aktuelle Saison nicht auslesen.");
             // ermittele die primary keys
             maxLigId = readMaxLigID(stmt);
             maxTeamID = 0; // readMaxTeamID(stmt);
@@ -120,6 +109,7 @@ public class DbfExporter extends DbfIO {
             deleteIndexFiles(path);
         }
     }
+
 
     private void deleteIndexFiles(String path) {
         File dir = new File(path);
