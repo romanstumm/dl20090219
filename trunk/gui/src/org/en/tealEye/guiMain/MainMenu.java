@@ -65,9 +65,14 @@ public class MainMenu extends JMenuBar {
         menu.add(item = new JMenuItem("vfs/dBase (Teams, Gruppen)"));
         item.setActionCommand("MENU_Datenexport");
         item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_5, InputEvent.CTRL_MASK));
-        dateiMenu.addSeparator();
         addMenuController(menu);
+
+        item = new JMenuItem("Export Rangliste (aus vfs)");
+        item.setActionCommand("MENU_Rangliste");
+        item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_MASK));
+        dateiMenu.add(item);
         // - - - - - - - - - - - -
+        dateiMenu.addSeparator();
         dateiMenu.add(new JMenuItem("Beenden"));
 
 

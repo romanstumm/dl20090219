@@ -64,7 +64,7 @@
             <fileset dir="${ligadir}/lib">
                 <include name="*.jar"/>
             </fileset>
-            <fileset dir="${ligadir}/lib/hibernate">
+            <fileset dir="${ligadir}/lib/hibernate3.3.1">
                 <include name="*.jar"/>
             </fileset>
             <fileset dir="libs">
@@ -76,6 +76,8 @@
             <fileset dir="config"/>
             <fileset dir="${ligadir}/config">
                 <include name="settings.properties"/>
+                <include name="log4j.xml"/>
+                <include name="vfs-rang-config.xml"/>
             </fileset>
         </copy>
         <copy todir="${distdir}/media">
