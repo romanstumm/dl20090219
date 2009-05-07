@@ -41,6 +41,11 @@ public class DbfImportErgebnis extends DbfIO {
         return teams;
     }
 
+
+    protected String actionVerb() {
+        return "Berechne";
+    }
+
     protected void exchangeData(Liga liga, String path) throws SQLException {
         Statement stmt = connection.createStatement();
         try {

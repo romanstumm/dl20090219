@@ -23,7 +23,8 @@ public class ExcelExportErgebnis extends ExcelIO {
     private Map<String, HSSFCellStyle> styles = new HashMap();
     private static final String[] HEADERS = {
             "Klasse", "Liganame", "Platz", "Liga-Meister", "Teamname",
-            "Rang", "Begegnungen", "Punkte", "Heim-Spiele", "Gast-Spiele", "Heim-Sätze", "Gast-Sätze"
+            "Rang", "Begegnungen", "Punkte", "Heim-Spiele", "Gast-Spiele", "Heim-Sätze",
+            "Gast-Sätze"
     };
     private static final String[] COLUMNS = {  // property names to get the value from a VfsTeam
             "klasse", "liganame", "platz", "ligameister", "teamname",
@@ -39,6 +40,7 @@ public class ExcelExportErgebnis extends ExcelIO {
     }
 
     protected void exchangeData() throws Exception {
+        progressIndicator.showProgress(90, "Speichere " + outFile.getName() + " ...");
         FileOutputStream fileOut = new FileOutputStream(outFile);
         try {
             HSSFWorkbook wb = new HSSFWorkbook();
@@ -49,6 +51,7 @@ public class ExcelExportErgebnis extends ExcelIO {
             wb.write(fileOut);
         } finally {
             fileOut.close();
+            progressIndicator.showProgress(0, "");
         }
     }
 

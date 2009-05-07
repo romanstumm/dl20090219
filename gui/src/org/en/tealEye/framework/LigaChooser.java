@@ -18,17 +18,36 @@ public class LigaChooser extends JDialog {
     private Liga selectedLiga;
     private boolean cancelled = false;
     private final String titleMessage;
+    private final String selectionMode;
+    public static final String SELECTION_MODE_LIGA_MIT_ALLE = "Combo_LigaMitLeer";
+    public static final String SELECTION_MODE_LIGA_MIT_KEINE = "Combo_LigaMitKeine";
+    public static final String SELECTION_MODE_LIGA = "Combo_Liga";
 
+    /**
+     * default selection mode = LIGA_MIT_ALLE
+     * @param title
+     * @param mainAppFrame
+     */
     public LigaChooser(String title, MainAppFrame mainAppFrame) {
+        this(title, mainAppFrame, SELECTION_MODE_LIGA_MIT_ALLE);
+    }
+
+    /**
+     * @param title
+     * @param mainAppFrame
+     * @param selectionModeName - use one of SELECTION_MODE_*
+     */
+    public LigaChooser(String title, MainAppFrame mainAppFrame, String selectionModeName) {
         super((Frame) null, "", true);
         setLocationRelativeTo(mainAppFrame);
         titleMessage = title;
+        selectionMode = selectionModeName;
     }
 
     private void initComponents() {
 
         final JComboBox ligaBox = new JComboBox();
-        ligaBox.setName("Combo_LigaMitLeer");
+        ligaBox.setName(selectionMode);
         setSize(200, 300);
         JButton okBt = new JButton("OK");
         okBt.setMnemonic(KeyEvent.VK_O);
