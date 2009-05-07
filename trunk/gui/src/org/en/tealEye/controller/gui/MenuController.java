@@ -12,7 +12,7 @@ import org.en.tealEye.guiMain.FloatPanel.ActiveFrameMenu;
 import org.en.tealEye.guiMain.*;
 import org.en.tealEye.guiPanels.ConfigPanels.MainConfigFrame;
 import org.en.tealEye.guiPanels.applicationLogicPanels.AboutFrame;
-import org.en.tealEye.guiPanels.helpSystem.core.HelpMain;
+//import org.en.tealEye.guiPanels.helpSystem.core.HelpMain;
 import org.en.tealEye.printing.controller.PrintingController;
 import org.en.tealEye.guiExt.ExtPanel.ExtJEditPanel;
 import org.en.tealEye.controller.PanelController;
@@ -82,6 +82,9 @@ public class MenuController extends PanelController {
         } else if (action.startsWith("MENU_Excelexport")) {
             instance = new ImportThreadWorker(mainAppFrame, IO_ACTION.ExcelExport);
             instance.execute();
+        }  else if (action.startsWith("MENU_Rangliste")) {
+            instance = new ImportThreadWorker(mainAppFrame, IO_ACTION.ExcelRangliste);
+            instance.execute();
         } else if (action.startsWith("MENU_Info")) {
             SwingUtils.createOkDialog(mainAppFrame,
                     Application.APPLICATION_NAME + " " + Application.APPLICATION_VERSION +
@@ -138,7 +141,7 @@ public class MenuController extends PanelController {
 
         }
              else if(action.startsWith("MENU_help")){
-                new HelpMain();
+//                new HelpMain();
             }else if(action.startsWith("MENU_index")){
 
             }else if(action.startsWith("pum_EditTeam")){
@@ -155,6 +158,7 @@ public class MenuController extends PanelController {
                 }   */
             }else if(action.startsWith("pum_EditLocation")){
                 JPanel p = h.showPanel("CreateLocation");
+            // TODO RSt - fix ClassCastException for CreateGroup$TModel!
                 Object obje = ((BeanTableModel) ((JTable)pC.getPopupSource()).getModel())
                             .getObject(((JTable)pC.getPopupSource()).getSelectedRow());
                 try {
