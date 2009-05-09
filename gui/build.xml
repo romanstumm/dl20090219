@@ -87,6 +87,7 @@
         <copy todir="${distdir}/misc" file="${ligadir}/database/liga.dump"/>
         <copy todir="${distdir}" file="dart.bat"/>
         <copy todir="${distdir}" file="${ligadir}/docs/Dokumentation.doc"/>
+        <copy todir="${distdir}" file="${ligadir}/docs/Vorlage-Urkunde.doc"/>
     </target>
 
   <target name="start" description="launch application">
