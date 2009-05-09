@@ -15,6 +15,7 @@ import org.en.tealEye.framework.PopupBase;
 import org.en.tealEye.guiExt.ExtPanel.ExtJEditPanel;
 import org.en.tealEye.guiExt.ExtPanel.ExtJTablePanel;
 import org.en.tealEye.guiExt.ExtPanel.ExtendedJPanelImpl;
+import org.en.tealEye.guiExt.ExtPanel.JListExt;
 import org.en.tealEye.guiMain.*;
 import org.en.tealEye.guiPanels.applicationLogicPanels.CreateTeam;
 import org.en.tealEye.guiPanels.applicationLogicPanels.ShowTeams;
@@ -73,12 +74,14 @@ public class TeamController extends PanelController {
                 }
             } else if (((JTable) obj).getName().equals("Table_SpielortProLiga")) {
                 if (e.getButton() == MouseEvent.BUTTON3) {
-                     int y = e.getY();
-                     int row = Math.round(y / ((JTable) obj).getRowHeight());
+                    int y = e.getY();
+                    int row = Math.round(y / ((JTable) obj).getRowHeight());
 
-                    ((JTable) obj).setRowSelectionInterval(row,row);
-                    PopupBase pum = new PopupBase(mainApp.getMenuController(), this,e.getComponent(),e.getX(),e.getY(),3);
+                    ((JTable) obj).setRowSelectionInterval(row, row);
                     this.setPopupSource(((JTable) obj));
+                    PopupBase pum = new PopupBase(mainApp.getMenuController(),
+                            this, e.getComponent(), e.getX(), e.getY(),
+                            PopupBase.MODE.Aufsteller_and_Location);
                 }
             } else if (((JTable) obj).getName().equals("Table_SpielortProLiga")) {
                 if (e.getClickCount() == 2) {
@@ -88,28 +91,33 @@ public class TeamController extends PanelController {
             }
         } else if (obj instanceof JList) {
             ((JList) obj).requestFocus();
-            
+
             if (((JList) obj).getName().equals("List_possibleTeamsForWunschList") &&
                     ((JList) obj).getSelectedValue() != null) {
                 if (e.getButton() == MouseEvent.BUTTON3) {
-
-                     int y = e.getY();
-                     int row = ((JList) obj).locationToIndex(e.getPoint());
-
-                    ((JList) obj).setSelectedIndex(row);
-                    PopupBase pum = new PopupBase(mainApp.getMenuController(), this,e.getComponent(),e.getX(),e.getY(),0);
-                   // this.setPopupSource(((JList) obj));
-                }
-                else if (e.getClickCount() == 2) {
+                    popupEditTeam(e, obj);
+                    // this.setPopupSource(((JList) obj));
+                } else if (e.getClickCount() == 2) {
                     moveTeamToWunschList();
                 }
             } else if (((JList) obj).getName().equals("List_TeamWunschList") &&
                     ((JList) obj).getSelectedValue() != null) {
-                if (e.getClickCount() == 2) {
+                if (e.getButton() == MouseEvent.BUTTON3) {
+                    popupEditTeam(e, obj);
+                } else if (e.getClickCount() == 2) {
                     removeTeamFromWunschList();
                 }
             }
         }
+    }
+
+    private void popupEditTeam(MouseEvent e, Object obj) {
+        int y = e.getY();
+        int row = ((JList) obj).locationToIndex(e.getPoint());
+        ((JList) obj).setSelectedIndex(row);
+        this.setPopupSource(((JList) obj));
+        PopupBase pum = new PopupBase(mainApp.getMenuController(), this, e.getComponent(),
+                e.getX(), e.getY(), PopupBase.MODE.Team);
     }
 
     private void removeTeamFromWunschList() {
@@ -195,7 +203,8 @@ public class TeamController extends PanelController {
                         Ligateam team = (Ligateam) createTeam.getModelEntity();
                         String infoText =
                                 ServiceFactory.get(LigateamService.class).queryTeamInfos(team);
-                        SwingUtils.createOkDialog(mainApp, infoText, "Infos zu " + team.getTeamName());
+                        SwingUtils.createOkDialog(mainApp, infoText,
+                                "Infos zu " + team.getTeamName());
                     }
                 });
             }

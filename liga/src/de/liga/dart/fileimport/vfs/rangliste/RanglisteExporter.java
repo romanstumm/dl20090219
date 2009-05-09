@@ -51,11 +51,11 @@ public class RanglisteExporter implements DataExchanger {
      */
     public boolean start(String liganame) {
         try {
-            DbfImportErgebnis dbfImport = new DbfImportErgebnis();
+            DbfImportErgebnis dbfImport = new DbfImportErgebnis(getVfsConfig().isComplete());
             dbfImport.setProgressIndicator(indicator);
             dbfImport.start(liganame);
             // RanglisteExporter: compute data zum seriendruck-export
-            indicator.showProgress(70, "Sortiere " + liganame + " ...");
+            if (indicator != null) indicator.showProgress(90, "Sortiere " + liganame + " ...");
             List<VfsLiga> ligen = sortLigen(dbfImport);
             List<VfsTeam> rangListe = computeRaenge(dbfImport, ligen);
             ExcelExportErgebnis exporter = new ExcelExportErgebnis(outFile, rangListe);
@@ -64,7 +64,7 @@ public class RanglisteExporter implements DataExchanger {
             return true;
         } catch (Exception e) {
             log.error("Fehler beim Export der Rangliste für " + liganame, e);
-            indicator.showProgress(0, "");
+            if (indicator != null) indicator.showProgress(0, "");
             return false;
         }
     }

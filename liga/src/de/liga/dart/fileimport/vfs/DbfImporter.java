@@ -32,7 +32,7 @@ public class DbfImporter extends DbfIO {
     private void importAufsteller(Liga liga) throws SQLException {
         Statement stmt = connection.createStatement();
         ResultSet rs = stmt.executeQuery(
-                "SELECT AUF_NR, AUF_NAME, AUF_ZUSATZ, AUF_STRASS, AUF_PLZ, AUF_ORT, AUF_TEL, AUF_FAX FROM \"LITAUF.DBF\"");
+                "SELECT AUF_NR, AUF_NAME, AUF_ZUSATZ, AUF_STRASS, AUF_PLZ, AUF_ORT, AUF_TEL, AUF_FAX FROM LITAUF");
         try {
             AutomatenaufstellerService service =
                     ServiceFactory.get(AutomatenaufstellerService.class);
@@ -116,7 +116,7 @@ public class DbfImporter extends DbfIO {
     private void importSpielorte(Liga liga) throws SQLException {
         Statement stmt = connection.createStatement();
         ResultSet rs = stmt.executeQuery(
-                "SELECT LOK_NR, LOK_NAME, LOK_ZUSATZ, LOK_STRASS, LOK_PLZ, LOK_ORT, LOK_TEL, LOK_FAX, LOK_RUHETA, AUF_NR FROM \"LITLOK.DBF\"");
+                "SELECT LOK_NR, LOK_NAME, LOK_ZUSATZ, LOK_STRASS, LOK_PLZ, LOK_ORT, LOK_TEL, LOK_FAX, LOK_RUHETA, AUF_NR FROM LITLOK");
         try {
             SpielortService service = ServiceFactory.get(SpielortService.class);
             List<Spielort> alle = service.findAllSpielortByLiga(liga);

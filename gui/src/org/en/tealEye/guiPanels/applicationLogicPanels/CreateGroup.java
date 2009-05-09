@@ -107,6 +107,7 @@ public class CreateGroup extends ExtJEditPanel implements
         gruppenName.setEditable(false);
 
         jtable = new RowTipJTable();
+        jtable.setName("Table_Gruppe");
         jtable.setModel(buildTableModel());
         jtable.setCellEditor(new DefaultCellEditor(new JCheckBox()));
         jtable.setFillsViewportHeight(true);

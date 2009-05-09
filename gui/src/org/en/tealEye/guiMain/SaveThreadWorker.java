@@ -66,7 +66,7 @@ public class SaveThreadWorker extends TransactionWorker {
                 DartService ds = ServiceFactory.get(DartService.class);
                 for (int platzNr = 0; platzNr < 8; platzNr++) {
                     //JExtTextField field = createGroup.getGroupTeamName(platzNr);
-                    Ligateam team = (Ligateam) createGroup.getTable().getValueAt(platzNr,1);
+                    Ligateam team = (Ligateam) createGroup.getTable().getValueAt(platzNr,CreateGroup.C_TEAMNAME);
                     Boolean spielfrei = (Boolean)createGroup.getTable().getValueAt(platzNr,CreateGroup.C_SPIELFREI);
                     Boolean fixiert = (Boolean) createGroup.getTable().getValueAt(platzNr, CreateGroup.C_FIXIERT);
                     if (team != null && spielfrei.equals(false)) {

@@ -3,24 +3,30 @@ package org.en.tealEye.controller.gui;
 import de.liga.dart.Application;
 import de.liga.dart.common.service.DartService;
 import de.liga.dart.common.service.ServiceFactory;
+import de.liga.dart.ligateam.model.TeamWunsch;
 import de.liga.dart.ligateam.service.LigateamService;
+import de.liga.dart.model.Automatenaufsteller;
+import de.liga.dart.model.Ligateam;
+import de.liga.dart.model.Spielort;
+import org.en.tealEye.controller.PanelController;
+import org.en.tealEye.framework.BeanTableModel;
 import org.en.tealEye.framework.LigaChooser;
 import org.en.tealEye.framework.SwingUtils;
 import org.en.tealEye.framework.TransactionWorker;
-import org.en.tealEye.framework.BeanTableModel;
-import org.en.tealEye.guiMain.FloatPanel.ActiveFrameMenu;
+import org.en.tealEye.guiExt.ExtPanel.ExtJEditPanel;
 import org.en.tealEye.guiMain.*;
+import org.en.tealEye.guiMain.FloatPanel.ActiveFrameMenu;
 import org.en.tealEye.guiPanels.ConfigPanels.MainConfigFrame;
 import org.en.tealEye.guiPanels.applicationLogicPanels.AboutFrame;
-//import org.en.tealEye.guiPanels.helpSystem.core.HelpMain;
+import org.en.tealEye.guiPanels.applicationLogicPanels.CreateGroup;
 import org.en.tealEye.printing.controller.PrintingController;
-import org.en.tealEye.guiExt.ExtPanel.ExtJEditPanel;
-import org.en.tealEye.controller.PanelController;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,7 +48,6 @@ public class MenuController extends PanelController {
         super(mainAppFrame);
         this.mainAppFrame = mainAppFrame;
         this.h = h;
-        this.pC = pC;
         initActionPanelMap();
     }
 
@@ -82,7 +87,7 @@ public class MenuController extends PanelController {
         } else if (action.startsWith("MENU_Excelexport")) {
             instance = new ImportThreadWorker(mainAppFrame, IO_ACTION.ExcelExport);
             instance.execute();
-        }  else if (action.startsWith("MENU_Rangliste")) {
+        } else if (action.startsWith("MENU_Rangliste")) {
             instance = new ImportThreadWorker(mainAppFrame, IO_ACTION.ExcelRangliste);
             instance.execute();
         } else if (action.startsWith("MENU_Info")) {
@@ -139,44 +144,30 @@ public class MenuController extends PanelController {
                 afm.setInactiveColor();
             }
 
-        }
-             else if(action.startsWith("MENU_help")){
+        } else if (action.startsWith("MENU_help")) {
 //                new HelpMain();
-            }else if(action.startsWith("MENU_index")){
-
-            }else if(action.startsWith("pum_EditTeam")){
-                JPanel p = h.showPanel("CreateTeam");
-               /* Object obje = ((JList)pC.getPopupSource()).getSelectedValue();
-                try {
-                    TransactionWorker work = new EditThreadWorker(
-                            this, (ExtJEditPanel) p, obje, mainAppFrame);
-                    work.addPropertyChangeListener(this);
-                    work.execute();
-                } catch (Exception e1) {
-                    mainApp.setTaskbarTask("WindowFehler: " + e1.getMessage());
-                    log.error(e1.getMessage(), e1);
-                }   */
-            }else if(action.startsWith("pum_EditLocation")){
-                JPanel p = h.showPanel("CreateLocation");
-            // TODO RSt - fix ClassCastException for CreateGroup$TModel!
-                Object obje = ((BeanTableModel) ((JTable)pC.getPopupSource()).getModel())
-                            .getObject(((JTable)pC.getPopupSource()).getSelectedRow());
-                try {
-                    TransactionWorker work = new EditThreadWorker(
-                            this, (ExtJEditPanel) p, obje, mainAppFrame);
-                    work.addPropertyChangeListener(this);
-                    work.execute();
-                } catch (Exception e1) {
-                    mainApp.setTaskbarTask("WindowFehler: " + e1.getMessage());
-                    log.error(e1.getMessage(), e1);
+        } else if (action.startsWith("pum_EditTeam")) {
+            Component comp = pC.getPopupSource();
+            Ligateam ligateam = null;
+            if ("List_possibleTeamsForWunschList".equals(comp.getName())) {
+                ligateam = (Ligateam) ((JList) comp).getSelectedValue();
+            } else if ("List_TeamWunschList".equals(comp.getName())) {
+                TeamWunsch wunsch = (TeamWunsch) ((JList) comp).getSelectedValue();
+                if (wunsch != null) {
+                    ligateam = wunsch.getOtherTeam();
                 }
-            }else if(action.startsWith("pum_EditVendor")){
-                JPanel p = h.showPanel("CreateVendor");
-                Object obje = ((BeanTableModel) ((JTable)pC.getPopupSource()).getModel())
-                            .getObject(((JTable)pC.getPopupSource()).getSelectedRow());
+            } else if ("List_LigateamsNochFrei".equals(comp.getName())) {
+                ligateam = (Ligateam) ((JList) comp).getSelectedValue();
+            } else if ("Table_Gruppe".equals(comp.getName())) {
+                JTable table = (JTable) comp;
+                ligateam =
+                        (Ligateam) table.getValueAt(table.getSelectedRow(), CreateGroup.C_TEAMNAME);
+            }
+            if (ligateam != null) {
                 try {
+                    JPanel p = h.showPanel("CreateTeam");
                     TransactionWorker work = new EditThreadWorker(
-                            this, (ExtJEditPanel) p, obje, mainAppFrame);
+                            this, (ExtJEditPanel) p, ligateam, mainAppFrame);
                     work.addPropertyChangeListener(this);
                     work.execute();
                 } catch (Exception e1) {
@@ -184,6 +175,49 @@ public class MenuController extends PanelController {
                     log.error(e1.getMessage(), e1);
                 }
             }
+        } else if (action.startsWith("pum_EditLocation")) {
+            Component comp = pC.getPopupSource();
+            Spielort location = null;
+            if ("Table_Gruppe".equals(comp.getName())) {
+                JTable table = (JTable) comp;
+                Ligateam ligateam =
+                        (Ligateam) table.getValueAt(table.getSelectedRow(), CreateGroup.C_TEAMNAME);
+                if (ligateam != null) location = ligateam.getSpielort();
+            } else if (comp instanceof JTable) {
+                JTable table = (JTable) comp;
+                location = (Spielort)
+                        ((BeanTableModel) table.getModel()).getObject(table.getSelectedRow());
+            }
+            if (location != null) {
+                try {
+                    JPanel p = h.showPanel("CreateLocation");
+                    TransactionWorker work = new EditThreadWorker(
+                            this, (ExtJEditPanel) p, location, mainAppFrame);
+                    work.addPropertyChangeListener(this);
+                    work.execute();
+                } catch (Exception e1) {
+                    mainApp.setTaskbarTask("WindowFehler: " + e1.getMessage());
+                    log.error(e1.getMessage(), e1);
+                }
+            }
+        } else if (action.startsWith("pum_EditVendor")) {
+            JTable comp = (JTable) pC.getPopupSource();
+            Automatenaufsteller aufsteller =
+                    (Automatenaufsteller) ((BeanTableModel) comp.getModel())
+                            .getObject(comp.getSelectedRow());
+            if (aufsteller != null) {
+                try {
+                    JPanel p = h.showPanel("CreateVendor");
+                    TransactionWorker work = new EditThreadWorker(
+                            this, (ExtJEditPanel) p, aufsteller, mainAppFrame);
+                    work.addPropertyChangeListener(this);
+                    work.execute();
+                } catch (Exception e1) {
+                    mainApp.setTaskbarTask("WindowFehler: " + e1.getMessage());
+                    log.error(e1.getMessage(), e1);
+                }
+            }
+        }
         /* else if (obj instanceof JButton &&
                mainAppFrame.getFrameMap().containsKey(action)) {
            mainAppFrame.insertInternalFrame(action, true);
@@ -219,7 +253,7 @@ public class MenuController extends PanelController {
             label.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
 
-        }   
+        }
     }
 
     public void mouseReleased(MouseEvent e) {
@@ -274,7 +308,7 @@ public class MenuController extends PanelController {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public void setPanelController(PanelController pC){
+    public void setPanelController(PanelController pC) {
         this.pC = pC;
     }
 }
