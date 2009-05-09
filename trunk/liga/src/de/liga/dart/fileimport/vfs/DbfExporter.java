@@ -42,7 +42,7 @@ public class DbfExporter extends DbfIO {
     protected void exchangeData(Liga liga, String path) throws SQLException {
         // delete from LITSAD
         Statement stmt = connection.createStatement();
-        stmt.execute("DELETE FROM \"LITSAD.DBF\"");
+        stmt.execute("DELETE FROM LITSAD");
         GruppenService service = ServiceFactory.get(GruppenService.class);
         List<Ligagruppe> gruppen;
         try {
@@ -54,13 +54,13 @@ public class DbfExporter extends DbfIO {
             ligList = readLigList(stmt);
             gruppen = service.findGruppen(liga, null);
             // alle Gruppen / Teams durchgehen (auch Spielfrei einfügen)
-            stmt.execute("DELETE FROM \"LITTEA.DBF\"");
+            stmt.execute("DELETE FROM LITTEA");
         } finally {
             stmt.close();
         }
 
         // INSERT INTO LITTEA (UPDATE Ligateam.externeId)
-        String teamInsert = "INSERT INTO \"LITTEA.DBF\" " +
+        String teamInsert = "INSERT INTO LITTEA " +
                 "(SAI_NR, LIG_NR, TEA_NR, TEA_NAME, LOK_NR, TEA_KAPIT, TEA_SPIELT, TEA_UHRZEI, " +
                 "TEA_STATUS) " +
                 "VALUES(?, ?, ?, ?, ?, '', ?, ?, ?)";
@@ -68,18 +68,18 @@ public class DbfExporter extends DbfIO {
 
         // oder UPDATE LITTEA (externeID)
         /*String teamUpdate =
-"UPDATE \"LITTEA.DBF\" SET LIG_NR=?, TEA_NAME=?, LOK_NR=?, TEA_SPIELT=?, " +
+"UPDATE LITTEA SET LIG_NR=?, TEA_NAME=?, LOK_NR=?, TEA_SPIELT=?, " +
       "TEA_UHRZEI=?, TEA_STATUS=?" +
       " WHERE TEA_NR=?";*/
 
         // INSERT INTO LITSAD
         String sadInsert =
-                "INSERT INTO \"LITSAD.DBF\" (SAI_NR, LIG_NR, SAI_POSNR, TEA_NR, SPI_NR) " +
+                "INSERT INTO LITSAD (SAI_NR, LIG_NR, SAI_POSNR, TEA_NR, SPI_NR) " +
                         "VALUES (?,?,?,?,'P0')";
         PreparedStatement sadInsertStmt = connection.prepareStatement(sadInsert);
 
         // wenn LITLIG missing: INSERT INTO LITLIG
-        String ligInsert = "INSERT INTO \"LITLIG.DBF\" (LIG_NR, LIG_NAME, LIG_ZUSATZ, SPO_SPORTA," +
+        String ligInsert = "INSERT INTO LITLIG (LIG_NR, LIG_NAME, LIG_ZUSATZ, SPO_SPORTA," +
                 "LIG_STAERK, LIG_DISZIP, LIG_SPIELT, LIG_UHRZEI) " +
                 "VALUES (?,?,?,?,?,?,?,?)";
         PreparedStatement ligInsertStmt = connection.prepareStatement(ligInsert);
@@ -188,7 +188,7 @@ public class DbfExporter extends DbfIO {
 
     private LITLOK insertLITLOK(LITLOK obj) throws SQLException {
         PreparedStatement pstmt =
-                connection.prepareStatement("insert into \"LITLOK.DBF\" (" +
+                connection.prepareStatement("insert into LITLOK (" +
                         "LOK_NR, LOK_ID, LOK_DFUE, LOK_NAME, LOK_ZUSATZ, LOK_STRASS, LOK_PLZ, " +
                         "LOK_ORT, LOK_TEL, LOK_FAX, LOK_RUHETA, AUF_NR) VALUES " +
                         "(?, 0, 0, ?, 'Gaststätte', ?, ?, ?, ?, ?, ?, 1)");
@@ -206,7 +206,7 @@ public class DbfExporter extends DbfIO {
 
     private long findNextLogID() throws SQLException {
         Statement stmt = connection.createStatement();
-        ResultSet resultSet = stmt.executeQuery("SELECT MAX(LOK_NR) FROM \"LITLOK.DBF\"");
+        ResultSet resultSet = stmt.executeQuery("SELECT MAX(LOK_NR) FROM LITLOK");
         resultSet.next();
         long id = resultSet.getLong(1);
         resultSet.close();
@@ -219,7 +219,7 @@ public class DbfExporter extends DbfIO {
             Statement stmt = connection.createStatement();
             ResultSet resultSet =
                     stmt.executeQuery(
-                            "SELECT LOK_NR FROM \"LITLOK.DBF\" WHERE LOK_NAME = 'Spielfrei'");
+                            "SELECT LOK_NR FROM LITLOK WHERE LOK_NAME = 'Spielfrei'");
             if (resultSet.next()) {
                 spielfreiLOK_NR = resultSet.getLong(1);
             }
@@ -229,7 +229,7 @@ public class DbfExporter extends DbfIO {
                 spielfreiLOK_NR = findNextLogID();
                 stmt = connection.createStatement();
                 stmt.execute(
-                        "INSERT INTO \"LITLOK.DBF\" (LOK_NR, LOK_ID, LOK_DFUE, LOK_NAME, LOK_RUHETA, AUF_NR) " +
+                        "INSERT INTO LITLOK (LOK_NR, LOK_ID, LOK_DFUE, LOK_NAME, LOK_RUHETA, AUF_NR) " +
                                 "VALUES(" + (spielfreiLOK_NR) + ",0,0,'Spielfrei','kein',2)");
                 stmt.close();
             }
@@ -284,7 +284,7 @@ public class DbfExporter extends DbfIO {
     }
 
     /*private long readMaxTeamID(Statement stmt) throws SQLException {
-        String maxTeamIDSql = "SELECT MAX(TEA_NR) FROM \"LITTEA.DBF\"";
+        String maxTeamIDSql = "SELECT MAX(TEA_NR) FROM LITTEA";
         ResultSet resultSet = stmt.executeQuery(maxTeamIDSql);
         resultSet.next();
         long maxTeamID = resultSet.getLong(1);
@@ -293,7 +293,7 @@ public class DbfExporter extends DbfIO {
     }     */
 
     private long readMaxLigID(Statement stmt) throws SQLException {
-        String maxLigIDSql = "SELECT MAX(LIG_NR) FROM \"LITLIG.DBF\"";
+        String maxLigIDSql = "SELECT MAX(LIG_NR) FROM LITLIG";
         ResultSet resultSet = stmt.executeQuery(maxLigIDSql);
         resultSet.next();
         long maxLigId = resultSet.getLong(1);
@@ -304,7 +304,7 @@ public class DbfExporter extends DbfIO {
     private List<LITLIG> readLigList(Statement stmt) throws SQLException {
         ResultSet resultSet;
         String ligSelect = "SELECT LIG_NR, LIG_NAME, LIG_ZUSATZ, SPO_SPORTA," +
-                "LIG_STAERK, LIG_DISZIP, LIG_SPIELT, LIG_UHRZEI FROM \"LITLIG.DBF\"";
+                "LIG_STAERK, LIG_DISZIP, LIG_SPIELT, LIG_UHRZEI FROM LITLIG";
         resultSet = stmt.executeQuery(ligSelect);
         List<LITLIG> ligList = new ArrayList();
         while (resultSet.next()) {

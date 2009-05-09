@@ -40,7 +40,8 @@ public class ExcelExportErgebnis extends ExcelIO {
     }
 
     protected void exchangeData() throws Exception {
-        progressIndicator.showProgress(90, "Speichere " + outFile.getName() + " ...");
+        if(progressIndicator != null)
+            progressIndicator.showProgress(95, "Speichere " + outFile.getName() + " ...");
         FileOutputStream fileOut = new FileOutputStream(outFile);
         try {
             HSSFWorkbook wb = new HSSFWorkbook();
@@ -51,7 +52,7 @@ public class ExcelExportErgebnis extends ExcelIO {
             wb.write(fileOut);
         } finally {
             fileOut.close();
-            progressIndicator.showProgress(0, "");
+            if(progressIndicator != null) progressIndicator.showProgress(0, "");
         }
     }
 

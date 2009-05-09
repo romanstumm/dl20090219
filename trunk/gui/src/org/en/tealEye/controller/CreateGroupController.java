@@ -65,7 +65,8 @@ public class CreateGroupController extends PanelController {
                 Ligagruppe previous = ServiceFactory.get(GruppenService.class)
                         .findPreviousGroup((Ligagruppe) createGroup.getModelEntity());
                 if (previous != null) {
-                    EditThreadWorker worker = new EditThreadWorker(this, createGroup, previous, mainApp);
+                    EditThreadWorker worker =
+                            new EditThreadWorker(this, createGroup, previous, mainApp);
                     worker.addPropertyChangeListener(this);
                     worker.execute();
                 }
@@ -73,7 +74,8 @@ public class CreateGroupController extends PanelController {
                 Ligagruppe next = ServiceFactory.get(GruppenService.class)
                         .findNextGroup((Ligagruppe) createGroup.getModelEntity());
                 if (next != null) {
-                    EditThreadWorker worker = new EditThreadWorker(this, createGroup, next, mainApp);
+                    EditThreadWorker worker =
+                            new EditThreadWorker(this, createGroup, next, mainApp);
                     worker.addPropertyChangeListener(this);
                     worker.execute();
                 }
@@ -135,28 +137,28 @@ public class CreateGroupController extends PanelController {
         final Object obj = e.getSource();
         if (obj instanceof JTable) {
             JTable jtable = (JTable) obj;
-            if(e.getButton() == MouseEvent.BUTTON3){
-                    int y = e.getY();
-                    int row = Math.round(y / ((JTable) obj).getRowHeight());
-
-                    ((JTable) obj).setRowSelectionInterval(row,row);
-                    PopupBase pum = new PopupBase(mainApp.getMenuController(), this,e.getComponent(),e.getX(),e.getY(),4);
-                    this.setPopupSource(((JTable) obj));
-            }
-            else if (jtable.equals(createGroup.getTable()) && e.getClickCount() == 2) {
+            if (e.getButton() == MouseEvent.BUTTON3) {
+                int y = e.getY();
+                int row = Math.round(y / ((JTable) obj).getRowHeight());
+                ((JTable) obj).setRowSelectionInterval(row, row);
+                this.setPopupSource(((JTable) obj));
+                PopupBase pum = new PopupBase(mainApp.getMenuController(),
+                        this, e.getComponent(), e.getX(), e.getY(),
+                        PopupBase.MODE.Team_and_Location);
+            } else if (jtable.equals(createGroup.getTable()) && e.getClickCount() == 2) {
                 handleClickInTable(jtable);
             }
         } else if (obj instanceof JListExt) {
 
-            if(e.getButton() == MouseEvent.BUTTON3){
-                     int y = e.getY();
-                     int row = ((JListExt) obj).locationToIndex(e.getPoint());
+            if (e.getButton() == MouseEvent.BUTTON3) {
+                int y = e.getY();
+                int row = ((JListExt) obj).locationToIndex(e.getPoint());
 
-                    ((JListExt) obj).setSelectedIndex(row);
-                    PopupBase pum = new PopupBase(mainApp.getMenuController(), this,e.getComponent(),e.getX(),e.getY(),0);
-            }
-
-            else if (ALTDown || e.getClickCount() == 2) {
+                ((JListExt) obj).setSelectedIndex(row);
+                this.setPopupSource(((JListExt) obj));
+                PopupBase pum = new PopupBase(mainApp.getMenuController(),
+                        this, e.getComponent(), e.getX(), e.getY(), PopupBase.MODE.Team);
+            } else if (ALTDown || e.getClickCount() == 2) {
                 Object item =
                         createGroup.getLigateamsNochFrei().getSelectedValue();
                 Ligateam team = (Ligateam) item;
