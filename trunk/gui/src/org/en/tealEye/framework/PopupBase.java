@@ -48,7 +48,7 @@ public class PopupBase extends JPopupMenu {
                 this.add(menuItem);
                 break;
             case Location:
-                menuItem = new JMenuItem("Location bearbeiten");//Location
+                menuItem = new JMenuItem("Spielort bearbeiten");//Location
                 menuItem.setActionCommand("pum_EditLocation");
                 menuItem.addActionListener(menuController);
                 this.add(menuItem);
@@ -58,7 +58,7 @@ public class PopupBase extends JPopupMenu {
                 menuItem.setActionCommand("pum_EditVendor");
                 menuItem.addActionListener(menuController);
                 this.add(menuItem);
-                menuItem = new JMenuItem("Location bearbeiten");
+                menuItem = new JMenuItem("Spielort bearbeiten");
                 menuItem.setActionCommand("pum_EditLocation");
                 menuItem.addActionListener(menuController);
                 this.add(menuItem);
@@ -68,7 +68,7 @@ public class PopupBase extends JPopupMenu {
                 menuItem.setActionCommand("pum_EditTeam");
                 menuItem.addActionListener(menuController);
                 this.add(menuItem);
-                menuItem = new JMenuItem("Location bearbeiten");
+                menuItem = new JMenuItem("Spielort bearbeiten");
                 menuItem.setActionCommand("pum_EditLocation");
                 menuItem.addActionListener(menuController);
                 this.add(menuItem);
