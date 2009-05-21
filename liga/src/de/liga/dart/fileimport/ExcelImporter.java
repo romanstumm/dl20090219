@@ -219,7 +219,8 @@ public class ExcelImporter extends ExcelIO {
             if (version != null) {
                 // kompatible Versionen hier prüfen
                 if (!version.equals(Application.APPLICATION_VERSION) &&
-                    !version.startsWith("2.2.") && !version.startsWith("2.3.")) {
+                    !version.startsWith("2.2.") && !version.startsWith("2.3.")
+                        && !version.startsWith("2.4.")) {
                     throw new DartException(
                             "Ungültige Version! In der Excel Datei steht " + version +
                                     " - erwartet wird jedoch " + Application.APPLICATION_VERSION);

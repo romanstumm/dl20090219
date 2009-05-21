@@ -202,9 +202,16 @@ public class MenuController extends PanelController {
             }
         } else if (action.startsWith("pum_EditVendor")) {
             JTable comp = (JTable) pC.getPopupSource();
-            Automatenaufsteller aufsteller =
-                    (Automatenaufsteller) ((BeanTableModel) comp.getModel())
+            Automatenaufsteller aufsteller = null;
+            if ("Table_SpielortProLiga".equals(comp.getName())) {
+                Spielort spielort =
+                    (Spielort) ((BeanTableModel) comp.getModel())
                             .getObject(comp.getSelectedRow());
+                 if(spielort != null) aufsteller = spielort.getAutomatenaufsteller();
+            } else {
+                aufsteller = (Automatenaufsteller) ((BeanTableModel) comp.getModel())
+                                            .getObject(comp.getSelectedRow());
+            }
             if (aufsteller != null) {
                 try {
                     JPanel p = h.showPanel("CreateVendor");

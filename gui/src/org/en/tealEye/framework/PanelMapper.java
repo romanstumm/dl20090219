@@ -144,19 +144,18 @@ public class PanelMapper {
             if (jvalue instanceof String) {
                 StringConverter converter =
                         converterMap.get(setter.getParameterTypes()[0]);
-                if (converter != null)
+                if (converter != null) {
                     jvalue = converter.fromString((String) jvalue);
+                } else { // aus String, z.B. "-keiner-", wird null, wenn String nicht zuweisbar ist.
+                   if(!setter.getParameterTypes()[0].isAssignableFrom(jvalue.getClass())) {
+                       // So soll es sein!
+                       jvalue = null;
+                   }
+                }
             }
             if (jvalue == null && setter.getParameterTypes()[0].isPrimitive()) {
                 jvalue = ClassUtils.primitiveDefault(setter.getParameterTypes()[0]);
             }
-            /*
-            if (jvalue != null) {
-                if (!setter.getParameterTypes()[0].isAssignableFrom(jvalue.getClass())) {
-                    log.warn("incompatible type for " + setter + " got: " + jvalue.getClass());
-                    jvalue = null;
-                }
-            }*/
             setter.invoke(object, jvalue);
         } catch (DartException ex) {
             throw ex;
