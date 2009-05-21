@@ -205,9 +205,11 @@ public class DbfImportErgebnis extends DbfIO {
 
     private int checkRowCountLitErg() throws SQLException {
         int rowcount = -1;
-        Statement stmt = connection.createStatement();
+        PreparedStatement stmt = connection.prepareStatement(
+                "select count(*) from LITERG where SAI_NR=?");
+        stmt.setDate(1, myCurrentSaison);
         try {
-            ResultSet rs = stmt.executeQuery("select count(*) from LITERG");
+            ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 rowcount = rs.getInt(1);
             }
@@ -220,13 +222,14 @@ public class DbfImportErgebnis extends DbfIO {
 
     private List<VfsErgebnis> readErgebnis(PreparedStatement pstmt, Long ligaNr,
                                            java.sql.Date stichtag) throws SQLException {
-        pstmt.setDate(1, myCurrentSaison);
+        int pindex = 1;
+        pstmt.setDate(pindex++, myCurrentSaison);
         if (stichtag != null) {
-            pstmt.setDate(2, stichtag);
+            pstmt.setDate(pindex++, stichtag);
         }
         if (ligaNr != null) {
             // liganr nur, um die Ergebnisgroesse < 1000 zu halten
-            pstmt.setLong(3, ligaNr.longValue());
+            pstmt.setLong(pindex, ligaNr.longValue());
         }
         ResultSet resultSet = pstmt.executeQuery();
         List<VfsErgebnis> parts = new ArrayList(300);

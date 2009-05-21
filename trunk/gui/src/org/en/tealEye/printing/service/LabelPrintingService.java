@@ -155,7 +155,7 @@ public class  LabelPrintingService extends JPanel implements LabelPrinting {
 
     private void addLocationCount(Graphics2D g2, int x, int y){
         g2.setFont(smallFont);
-        System.out.println(g2.getFont());
+//        System.out.println(g2.getFont());
         g2.drawString(entries[5], (float) ((int)(labelWidth*ScaleX*x+((labelWidth*ScaleX)/1))-50+(padX*ScaleX)), (float) ((int)(labelHeight*ScaleY*y+(fontHeight))+(padY)));
     }
 

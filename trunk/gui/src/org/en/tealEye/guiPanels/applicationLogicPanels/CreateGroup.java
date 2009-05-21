@@ -514,15 +514,12 @@ public class CreateGroup extends ExtJEditPanel implements
     }
 
     public void keyTyped(KeyEvent e) {
-        System.out.println("Hallo");
     }
 
     public void keyPressed(KeyEvent e) {
-        System.out.println("Hallo");
     }
 
     public void keyReleased(KeyEvent e) {
-        System.out.println("Hallo");
     }
 
     public class TModel extends DefaultTableModel {
