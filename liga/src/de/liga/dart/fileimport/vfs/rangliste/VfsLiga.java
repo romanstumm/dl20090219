@@ -48,4 +48,8 @@ public class VfsLiga {
     public int hashCode() {
         return (int) (nr ^ (nr >>> 32));
     }
+
+    public String toString() {
+        return getClass().getName() + "{ nr=" + nr +";name=" + name + "}";
+    }
 }
