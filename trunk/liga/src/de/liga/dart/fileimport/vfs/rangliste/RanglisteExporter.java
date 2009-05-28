@@ -73,6 +73,10 @@ public class RanglisteExporter implements DataExchanger {
         this.indicator = indicator;
     }
 
+    public ProgressIndicator getIndicator() {
+        return indicator;
+    }
+
     public static VfsConfig getVfsConfig() {
         if (vfsConfig == null) readVfsConfig();
         return vfsConfig;

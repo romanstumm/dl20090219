@@ -43,4 +43,8 @@ public class VfsErgebnis {
     public void setPAR_CODE(String PAR_CODE) {
         this.PAR_CODE = PAR_CODE;
     }
+
+    public String toString() {
+        return "VfsErg: gast=" + gast + ";heim=" + heim;
+    }
 }

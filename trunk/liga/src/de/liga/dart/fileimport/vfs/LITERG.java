@@ -7,7 +7,7 @@ import java.sql.Date;
  * User: roman
  * Date: 25.04.2009, 16:08:30
  */
-public class LIGERG {
+public class LITERG {
     Date SAI_NR; // D
     long LIG_NR; // N,3
     int PAR_RUNDE; // N,2

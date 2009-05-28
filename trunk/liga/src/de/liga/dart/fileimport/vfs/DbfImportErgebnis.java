@@ -58,13 +58,14 @@ public class DbfImportErgebnis extends DbfIO {
         Statement stmt = connection.createStatement();
         try {
             readCurrentSaison(stmt);
-            readLitteams();
-            readAbzug();
-            readErgebnisse();
-            computeRangListe();
         } finally {
             stmt.close();
         }
+        readLitteams();
+        readAbzug();
+        readErgebnisse();
+        computeRangListe();
+
     }
 
 
@@ -141,7 +142,7 @@ public class DbfImportErgebnis extends DbfIO {
         void visit(VfsErgebnis eachERG);
     }
 
-    private void readErgebnisse() throws SQLException {
+    protected void readErgebnisse() throws SQLException {
 
         String selectErgebnis =
                 "SELECT heim.TEA_NR, heim.SAI_POSNR, gast.TEA_NR, gast.SAI_POSNR, " +
@@ -220,7 +221,7 @@ public class DbfImportErgebnis extends DbfIO {
         return rowcount;
     }
 
-    private List<VfsErgebnis> readErgebnis(PreparedStatement pstmt, Long ligaNr,
+    public List<VfsErgebnis> readErgebnis(PreparedStatement pstmt, Long ligaNr,
                                            java.sql.Date stichtag) throws SQLException {
         int pindex = 1;
         pstmt.setDate(pindex++, myCurrentSaison);
@@ -233,6 +234,7 @@ public class DbfImportErgebnis extends DbfIO {
         }
         ResultSet resultSet = pstmt.executeQuery();
         List<VfsErgebnis> parts = new ArrayList(300);
+        //int rowc = 0;
         try {
             while (resultSet.next()) {
                 int c = 1;
@@ -256,7 +258,8 @@ public class DbfImportErgebnis extends DbfIO {
                 erg.gast().setSPIEL(resultSet.getInt(c++));
                 erg.gast().setSATZ(resultSet.getInt(c++));
                 erg.gast().setANZAH(resultSet.getInt(c));
-
+                //rowc++;
+                //System.out.println(rowc + ". " + erg);
                 parts.add(erg);
             }
         } finally {
