@@ -6,18 +6,18 @@ package de.liga.dart.fileimport.vfs.rangliste;
  * Date: 03.05.2009, 18:11:26
  */
 public class VfsGastHeim {
-    private long TEA_NR;
+    private int TEA_NR;
     private int POSNR;
     private int PUNKT;
     private int SPIEL;
     private int SATZ;
     private int ANZAH;
 
-    public long getTEA_NR() {
+    public int getTEA_NR() {
         return TEA_NR;
     }
 
-    public void setTEA_NR(long TEA_NR) {
+    public void setTEA_NR(int TEA_NR) {
         this.TEA_NR = TEA_NR;
     }
 

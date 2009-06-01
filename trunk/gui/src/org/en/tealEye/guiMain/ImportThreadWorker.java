@@ -182,7 +182,7 @@ public class ImportThreadWorker extends SwingWorker implements ProgressIndicator
 
     private Object doDBaseExport() {
         LigaChooser chooser =
-                new LigaChooser("Export Teams und Gruppen aus DBase Dateien", mainAppFrame);
+                new LigaChooser("Export Teams und Gruppen in dBase Dateien", mainAppFrame);
         if (!chooser.choose()) {
             mainAppFrame.setMessage("Datenexport - Abbruch!");
             return null;
@@ -219,7 +219,7 @@ public class ImportThreadWorker extends SwingWorker implements ProgressIndicator
 
     private Object doDBaseImport() {
         LigaChooser chooser =
-                new LigaChooser("Import Spielorte und Aufsteller aus DBase Dateien", mainAppFrame);
+                new LigaChooser("Import Spielorte und Aufsteller von dBase Dateien", mainAppFrame);
         if (!chooser.choose()) {
             mainAppFrame.setMessage("dBase-Import - Abbruch!");
             return null;

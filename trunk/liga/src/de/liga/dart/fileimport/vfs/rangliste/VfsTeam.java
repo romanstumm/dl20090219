@@ -6,7 +6,7 @@ package de.liga.dart.fileimport.vfs.rangliste;
  * Date: 03.05.2009, 16:00:14
  */
 public class VfsTeam {
-    private long teamNr;
+    private int teamNr;
     private String klasse;
     private String liganame;
     private String platz;
@@ -24,11 +24,11 @@ public class VfsTeam {
     public VfsTeam() {
     }
 
-    public long getTeamNr() {
+    public int getTeamNr() {
         return teamNr;
     }
 
-    public void setTeamNr(long teamNr) {
+    public void setTeamNr(int teamNr) {
         this.teamNr = teamNr;
     }
 
