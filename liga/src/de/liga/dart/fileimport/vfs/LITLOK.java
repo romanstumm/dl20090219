@@ -6,7 +6,7 @@ package de.liga.dart.fileimport.vfs;
  * Date: 21.03.2008, 11:39:34
  */
 class LITLOK {
-    String LOK_NR; // long
+    String LOK_NR; // number
     String LOK_NAME;
     String LOK_ZUSATZ;
     String LOK_STRASS;

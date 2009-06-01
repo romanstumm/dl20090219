@@ -9,7 +9,7 @@ import java.sql.Date;
  */
 public class LITERG {
     Date SAI_NR; // D
-    long LIG_NR; // N,3
+    int LIG_NR; // N,3
     int PAR_RUNDE; // N,2
     int PAR_SPIEL; // N,2 - was ist das? TODO RSt - Punkte, Spiel, Satz, Anzahl? (<56?)
     int ERG_HPUNKT; // N,4  Heimspieler Punkte

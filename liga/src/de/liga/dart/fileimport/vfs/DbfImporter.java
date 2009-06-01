@@ -8,6 +8,8 @@ import de.liga.dart.model.Liga;
 import de.liga.dart.model.Spielort;
 import de.liga.dart.spielort.service.SpielortService;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -21,6 +23,7 @@ import java.util.List;
  * Date: 21.03.2008, 11:31:57
  */
 public class DbfImporter extends DbfIO {
+    private static final Log log = LogFactory.getLog(DbfImporter.class);
     protected String actionVerb() { return "Importiere"; }
     protected String actionName() { return "Import"; }
 
@@ -42,9 +45,11 @@ public class DbfImporter extends DbfIO {
                 if (isValid(litauf)) {
                     Automatenaufsteller aufsteller = findAufsteller(alle, litauf);
                     if (aufsteller == null) {
+                        log.info("Erzeuge Aufsteller " + litauf.AUF_NAME);
                         aufsteller = createAufsteller(litauf);
                         aufsteller.setLiga(liga);
                     } else {
+                        log.info("Aktualisiere Aufsteller " + litauf.AUF_NAME);
                         updateAufsteller(aufsteller, litauf);
                     }
                     service.saveAutomatenaufsteller(aufsteller);

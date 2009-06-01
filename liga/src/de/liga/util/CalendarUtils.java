@@ -28,6 +28,20 @@ public class CalendarUtils {
         return new Time(gc.getTimeInMillis());
     }
 
+    public static int getYear(Date d) {
+        Calendar gc = Calendar.getInstance();
+        gc.clear();
+        gc.setTime(d);
+        return gc.get(Calendar.YEAR);
+    }
+
+    public static int getMonth(Date d) {
+        Calendar gc = Calendar.getInstance();
+        gc.clear();
+        gc.setTime(d);
+        return gc.get(Calendar.MONTH) + 1;
+    }
+
     public static String timeToString(Time time) {
         if (time == null) return null;
         SimpleDateFormat timeFormHHMM = new SimpleDateFormat("HH:mm");
@@ -45,7 +59,7 @@ public class CalendarUtils {
             return null;
         }
     }
-    
+
     public static Date stringToDate(String date, String format) {
         if (StringUtils.isEmpty(date)) return null;
         SimpleDateFormat dateFormat = new SimpleDateFormat(format);
@@ -65,6 +79,7 @@ public class CalendarUtils {
 
     /**
      * database time formatted string -> Time
+     *
      * @param time
      * @return
      */
@@ -82,6 +97,7 @@ public class CalendarUtils {
     /**
      * database timestamp formatted string -> Timestamp
      * e.g. 2009-02-22 14:12:04.468
+     *
      * @param timestamp
      * @return
      */
@@ -122,7 +138,7 @@ public class CalendarUtils {
      * @param time
      * @return
      */
-    public static int toOldLongValue(Time time) {
+    public static int toVfsValue(Time time) {
         GregorianCalendar gc = new GregorianCalendar();
         gc.setTime(time);
         int h = gc.get(Calendar.HOUR_OF_DAY);

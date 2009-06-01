@@ -6,15 +6,15 @@ package de.liga.dart.fileimport.vfs.rangliste;
  * Date: 03.05.2009, 19:20:55
  */
 public class VfsLiga {
-    private long nr;
+    private int nr;
     private String name;
     private String klasse;
 
-    public long getNr() {
+    public int getNr() {
         return nr;
     }
 
-    public void setNr(long nr) {
+    public void setNr(int nr) {
         this.nr = nr;
     }
 

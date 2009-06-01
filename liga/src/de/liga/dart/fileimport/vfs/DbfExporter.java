@@ -4,15 +4,11 @@ import de.liga.dart.common.service.ServiceFactory;
 import de.liga.dart.fileimport.DbfIO;
 import de.liga.dart.gruppen.service.GruppenService;
 import de.liga.dart.model.*;
-import de.liga.dart.exception.DartException;
 import de.liga.util.CalendarUtils;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.FileFilter;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -27,9 +23,9 @@ public class DbfExporter extends DbfIO {
     private static final Log log = LogFactory.getLog(DbfExporter.class);
 
     private List<LITLIG> ligList;
-    private long maxLigId;
+    private int maxLigId;
     private int maxTeamID;
-    private long spielfreiLOK_NR = -1;
+    private int spielfreiLOK_NR = -1;
 
     protected String actionVerb() {
         return "Exportiere";
@@ -42,18 +38,20 @@ public class DbfExporter extends DbfIO {
     protected void exchangeData(Liga liga, String path) throws SQLException {
         // delete from LITSAD
         Statement stmt = connection.createStatement();
+        log.debug("Alle LITSAD löschen");
         stmt.execute("DELETE FROM LITSAD");
         GruppenService service = ServiceFactory.get(GruppenService.class);
         List<Ligagruppe> gruppen;
         try {
             readCurrentSaison(stmt);
 
-            // ermittele die primary keys
+            log.debug("ermittele die primary keys...");
             maxLigId = readMaxLigID(stmt);
             maxTeamID = 0; // readMaxTeamID(stmt);
             ligList = readLigList(stmt);
             gruppen = service.findGruppen(liga, null);
             // alle Gruppen / Teams durchgehen (auch Spielfrei einfügen)
+            log.debug("alle LITTEA löschen");
             stmt.execute("DELETE FROM LITTEA");
         } finally {
             stmt.close();
@@ -106,11 +104,11 @@ public class DbfExporter extends DbfIO {
             ligInsertStmt.close();
             sadInsertStmt.close();
             teamInsertStmt.close();
-            deleteIndexFiles(path);
+//            deleteIndexFiles(path);
         }
     }
 
-
+/*
     private void deleteIndexFiles(String path) {
         File dir = new File(path);
         File[] indexFiles = dir.listFiles(new FilenameFilter() {
@@ -125,7 +123,7 @@ public class DbfExporter extends DbfIO {
                 log.warn(each.getPath() + " konnte nicht gelöscht werden!");
             }
         }
-    }
+    }*/
 
     private LITSAD writeLITSAD(LITTEA tea, int platzNr,
                                PreparedStatement sadInsertStmt) throws SQLException {
@@ -134,6 +132,7 @@ public class DbfExporter extends DbfIO {
         sad.LIG_NR = tea.LIG_NR;
         sad.SAI_POSNR = platzNr;
         sad.TEA_NR = tea.TEA_NR;
+        if(log.isDebugEnabled()) log.debug("LITSAD einfügen: " + sad.TEA_NR + ", " + sad.SAI_POSNR);
         insertLITSAD(sadInsertStmt, sad);
         return sad;
     }
@@ -157,20 +156,22 @@ public class DbfExporter extends DbfIO {
             tea.TEA_NAME = team.getTeamName();
             tea.LOK_NR = getOrCreateLokNr(team.getSpielort());
             tea.TEA_SPIELT = team.getWochentagName();
-            tea.TEA_UHRZEI = CalendarUtils.toOldLongValue(team.getSpielzeit());
+            tea.TEA_UHRZEI = CalendarUtils.toVfsValue(team.getSpielzeit());
             tea.TEA_STATUS = "";
         }
+        if (log.isDebugEnabled())
+            log.debug("LITTEA einfügen: " + tea.TEA_NAME + " (" + tea.TEA_NR + ")");
         insertLITTEA(teamInsertStmt, tea);
         return tea;
     }
 
-    private long getOrCreateLokNr(Spielort spielort) throws SQLException {
+    private int getOrCreateLokNr(Spielort spielort) throws SQLException {
         // wenn Spielort.externeId nicht vorhanden: insert Spielort!
         if (spielort.getExterneId() != null && spielort.getExterneId().length() > 0
-                && StringUtils.isNumeric(spielort.getExterneId()) ) {
-            return Long.parseLong(spielort.getExterneId());
+                && StringUtils.isNumeric(spielort.getExterneId())) {
+            return Integer.parseInt(spielort.getExterneId());
         } else { // erzeuge spielort (fehlte bisher in Altdaten)
-            long lokId = findNextLogID();
+            int lokId = findNextLogID();
             LITLOK obj = new LITLOK();
             obj.LOK_NR = String.valueOf(lokId);
             obj.LOK_NAME = spielort.getSpielortName();
@@ -192,7 +193,7 @@ public class DbfExporter extends DbfIO {
                         "LOK_NR, LOK_ID, LOK_DFUE, LOK_NAME, LOK_ZUSATZ, LOK_STRASS, LOK_PLZ, " +
                         "LOK_ORT, LOK_TEL, LOK_FAX, LOK_RUHETA, AUF_NR) VALUES " +
                         "(?, 0, 0, ?, 'Gaststätte', ?, ?, ?, ?, ?, ?, 1)");
-        pstmt.setLong(1, Long.parseLong(obj.LOK_NR));
+        pstmt.setInt(1, Integer.parseInt(obj.LOK_NR));
         pstmt.setString(2, obj.LOK_NAME);
         pstmt.setString(3, obj.LOK_STRASS);
         pstmt.setString(4, obj.LOK_PLZ);
@@ -204,24 +205,24 @@ public class DbfExporter extends DbfIO {
         return obj;
     }
 
-    private long findNextLogID() throws SQLException {
+    private int findNextLogID() throws SQLException {
         Statement stmt = connection.createStatement();
         ResultSet resultSet = stmt.executeQuery("SELECT MAX(LOK_NR) FROM LITLOK");
         resultSet.next();
-        long id = resultSet.getLong(1);
+        int id = resultSet.getInt(1);
         resultSet.close();
         stmt.close();
         return id + 1;
     }
 
-    private long findOrCreateSpielfreiOrt() throws SQLException {
+    private int findOrCreateSpielfreiOrt() throws SQLException {
         if (spielfreiLOK_NR == -1) {
             Statement stmt = connection.createStatement();
             ResultSet resultSet =
                     stmt.executeQuery(
                             "SELECT LOK_NR FROM LITLOK WHERE LOK_NAME = 'Spielfrei'");
             if (resultSet.next()) {
-                spielfreiLOK_NR = resultSet.getLong(1);
+                spielfreiLOK_NR = resultSet.getInt(1);
             }
             resultSet.close();
             stmt.close();
@@ -239,13 +240,13 @@ public class DbfExporter extends DbfIO {
 
     private LITLIG findOrCreateLITLIG(Ligagruppe gruppe, Liga liga, PreparedStatement ligInsertStmt)
             throws SQLException {
+        log.debug("suche LITLIG " + gruppe.getLigaklasse() + ", nr: " + gruppe.getGruppenNr());
         LITLIG lig = findLITLIG(gruppe.getLigaklasse(), gruppe.getGruppenNr());
         if (lig == null) {
             String klassenName = gruppe.getLigaklasse().getKlassenName();
+            String liganame = liga.getLigaName();
             lig = new LITLIG();
             lig.LIG_NR = (++maxLigId);
-            lig.LIG_NAME = (klassenName + gruppe.getGruppenNr() +
-                    " " + liga.getLigaName());
             lig.LIG_ZUSATZ = "";
             lig.SPO_SPORTA = "DART";
             if ("A".equals(klassenName)) {
@@ -254,26 +255,42 @@ public class DbfExporter extends DbfIO {
                 lig.LIG_STAERK = 2;
             } else if ("C".equals(klassenName)) {
                 lig.LIG_STAERK = 1;
+            } else if("Bez".equals(klassenName)) {
+                lig.LIG_STAERK = 4;
             } else {
                 lig.LIG_STAERK = 0;
             }
+            if(klassenName.equals("Bez")) klassenName = "Bezirksliga "; // vfs nennt es so
+            if("Rhl-WW".equals(liganame)) liganame = "Rheinland-Westerwald"; // vfs nennt es so
+            lig.LIG_NAME = (klassenName + gruppe.getGruppenNr() +
+                    " " + liganame);            
             lig.LIG_DISZIP = "301";
             lig.LIG_SPIELT = "Sonntag";
             lig.LIG_UHRZEI = 20 * 60 * 60;
+            if(log.isDebugEnabled()) log.debug("LITLIG einfügen: " + lig.LIG_NAME);
             insertLITLIG(ligInsertStmt, lig);
+        } else {
+            log.debug("gefunden!");
         }
         return lig;
     }
 
     private LITLIG findLITLIG(Ligaklasse ligaklasse, int gruppenNr) {
-        String search = ligaklasse.getKlassenName() + gruppenNr + " ";
+        LITLIG found = findLITLIG(ligaklasse.getKlassenName(), gruppenNr);
+        if(found == null && "Bez".equals(ligaklasse.getKlassenName()))
+            found = findLITLIG("Bezirksliga ", gruppenNr);
+        return found;
+    }
+
+    private LITLIG findLITLIG(String klassenname, int gruppenNr) {
+        String search = klassenname + gruppenNr + " ";
         for (LITLIG lig : ligList) {
             if (lig.LIG_NAME.startsWith(search)) {
                 return lig;
             }
         }
         if (gruppenNr == 1) {
-            search = ligaklasse.getKlassenName() + " ";
+            search = klassenname + " ";
             for (LITLIG lig : ligList) {
                 if (lig.LIG_NAME.startsWith(search)) {
                     return lig;
@@ -283,20 +300,11 @@ public class DbfExporter extends DbfIO {
         return null;
     }
 
-    /*private long readMaxTeamID(Statement stmt) throws SQLException {
-        String maxTeamIDSql = "SELECT MAX(TEA_NR) FROM LITTEA";
-        ResultSet resultSet = stmt.executeQuery(maxTeamIDSql);
-        resultSet.next();
-        long maxTeamID = resultSet.getLong(1);
-        resultSet.close();
-        return maxTeamID;
-    }     */
-
-    private long readMaxLigID(Statement stmt) throws SQLException {
+    private int readMaxLigID(Statement stmt) throws SQLException {
         String maxLigIDSql = "SELECT MAX(LIG_NR) FROM LITLIG";
         ResultSet resultSet = stmt.executeQuery(maxLigIDSql);
         resultSet.next();
-        long maxLigId = resultSet.getLong(1);
+        int maxLigId = resultSet.getInt(1);
         resultSet.close();
         return maxLigId;
     }
@@ -316,58 +324,46 @@ public class DbfExporter extends DbfIO {
 
     private void insertLITSAD(PreparedStatement stmt, LITSAD sad) throws SQLException {
         stmt.setDate(1, sad.SAI_NR);
-        stmt.setLong(2, sad.LIG_NR);
+        stmt.setInt(2, sad.LIG_NR);
         stmt.setInt(3, sad.SAI_POSNR);
-        stmt.setLong(4, sad.TEA_NR);
+        stmt.setInt(4, sad.TEA_NR);
         stmt.executeUpdate();
     }
 
     private void insertLITTEA(PreparedStatement stmt, LITTEA team) throws SQLException {
         stmt.setDate(1, team.SAI_NR);
-        stmt.setLong(2, team.LIG_NR);
-        stmt.setLong(3, team.TEA_NR);
+        stmt.setInt(2, team.LIG_NR);
+        stmt.setInt(3, team.TEA_NR);
         stmt.setString(4, team.TEA_NAME);
-        stmt.setLong(5, team.LOK_NR);
+        stmt.setInt(5, team.LOK_NR);
         stmt.setString(6, team.TEA_SPIELT);
-        stmt.setLong(7, team.TEA_UHRZEI);
+        stmt.setInt(7, team.TEA_UHRZEI);
         stmt.setString(8, team.TEA_STATUS);
         stmt.executeUpdate();
     }
 
-    /*
-    private boolean updateLITTEA(PreparedStatement stmt, LITTEA team) throws SQLException {
-        stmt.setLong(1, team.LIG_NR);
-        stmt.setString(2, team.TEA_NAME);
-        stmt.setLong(3, team.LOK_NR);
-        stmt.setString(4, team.TEA_SPIELT);
-        stmt.setLong(5, team.TEA_UHRZEI);
-        stmt.setString(6, team.TEA_STATUS);
-        stmt.setLong(7, team.TEA_NR);
-        return stmt.executeUpdate() > 0;
-    }  */
-
     private LITLIG readLITLIG(ResultSet resultSet) throws SQLException {
         LITLIG lig = new LITLIG();
-        lig.LIG_NR = resultSet.getLong(1);
+        lig.LIG_NR = resultSet.getInt(1);
         lig.LIG_NAME = resultSet.getString(2);
         lig.LIG_ZUSATZ = resultSet.getString(3);
         lig.SPO_SPORTA = resultSet.getString(4);
         lig.LIG_STAERK = resultSet.getInt(5);
         lig.LIG_DISZIP = resultSet.getString(6);
         lig.LIG_SPIELT = resultSet.getString(7);
-        lig.LIG_UHRZEI = resultSet.getLong(8);
+        lig.LIG_UHRZEI = resultSet.getInt(8);
         return lig;
     }
 
     private void insertLITLIG(PreparedStatement stmt, LITLIG lig) throws SQLException {
-        stmt.setLong(1, lig.LIG_NR);
+        stmt.setInt(1, lig.LIG_NR);
         stmt.setString(2, lig.LIG_NAME);
         stmt.setString(3, lig.LIG_ZUSATZ);
         stmt.setString(4, lig.SPO_SPORTA);
         stmt.setInt(5, lig.LIG_STAERK);
         stmt.setString(6, lig.LIG_DISZIP);
         stmt.setString(7, lig.LIG_SPIELT);
-        stmt.setLong(8, lig.LIG_UHRZEI);
+        stmt.setObject(8, lig.LIG_UHRZEI);
         stmt.executeUpdate();
     }
 

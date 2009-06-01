@@ -9,7 +9,7 @@ import java.sql.Date;
  */
 class LITPAR {
     Date SAI_NR; //,D   TODO RSt - ??
-    long LIG_NR; //N,3,0
+    int LIG_NR; //N,3,0
     int PAR_RUNDE; // N,2,0   Runde Nr
     int PAR_SPIEL; // N,2,0   Spiel Nr "1-56"
     String PAR_CODE; // Hin- oder Rückspiel, C,1 Spiel Nr 1-28= "V", Spiel Nr 29-56 = "R"
@@ -47,7 +47,7 @@ class LITPAR {
     int PAR_HEIM; // N,2,0 Heim-Position 1-8
     int PAR_GAST; // N,2,0 Gast-Position 1-8
     Date PAR_DATUM; //D
-    long PAR_UHRZEI; // N(5) 72000 (20:00) 68400 (:60:60 = 19:00)
+    int PAR_UHRZEI; // N(5) 72000 (20:00) 68400 (:60:60 = 19:00)
     String PAR_STATUS; // C, 1  "A", "M" ?
 
 }

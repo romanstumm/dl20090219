@@ -6,7 +6,7 @@ package de.liga.dart.fileimport.vfs;
  * Date: 17.05.2008, 16:07:13
  */
 class LITLIG {
-    long LIG_NR;   // primary key
+    int LIG_NR;   // primary key
     String LIG_NAME;
     String LIG_ZUSATZ;
     String SPO_SPORTA; // DART fix
@@ -14,5 +14,5 @@ class LITLIG {
     String LIG_KLASSE; // A,B,C
     String LIG_DISZIP;
     String LIG_SPIELT; // Sonntag
-    long LIG_UHRZEI; // 72000 = 20:00
+    int LIG_UHRZEI; // 72000 = 20:00
 }

@@ -8,7 +8,7 @@ import java.sql.Date;
  * Date: 25.04.2009, 16:04:34
  */
 class LITABZUG {
-    long TEA_NR; // team PK
+    int TEA_NR; // team PK
     Date SAI_NR; //,D Saison datum     
     int ABZ_PUNKTE; // Punktabzug von Gesamtpunktzahl in der Saison 
 }
