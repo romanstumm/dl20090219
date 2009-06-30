@@ -82,9 +82,7 @@ public class TeamController extends PanelController {
                     PopupBase pum = new PopupBase(mainApp.getMenuController(),
                             this, e.getComponent(), e.getX(), e.getY(),
                             PopupBase.MODE.Aufsteller_and_Location);
-                }
-            } else if (((JTable) obj).getName().equals("Table_SpielortProLiga")) {
-                if (e.getClickCount() == 2) {
+                } else if (e.getClickCount() == 2) {
                     CreateTeam panel = (CreateTeam) mainApp.getPanelMap().get("CreateTeam");
                     panel.setSpielortTextField();
                 }
