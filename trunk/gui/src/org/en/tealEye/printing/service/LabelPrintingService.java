@@ -64,6 +64,7 @@ public class  LabelPrintingService extends JPanel implements LabelPrinting {
     private int vLabelCount;
     private boolean guides;
     private int etiZeilenAbstand;
+    //private List<int, boolean> dupeMap = new HashMap<int,boolean>();
 
     private  Font font = new GlobalGuiService().getFontMap().get("EtiFont");
     private final Font smallFont = new Font(font.getName(),font.getStyle(),font.getSize()-6);
@@ -136,14 +137,14 @@ public class  LabelPrintingService extends JPanel implements LabelPrinting {
                     g2.drawString(entries[0],(int)(labelWidth*ScaleX*x+(padX*ScaleX)),(int)(labelHeight*ScaleY*y+(fontHeight)+(padY*ScaleY)));
                         if(entries[1].matches("")){
                             g2.drawString(entries[2],(int)(labelWidth*ScaleX*x+(padX*ScaleX)),(int)(labelHeight*ScaleY*y+(fontHeight*2)+(padY*ScaleY))+etiZeilenAbstand);
-                            g2.drawString(entries[4],(int)(labelWidth*ScaleX*x+(padX*ScaleX)),(int)(labelHeight*ScaleY*y+(fontHeight*3)+(padY*ScaleY))+etiZeilenAbstand*2);
+                            g2.drawString(entries[3],(int)(labelWidth*ScaleX*x+(padX*ScaleX)),(int)(labelHeight*ScaleY*y+(fontHeight*3)+(padY*ScaleY))+etiZeilenAbstand*2);
                         }else{
                             g2.drawString(entries[1],(int)(labelWidth*ScaleX*x+(padX*ScaleX)),(int)(labelHeight*ScaleY*y+(fontHeight*2)+(padY*ScaleY))+etiZeilenAbstand);
                             g2.drawString(entries[2],(int)(labelWidth*ScaleX*x+(padX*ScaleX)),(int)(labelHeight*ScaleY*y+(fontHeight*3)+(padY*ScaleY))+etiZeilenAbstand*2);
                           //g2.drawString(entries[3],(int)(labelWidth*ScaleX*x+(padX*ScaleX)),(int)(labelHeight*ScaleY*y+(fontHeight*4)+(padY*ScaleY))+etiZeilenAbstand*4);
-                            g2.drawString(entries[4],(int)(labelWidth*ScaleX*x+(padX*ScaleX)),(int)(labelHeight*ScaleY*y+(fontHeight*4)+(padY*ScaleY))+etiZeilenAbstand*3);
+                            g2.drawString(entries[3],(int)(labelWidth*ScaleX*x+(padX*ScaleX)),(int)(labelHeight*ScaleY*y+(fontHeight*4)+(padY*ScaleY))+etiZeilenAbstand*3);
                     }
-                    if(!entries[5].equals("count1")){
+                    if(!entries[4].equals("count1")){
                         addLocationCount(g2,x,y);
                     }
                     labelsNeeded--;
@@ -156,7 +157,7 @@ public class  LabelPrintingService extends JPanel implements LabelPrinting {
     private void addLocationCount(Graphics2D g2, int x, int y){
         g2.setFont(smallFont);
 //        System.out.println(g2.getFont());
-        g2.drawString(entries[5], (float) ((int)(labelWidth*ScaleX*x+((labelWidth*ScaleX)/1))-50+(padX*ScaleX)), (float) ((int)(labelHeight*ScaleY*y+(fontHeight))+(padY)));
+        g2.drawString(entries[4], (float) ((int)(labelWidth*ScaleX*x+((labelWidth*ScaleX)/1))-50+(padX*ScaleX)), (float) ((int)(labelHeight*ScaleY*y+(fontHeight))+(padY)));
     }
 
     private void sievePrintableData(){
@@ -172,6 +173,7 @@ public class  LabelPrintingService extends JPanel implements LabelPrinting {
         Spielort spielort = null;
         String[] rowString;
         ArrayList<Long> ortIds = new ArrayList<Long>();
+        ArrayList<Long> ortIdx = new ArrayList<Long>();
         if(sourceTable.getName().equals("Table_Ligagruppe")){
             for(int rowIndex:rowSelectionCount){
                 Object obj = ((BeanTableModel) sourceTable.getModel()).getObject(rowIndex);
@@ -189,7 +191,7 @@ public class  LabelPrintingService extends JPanel implements LabelPrinting {
                     }
                     if(!(lt==null)){
                         if(!ortIds.contains(spielort.getSpielortId())){
-                            rowString = new String[6];
+                            rowString = new String[5];
                             String lines[] = StringUtils.wordWrap(spielort.getSpielortName(), 25);
                             rowString[0] = lines[0];
                             if(lines.length > 1) {
@@ -198,16 +200,24 @@ public class  LabelPrintingService extends JPanel implements LabelPrinting {
                                 rowString[1] = "";
                             }
                             rowString[2] = spielort.getStrasse();
-                            rowString[3] = "";
-                            rowString[4] = spielort.getPlzUndOrt();
-                            rowString[5] = "count1";
+
+                            rowString[3] = spielort.getPlzUndOrt();
+                            rowString[4] = "count1";
                             labelStrings.addElement(rowString);
                             ortIds.add(spielort.getSpielortId());
+                            ortIdx.add(spielort.getSpielortId());
                         }else{
                             Set<Ligateam> teams = spielort.getLigateamsInGruppe(gruppe);
-                            int idx = ortIds.indexOf(spielort.getSpielortId());
+                            int idx = ortIdx.indexOf(spielort.getSpielortId());
+                            
                             String[] entries = labelStrings.get(idx);
-                            entries[4] = String.valueOf(teams.size());
+                            ortIds.add(spielort.getSpielortId());
+                            int tmpAnzahl = 0;
+                            for(Long anzahl : ortIds){
+                                if(anzahl == spielort.getSpielortId())
+                                    tmpAnzahl++;
+                            }
+                            entries[4] = String.valueOf(tmpAnzahl);
                         }
                     }
             }

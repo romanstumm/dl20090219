@@ -70,7 +70,7 @@ public class GroupTablePrintingService extends JPanel implements TablePrinting {
 
     private void paintTable() {
 
-        for (int i = 0; i <= getPageCount(); i++) {
+        for (int i = 0; i <= getPageCount()+1; i++) {
             BufferedImage paintCanvas =
                     new BufferedImage(mediaWidth, mediaHeight, BufferedImage.TYPE_BYTE_GRAY);
             Graphics2D g2 = paintCanvas.createGraphics();
@@ -130,7 +130,7 @@ public class GroupTablePrintingService extends JPanel implements TablePrinting {
                                     jTable.getRowHeight() * (i + 1) + padY - 3);
                         } else {
                         }
-                        if (fieldIndex == printVec.size() - 1) trigger = true;
+                        if (fieldIndex == printVec.size() ) trigger = true;
                         iteratedWidths = (iteratedWidths +
                                 ((double) columnWidth[j] * columnFactor));
                     }
@@ -346,7 +346,7 @@ public class GroupTablePrintingService extends JPanel implements TablePrinting {
 
     public int getPageCount() {
         return round((double) generatePrintableData(jTable).size() /
-                printingUtils.getRowsPerPage(jTable.getRowHeight(), mediaHeight));
+                printingUtils.getRowsPerPage(jTable.getRowHeight(), mediaHeight))+1;
     }
 
     public void repaintCanvas() {
