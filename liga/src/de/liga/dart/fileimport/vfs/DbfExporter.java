@@ -82,9 +82,15 @@ public class DbfExporter extends DbfIO {
                 "VALUES (?,?,?,?,?,?,?,?)";
         PreparedStatement ligInsertStmt = connection.prepareStatement(ligInsert);
 
+        // wenn LITSAI missing: INSERT INTO LITSAI
+        String saiInsert = "INSERT INTO LITSAI (SAI_NR, LIG_NR, SAI_EINZEL, SAI_STATUS) " +
+                "VALUES (?,?,?,?)";
+        PreparedStatement saiInsertStmt = connection.prepareStatement(saiInsert);
+
         try {
             for (Ligagruppe gruppe : gruppen) {
                 LITLIG lig = findOrCreateLITLIG(gruppe, liga, ligInsertStmt);
+                LITSAI sai = findOrCreateLITSAI(lig, saiInsertStmt); // ensure sai exists (required by vfs)
                 List<Ligateamspiel> spiele = service.findSpieleInGruppe(gruppe);
                 int platzNr = 1;
                 for (Ligateamspiel spiel : spiele) {
@@ -104,8 +110,43 @@ public class DbfExporter extends DbfIO {
             ligInsertStmt.close();
             sadInsertStmt.close();
             teamInsertStmt.close();
+            saiInsertStmt.close();
 //            deleteIndexFiles(path);
         }
+    }
+
+    private List<LITSAI> saiList;
+
+    private LITSAI findOrCreateLITSAI(LITLIG lig, PreparedStatement pstmt) throws SQLException {
+        if (saiList == null) {
+            Statement stmt = connection.createStatement();
+            try {
+                saiList = readSaiList(stmt);
+            } finally {
+                stmt.close();
+            }
+        }
+        for(LITSAI sai : saiList) {
+            if(sai.LIG_NR == lig.LIG_NR && sai.SAI_NR.equals(myCurrentSaison)) {
+                return sai;
+            }
+        }
+        LITSAI sai = new LITSAI();
+        sai.LIG_NR = lig.LIG_NR;
+        sai.SAI_NR = myCurrentSaison;
+        sai.SAI_EINZEL = "kein";
+        sai.SAI_STATUS = null;
+        insertLITSAI(pstmt, sai);
+        return sai;
+    }
+
+
+    private void insertLITSAI(PreparedStatement stmt, LITSAI sai) throws SQLException {
+        stmt.setDate(1, sai.SAI_NR);
+        stmt.setInt(2, sai.LIG_NR);
+        stmt.setString(3, sai.SAI_EINZEL);
+        stmt.setString(4, sai.SAI_STATUS);
+        stmt.executeUpdate();
     }
 
 /*
@@ -132,7 +173,8 @@ public class DbfExporter extends DbfIO {
         sad.LIG_NR = tea.LIG_NR;
         sad.SAI_POSNR = platzNr;
         sad.TEA_NR = tea.TEA_NR;
-        if(log.isDebugEnabled()) log.debug("LITSAD einfügen: " + sad.TEA_NR + ", " + sad.SAI_POSNR);
+        if (log.isDebugEnabled())
+            log.debug("LITSAD einfügen: " + sad.TEA_NR + ", " + sad.SAI_POSNR);
         insertLITSAD(sadInsertStmt, sad);
         return sad;
     }
@@ -255,19 +297,19 @@ public class DbfExporter extends DbfIO {
                 lig.LIG_STAERK = 2;
             } else if ("C".equals(klassenName)) {
                 lig.LIG_STAERK = 1;
-            } else if("Bez".equals(klassenName)) {
+            } else if ("Bez".equals(klassenName)) {
                 lig.LIG_STAERK = 4;
             } else {
                 lig.LIG_STAERK = 0;
             }
-            if(klassenName.equals("Bez")) klassenName = "Bezirksliga "; // vfs nennt es so
-            if("Rhl-WW".equals(liganame)) liganame = "Rheinland-Westerwald"; // vfs nennt es so
+            if (klassenName.equals("Bez")) klassenName = "Bezirksliga "; // vfs nennt es so
+            if ("Rhl-WW".equals(liganame)) liganame = "Rheinland-Westerwald"; // vfs nennt es so
             lig.LIG_NAME = (klassenName + gruppe.getGruppenNr() +
-                    " " + liganame);            
+                    " " + liganame);
             lig.LIG_DISZIP = "301";
             lig.LIG_SPIELT = "Sonntag";
             lig.LIG_UHRZEI = 20 * 60 * 60;
-            if(log.isDebugEnabled()) log.debug("LITLIG einfügen: " + lig.LIG_NAME);
+            if (log.isDebugEnabled()) log.debug("LITLIG einfügen: " + lig.LIG_NAME);
             insertLITLIG(ligInsertStmt, lig);
         } else {
             log.debug("gefunden!");
@@ -277,7 +319,7 @@ public class DbfExporter extends DbfIO {
 
     private LITLIG findLITLIG(Ligaklasse ligaklasse, int gruppenNr) {
         LITLIG found = findLITLIG(ligaklasse.getKlassenName(), gruppenNr);
-        if(found == null && "Bez".equals(ligaklasse.getKlassenName()))
+        if (found == null && "Bez".equals(ligaklasse.getKlassenName()))
             found = findLITLIG("Bezirksliga ", gruppenNr);
         return found;
     }
@@ -320,6 +362,30 @@ public class DbfExporter extends DbfIO {
         }
         resultSet.close();
         return ligList;
+    }
+
+    private List<LITSAI> readSaiList(Statement stmt) throws SQLException {
+        ResultSet resultSet;
+        String saiSelect = "SELECT SAI_NR, LIG_NR, SAI_EINZEL, SAI_STATUS FROM LITSAI";
+        resultSet = stmt.executeQuery(saiSelect);
+        try {
+            saiList = new ArrayList();
+            while (resultSet.next()) {
+                saiList.add(readLITSAI(resultSet));
+            }
+        } finally {
+            resultSet.close();
+        }
+        return saiList;
+    }
+
+    private LITSAI readLITSAI(ResultSet resultSet) throws SQLException {
+        LITSAI sai = new LITSAI();
+        sai.SAI_NR = resultSet.getDate(1);
+        sai.LIG_NR = resultSet.getInt(2);
+        sai.SAI_EINZEL = resultSet.getString(3);
+        sai.SAI_STATUS = resultSet.getString(4);
+        return sai;
     }
 
     private void insertLITSAD(PreparedStatement stmt, LITSAD sad) throws SQLException {
