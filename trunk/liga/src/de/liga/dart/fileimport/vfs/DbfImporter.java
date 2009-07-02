@@ -15,6 +15,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 
 /**
  * Description: Datenabgleich mit Altdaten in DBF Datenbank
@@ -40,6 +42,7 @@ public class DbfImporter extends DbfIO {
             AutomatenaufstellerService service =
                     ServiceFactory.get(AutomatenaufstellerService.class);
             List<Automatenaufsteller> alle = service.findAllAutomatenaufstellerByLiga(liga);
+            Set<Automatenaufsteller> updated = new HashSet();
             while (rs.next()) {
                 LITAUF litauf = readLITAUF(rs);
                 if (isValid(litauf)) {
@@ -53,6 +56,14 @@ public class DbfImporter extends DbfIO {
                         updateAufsteller(aufsteller, litauf);
                     }
                     service.saveAutomatenaufsteller(aufsteller);
+                    updated.add(aufsteller);
+                }
+            }
+            // externeId löschen, wenn Daten nicht mehr in vfs vorhanden
+            for(Automatenaufsteller each : alle) {
+                if(!updated.contains(each) && each.getExterneId() != null) {
+                    each.setExterneId(null); // kommt nicht (mehr) in vfs vor
+                    service.saveAutomatenaufsteller(each);
                 }
             }
         } finally {
@@ -107,7 +118,9 @@ public class DbfImporter extends DbfIO {
 
     private Automatenaufsteller findAufsteller(List<Automatenaufsteller> alle, LITAUF litauf) {
         Automatenaufsteller found = findAufsteller(alle, litauf.AUF_NR);
-        if (found != null) return found;
+        if (found != null) {
+            return found;
+        }
         for (Automatenaufsteller each : alle) {
             if (each.getAufstellerName() != null && each.getPlz() != null
                     && each.getAufstellerName().equals(litauf.AUF_NAME)
@@ -129,6 +142,7 @@ public class DbfImporter extends DbfIO {
                     ServiceFactory.get(AutomatenaufstellerService.class);
             List<Automatenaufsteller> alleAufsteller =
                     aufstellerService.findAllAutomatenaufstellerByLiga(liga);
+            Set<Spielort> updated = new HashSet();
             while (rs.next()) {
                 LITLOK litlok = readLITLOK(rs);
                 if (isValid(litlok)) {
@@ -144,6 +158,14 @@ public class DbfImporter extends DbfIO {
                         spielort.setAutomatenaufsteller(aufsteller);
                     }
                     service.saveSpielort(spielort);
+                    updated.add(spielort);
+                }
+            }
+            // externeId löschen, wenn Daten nicht mehr in vfs vorhanden
+            for(Spielort each : alle) {
+                if(!updated.contains(each) && each.getExterneId() != null) {
+                    each.setExterneId(null); // kommt nicht (mehr) in vfs vor
+                    service.saveSpielort(each);
                 }
             }
         } finally {
@@ -203,7 +225,7 @@ public class DbfImporter extends DbfIO {
 
     private LITAUF readLITAUF(ResultSet rs) throws SQLException {
         LITAUF obj = new LITAUF();
-        obj.AUF_NR = rs.getString(1);
+        obj.AUF_NR = String.valueOf(rs.getInt(1));
         obj.AUF_NAME = rs.getString(2);
         obj.AUF_ZUSATZ = rs.getString(3);
         obj.AUF_STRASS = rs.getString(4);
@@ -216,7 +238,7 @@ public class DbfImporter extends DbfIO {
 
     private LITLOK readLITLOK(ResultSet rs) throws SQLException {
         LITLOK obj = new LITLOK();
-        obj.LOK_NR = rs.getString(1);
+        obj.LOK_NR = String.valueOf(rs.getInt(1));
         obj.LOK_NAME = rs.getString(2);
         obj.LOK_ZUSATZ = rs.getString(3);
         obj.LOK_STRASS = rs.getString(4);
@@ -225,7 +247,7 @@ public class DbfImporter extends DbfIO {
         obj.LOK_TEL = rs.getString(7);
         obj.LOK_FAX = rs.getString(8);
         obj.LOK_RUHETA = rs.getString(9);
-        obj.AUF_NR = rs.getString(10);
+        obj.AUF_NR = String.valueOf(rs.getInt(10));
         return obj;
     }
 }
