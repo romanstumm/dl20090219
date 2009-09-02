@@ -6,10 +6,8 @@ import javax.swing.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.TypeVariable;
-import java.util.Map;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Collection;
 import java.awt.*;
 
 /**
@@ -21,42 +19,33 @@ import java.awt.*;
  */
 public class FieldMapper {
 
-    private HashMap<String, Field> fieldMap = new HashMap<String,Field>();
-    private Class form;
-    private Class methods;
-    private Field[] fields;
-    private Method[] meths;
-    private Map methodMap;
+//    private HashMap<String, Field> fieldMap = new HashMap<String, Field>();
+    private Component form;
+    //    private Class methods;
+    private List<Field> fields = new ArrayList();
+//    private Method[] meths;
+//    private Map methodMap;
 
 
-    public FieldMapper(Class form, Class methods) {
+    public FieldMapper(Component form) {
         this.form = form;
-        this.methods = methods;
+//        this.methods = methods;
 
         registerFields();
-        registerMethods();
+//        registerMethods();
         addListener();
     }
 
     private void addListener() {
-        for(Field f: fields){
-            f.setAccessible(true);
+        for (Field f : fields) {
+//            f.setAccessible(true);
             Object o = null;
             try {
                 o = f.get(form);
-                System.out.println(form.getDeclaredField(f.getName()).isAccessible());
-
-                try {
-                    o = form.getDeclaredField(f.getName()).get(f);
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                }
-            } catch (NoSuchFieldException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            } catch (IllegalAccessException e) {
+            } catch (Exception e) {
                 e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             }
-            if(o instanceof Component) {
+            if (o instanceof Component) {
                 Component c = (Component) o;
                 System.out.println(c.getName());
             }
@@ -65,20 +54,21 @@ public class FieldMapper {
         }
     }
 
-    private void registerMethods() {
-        meths = methods.getDeclaredMethods();
-    }
+/*    private void registerMethods() {
+//        methods = form.getClass().getDeclaredMethods();
+    }*/
 
     private void registerFields() {
-        fields = form.getDeclaredFields();
-
-        for(Field f:fields){
-            fieldMap.put(f.getType().toString(),f);
+        Class each = form.getClass();
+        while (each != null) {
+            Field[] _fields = each.getDeclaredFields();
+            for (Field f : _fields) {
+                f.setAccessible(true);
+                fields.add(f);
+            }
+            each = each.getSuperclass();
         }
-
     }
-
-
 
 
 }
