@@ -5,6 +5,8 @@ import org.en.tealEye.guiExt.ExtPanel.ExtJTablePanel;
 import org.en.tealEye.guiMain.MainAppFrame;
 import org.en.tealEye.printing.gui.PrintingDialogFrame;
 import org.en.tealEye.printing.gui.TablePrintingFrame;
+import org.en.tealEye.printing.gui.EnvelopePrintFrame;
+import org.en.tealEye.printing.gui.EnvelopePrintFrameMethods;
 
 import javax.swing.*;
 import java.awt.event.*;
@@ -25,6 +27,7 @@ public class PrintingController implements ActionListener, MouseListener, Window
     private final MainAppFrame mainApp;
 //    private JInternalFrame activeFrame;
     private TablePrintingFrame tablePrintFrame;
+    private JFrame baseFrame;
     private final WindowController winCon = new WindowController();
 
     public PrintingController(MainAppFrame mainApp) {
@@ -57,6 +60,8 @@ public class PrintingController implements ActionListener, MouseListener, Window
                         tablePrintFrame =
                                 new TablePrintingFrame(PrintingController.this, getPrintableTable(),
                                         mode, winCon);
+                    if (mode.equals("envelope"))
+                        new FieldMapper(new EnvelopePrintFrame(),new EnvelopePrintFrameMethods());
                     pframe.dispose();
                 }
                                }
