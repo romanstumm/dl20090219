@@ -61,7 +61,7 @@ public class PrintingController implements ActionListener, MouseListener, Window
                                 new TablePrintingFrame(PrintingController.this, getPrintableTable(),
                                         mode, winCon);
                     if (mode.equals("envelope"))
-                        new FieldMapper(new EnvelopePrintFrame(),new EnvelopePrintFrameMethods());
+                        new FieldMapper(EnvelopePrintFrame.class, EnvelopePrintFrameMethods.class, getPrintableTable());
                     pframe.dispose();
                 }
                                }

@@ -1,112 +1,301 @@
 package org.en.tealEye.printing.controller;
 
-import org.en.tealEye.printing.gui.EnvelopePrintFrame;
-import org.en.tealEye.printing.gui.EnvelopePrintFrameMethods;
+import org.en.tealEye.printing.gui.GenericLoadingBarFrame;
 
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.ListSelectionEvent;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.TypeVariable;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Constructor;
 import java.util.*;
 import java.util.List;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowListener;
+import java.awt.event.WindowEvent;
+import java.beans.PropertyChangeSupport;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Stephan Pudras
- * Date: 02.09.2009
- * Time: 10:06:48
- * To change this template use File | Settings | File Templates.
- */
-public class FieldMapper implements ActionListener, ChangeListener {
 
-    private HashMap<String, Field> fieldMap = new HashMap<String, Field>();
-    private Object form;
-    private Object methods;
+import contrib.ch.randelshofer.quaqua.util.Worker;
+
+public class FieldMapper implements ActionListener, ChangeListener, ListSelectionListener, PropertyChangeListener, WindowListener {
+
+    private Object formObject;
+    private Object methodObject;
     private List<Field> fields = new ArrayList();
-    private Method[] meths;
+    private Map<String,Component> components = new HashMap<String,Component>();
     private Map<String, Method> methodMap = new HashMap<String, Method>();
-    private List<Method> methodList;
+    private Map<String, SwingWorker> threadMap = new HashMap<String, SwingWorker>();
+
+    public FieldMapper(Class formClass, Class methodClass, Object parentObject) {
+        try {
+            formObject = formClass.newInstance();
+            if(formObject instanceof JFrame){
+            ((JFrame)formObject).addWindowListener(this);
+            }
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+            registerFields();
+        try {
+            methodObject = methodClass.getDeclaredConstructors()[0].newInstance(components, formObject, parentObject);
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+            registerMethods();
+            evokeCustomMethods();
+            addListener();
+        }
+
+    public FieldMapper(Class formClass, Class methodClass, Object parentObject, Component targetComponent) {
+        try {
+            formObject = formClass.newInstance();
+            if(formObject instanceof JFrame){
+            ((JFrame)formObject).addWindowListener(this);
+            }
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+            registerFields();
+        try {
+            methodObject = methodClass.getDeclaredConstructors()[0].newInstance(components, formObject, parentObject, targetComponent);
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+            registerMethods();
+            evokeCustomMethods();
+            addListener();
+        }
+
+    public FieldMapper(Class formClass, Class methodClass) {
+            try {
+                formObject = formClass.newInstance();
+                if(formObject instanceof JFrame){
+                ((JFrame)formObject).addWindowListener(this);
+                }
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+                registerFields();
+            try {
+                methodObject = methodClass.getDeclaredConstructors()[0].newInstance(components, formObject);
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
+                registerMethods();
+                evokeCustomMethods();
+                addListener();
+        }
 
 
-    public FieldMapper(Object form, Object aClass) {
-        this.form = form;
-        this.methods = aClass;
+    private void evokeCustomMethods() {
+       int i = 0;
+        Collection<Method> methods = methodMap.values();
+        methods.toArray();
+        for(Method me: methods){
+            if(me.getName().contains("Custom"))
+                try {
+                    me.invoke(methodObject);
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                }
+        }
+    }
 
+    public FieldMapper(Object formObject, Object methodObject) {
+        this.formObject = formObject;
+        this.methodObject = methodObject;
         registerFields();
         registerMethods();
         addListener();
     }
 
     private void addListener() {
-        for (Field f : fields) {
-            f.setAccessible(true);
-            Object o = null;
-            try {
-                o = f.get(form);
-            } catch (Exception e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            }
-            if (o instanceof Component) {
-                Component c = (Component) o;
-                if(c instanceof JButton){
-                    ((JButton)c).addActionListener(this);
-                }else if(c instanceof JSpinner){
-                    ((JSpinner)c).addChangeListener(this);
-                }else if(c instanceof JComboBox){
-                    ((JComboBox)c).addActionListener(this);
-                }else if(c instanceof JCheckBox){
-                    ((JCheckBox)c).addActionListener(this);
-                }else if(c instanceof JRadioButton){
-                    ((JRadioButton)c).addActionListener(this);
+
+        for(Component c : components.values()) {
+                if (c instanceof JButton) {
+                    ((JButton) c).addActionListener(this);
+                } else if (c instanceof JSpinner) {
+                    ((JSpinner) c).addChangeListener(this);
+                } else if (c instanceof JComboBox) {
+                    ((JComboBox) c).addActionListener(this);
+                } else if (c instanceof JCheckBox) {
+                    ((JCheckBox) c).addActionListener(this);
+                } else if (c instanceof JRadioButton) {
+                    ((JRadioButton) c).addActionListener(this);
+                } else if (c instanceof JList) {
+                    ((JList) c).addListSelectionListener(this);
                 }
-            }
-
-
         }
     }
 
     private void registerMethods() {
-        meths = methods.getClass().getDeclaredMethods();
-        for(Method m: meths){
-            methodMap.put(m.getName(),m);
+        Method[] meths = methodObject.getClass().getDeclaredMethods();
+        for (Method m : meths) {
+            methodMap.put(m.getName(), m);
         }
     }
 
     private void registerFields() {
-        Class each = form.getClass();
+        Class each = formObject.getClass();
+        Object o = null;
         while (each != null) {
             Field[] _fields = each.getDeclaredFields();
             for (Field f : _fields) {
                 f.setAccessible(true);
                 fields.add(f);
+                try {
+                    o = f.get(formObject);
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+                if(o instanceof Component){
+                    Component c = (Component)o;
+                    components.put(c.getName(),c);
+                }
             }
             each = each.getSuperclass();
         }
     }
 
-
     @Override
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
-        String compName = ((Component)o).getName();
+        String compName = ((Component) o).getName();
         Method m = methodMap.get(compName);
-        try {
-            m.invoke(methods);
-        } catch (IllegalAccessException e1) {
-            e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        } catch (InvocationTargetException e1) {
-            e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        if (m == null){
+            m = methodMap.get(compName+"asThread");
         }
-    }
+            System.out.println(m.getName());
+        if(m.getName().contains("asThread")){
+                Point point = ((JFrame)formObject).getLocationOnScreen();
+                GenericLoadingBarFrame frame = new GenericLoadingBarFrame(point);
+                new ThreadFactory(m, methodObject, frame, fields).execute();
+
+            }else
+            {
+                try {
+                    m.invoke(methodObject);
+                } catch (IllegalAccessException e1) {
+                    e1.printStackTrace();
+                } catch (InvocationTargetException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        }
 
     @Override
     public void stateChanged(ChangeEvent e) {
+        Object o = e.getSource();
+        String compName = ((Component) o).getName();
+        Method m = methodMap.get(compName);
+            if(m.getName().contains("asThread")){
+                new ThreadFactory(m, methodObject);
+            }else
+            {
+                try {
+                    m.invoke(methodObject);
+                } catch (IllegalAccessException e1) {
+                    e1.printStackTrace();
+                } catch (InvocationTargetException e1) {
+                    e1.printStackTrace();
+                }
+            }
+    }
+
+    @Override
+    public void valueChanged(ListSelectionEvent e) {
+        Object o = e.getSource();
+        String compName = ((Component)o).getName();
+        Method m = methodMap.get(compName);
+            if(m.getName().contains("asThread")){
+                new ThreadFactory(m, methodObject);
+            }else
+            {
+                try {
+                    m.invoke(methodObject);
+                } catch (IllegalAccessException e1) {
+                    e1.printStackTrace();
+                } catch (InvocationTargetException e1) {
+                    e1.printStackTrace();
+                }
+            }
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        evt.getPropagationId();
+    }
+
+
+    @Override
+    public void windowOpened(WindowEvent e) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void windowClosing(WindowEvent e) {
+        System.out.println("Dispose");
+        Method dispose = methodMap.get("DisposeMethod");
+        if(dispose != null)
+            try {
+                dispose.invoke(methodObject);
+            } catch (IllegalAccessException e1) {
+                e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            } catch (InvocationTargetException e1) {
+                e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
+    }
+
+    @Override
+    public void windowClosed(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowIconified(WindowEvent e) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void windowDeiconified(WindowEvent e) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void windowActivated(WindowEvent e) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void windowDeactivated(WindowEvent e) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 }

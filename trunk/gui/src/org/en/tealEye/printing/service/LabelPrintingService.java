@@ -144,7 +144,7 @@ public class  LabelPrintingService extends JPanel implements LabelPrinting {
                           //g2.drawString(entries[3],(int)(labelWidth*ScaleX*x+(padX*ScaleX)),(int)(labelHeight*ScaleY*y+(fontHeight*4)+(padY*ScaleY))+etiZeilenAbstand*4);
                             g2.drawString(entries[3],(int)(labelWidth*ScaleX*x+(padX*ScaleX)),(int)(labelHeight*ScaleY*y+(fontHeight*4)+(padY*ScaleY))+etiZeilenAbstand*3);
                     }
-                    if(!entries[4].equals("count1")){
+                    if(!entries[4].equals("")){
                         addLocationCount(g2,x,y);
                     }
                     labelsNeeded--;
@@ -172,13 +172,15 @@ public class  LabelPrintingService extends JPanel implements LabelPrinting {
         GruppenService gs = ServiceFactory.get(GruppenService.class);
         Spielort spielort = null;
         String[] rowString;
-        ArrayList<Long> ortIds = new ArrayList<Long>();
+
         ArrayList<Long> ortIdx = new ArrayList<Long>();
         if(sourceTable.getName().equals("Table_Ligagruppe")){
             for(int rowIndex:rowSelectionCount){
                 Object obj = ((BeanTableModel) sourceTable.getModel()).getObject(rowIndex);
                 Ligagruppe gruppe = ((Ligagruppe) obj);
+                ArrayList<Long> ortIds = new ArrayList<Long>();
             for(int teamIndex = 1; teamIndex <= 8; teamIndex++){
+
                     Ligateam lt;
                     try {
                         lt = gruppe.findSpiel(gs.findSpieleInGruppe(gruppe), teamIndex).getLigateam();
@@ -202,13 +204,13 @@ public class  LabelPrintingService extends JPanel implements LabelPrinting {
                             rowString[2] = spielort.getStrasse();
 
                             rowString[3] = spielort.getPlzUndOrt();
-                            rowString[4] = "count1";
+                            rowString[4] = "";
                             labelStrings.addElement(rowString);
                             ortIds.add(spielort.getSpielortId());
                             ortIdx.add(spielort.getSpielortId());
                         }else{
                             Set<Ligateam> teams = spielort.getLigateamsInGruppe(gruppe);
-                            int idx = ortIdx.indexOf(spielort.getSpielortId());
+                            int idx = ortIdx.lastIndexOf(spielort.getSpielortId());
                             
                             String[] entries = labelStrings.get(idx);
                             ortIds.add(spielort.getSpielortId());
@@ -220,7 +222,7 @@ public class  LabelPrintingService extends JPanel implements LabelPrinting {
                             entries[4] = String.valueOf(tmpAnzahl);
                         }
                     }
-            }
+                }
             }
         }
     }
