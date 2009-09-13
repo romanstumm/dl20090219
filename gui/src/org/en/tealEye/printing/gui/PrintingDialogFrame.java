@@ -47,6 +47,7 @@ public class PrintingDialogFrame extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JSeparator();
         druckenButton = new JButton("Drucken");
         abbrechenButton = new JButton("Abbrechen");
+        envelopeRadio = new JRadioButton();
         getContentPane().setLayout(new java.awt.GridBagLayout());
         setPreferredSize(new Dimension(250, 250));
         this.setLocation(250, 250);
@@ -65,6 +66,19 @@ public class PrintingDialogFrame extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         getContentPane().add(etikettenRadio, gridBagConstraints);
+        buttonGroup1.add(envelopeRadio);
+
+        envelopeRadio.setText("Briefumschläge beschriften");
+        envelopeRadio.setMnemonic('B');
+        envelopeRadio.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        envelopeRadio.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        getContentPane().add(envelopeRadio, gridBagConstraints);
 
         buttonGroup1.add(gruppenRadio);
         auswahlRadio.setText("Auswahl drucken");
@@ -115,7 +129,7 @@ public class PrintingDialogFrame extends javax.swing.JFrame {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridy = 7;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.CENTER;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 2, 10);
         getContentPane().add(druckenButton, gridBagConstraints);
@@ -123,7 +137,7 @@ public class PrintingDialogFrame extends javax.swing.JFrame {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridy = 7;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.CENTER;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 2, 10);
         getContentPane().add(abbrechenButton, gridBagConstraints);
@@ -150,6 +164,7 @@ public class PrintingDialogFrame extends javax.swing.JFrame {
     private javax.swing.JRadioButton gruppenRadio;
     private javax.swing.JRadioButton etikettenRadio;
     private javax.swing.JRadioButton alleRadio;
+    private JRadioButton envelopeRadio;
     private javax.swing.JSeparator jSeparator1;
     // Ende der Variablendeklaration
 
@@ -158,6 +173,7 @@ public class PrintingDialogFrame extends javax.swing.JFrame {
         else if (gruppenRadio.isSelected()) return "gruppen";
         else if (etikettenRadio.isSelected()) return "etikett";
         else if (alleRadio.isSelected()) return "alle";
+        else if (envelopeRadio.isSelected()) return "envelope";
         else return null;
     }
 
