@@ -95,7 +95,7 @@ public class EnvelopePrintFrame extends javax.swing.JFrame {
         jSeparator3 = new javax.swing.JSeparator();
         jMenuItem4 = new javax.swing.JMenuItem();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         ExtResourceBundle resourceMap = new ExtResourceBundle("org.en.tealEye.resources.EnvelopePrintFrame");
         setTitle(resourceMap.getString("Form.title")); // NOI18N
         setName("Form"); // NOI18N
