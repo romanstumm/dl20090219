@@ -41,6 +41,8 @@ public class PrintingUtils {
         mediaHeight = mediaSize[1];
     }
 
+
+
     public PrinterJob getPrinterJob(){
         return job;
     }
