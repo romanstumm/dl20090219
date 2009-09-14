@@ -1,6 +1,8 @@
 package org.en.tealEye.printing.gui;
 
 import org.en.tealEye.printing.controller.FieldMapper;
+import org.en.tealEye.printing.controller.GenericThread;
+import org.en.tealEye.printing.service.EnvelopePrintService;
 import org.en.tealEye.guiServices.GlobalGuiService;
 
 import javax.swing.*;
@@ -21,6 +23,11 @@ public class EnvelopePrintFrameMethods {
     private JFrame form;
     private GlobalGuiService service = null;
     private Object parentObject;
+    private EnvelopePrintService eps;
+    private GenericThread tf;
+    private int pageIndex = 0;
+    private JPanel panel;
+
 
     public EnvelopePrintFrameMethods(Map<String, Component> components, Object form, Object parentObject){
         this.form = (JFrame) form;
@@ -42,8 +49,16 @@ public class EnvelopePrintFrameMethods {
                                                                     service.getProperty("senderLocation"));
     }
 
-    public void loadInitialGraphicsCustomAsThread(){
-        
+    public void loadInitialGraphicsCustomAsThread(GenericThread tf){
+        this.tf = tf;
+        eps = new EnvelopePrintService(parentObject, tf, 10);
+        panel = ((JPanel)components.get("previewPanel"));
+        panel.setVisible(false);
+        panel.setLayout(new BorderLayout());
+        panel.add(new JLabel(eps.getGraphic(pageIndex)),BorderLayout.CENTER);
+        panel.repaint();
+        panel.setVisible(true);
+
     }
 
     private String getFontStyleName(Font font) {
@@ -55,11 +70,13 @@ public class EnvelopePrintFrameMethods {
             }
             return null;    }
 
-    public void epPrintBtasThread(){
+    public void epPrintBtasThread(GenericThread tf){
+        tf.setDone();
         System.out.println("PrintBT");                 
     }
 
     public void epDeclineBt(){
+        form.dispose();
         System.out.println("DeclineBT");
     }
     public void epGraphicBt(){
@@ -73,6 +90,34 @@ public class EnvelopePrintFrameMethods {
            ((JTextField)components.get("epGraphicPathTB")).setText(chooser.getSelectedFile().getAbsolutePath());
         }
     }
+
+    public void epFowardBt(){
+        pageIndex++;
+        panel.setVisible(false);
+        panel.removeAll();
+        panel.add(new JLabel(eps.getGraphic(pageIndex)),BorderLayout.CENTER);
+        panel.repaint();
+        panel.setVisible(true);
+        eps.getGraphic(pageIndex);
+    }
+    public void epHomeBt(){
+        pageIndex = 0;
+        panel.setVisible(false);
+        panel.removeAll();
+        panel.add(new JLabel(eps.getGraphic(pageIndex)),BorderLayout.CENTER);
+        panel.repaint();
+        panel.setVisible(true);
+    }
+    public void epBackwardBt(){
+        if(pageIndex>=1)
+        pageIndex--;
+        panel.setVisible(false);
+        panel.removeAll();
+        panel.add(new JLabel(eps.getGraphic(pageIndex)),BorderLayout.CENTER);
+        panel.repaint();
+        panel.setVisible(true);
+    }
+
 
     public void epAddressFontBt(){
         new FieldMapper(GenericFontFrame.class, GenericFontFrameMethods.class, components.get("epAddressFontPreviewTB"));
@@ -90,7 +135,6 @@ public class EnvelopePrintFrameMethods {
     }
 
     public void DisposeMethod(){
-
         System.out.println("DisposeEnvelop");
         Properties props = new Properties();
         props.setProperty("AddressFontType", components.get("epAddressFontPreviewTB").getFont().getFamily());
@@ -119,4 +163,5 @@ public class EnvelopePrintFrameMethods {
         }
         service.updateProps(props);    
     }
+
 }

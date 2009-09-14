@@ -10,7 +10,6 @@ import javax.swing.event.ListSelectionEvent;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Constructor;
 import java.util.*;
 import java.util.List;
 import java.awt.*;
@@ -18,12 +17,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowListener;
 import java.awt.event.WindowEvent;
-import java.beans.PropertyChangeSupport;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
-
-
-import contrib.ch.randelshofer.quaqua.util.Worker;
 
 public class FieldMapper implements ActionListener, ChangeListener, ListSelectionListener, PropertyChangeListener, WindowListener {
 
@@ -118,7 +113,10 @@ public class FieldMapper implements ActionListener, ChangeListener, ListSelectio
         Collection<Method> methods = methodMap.values();
         methods.toArray();
         for(Method me: methods){
-            if(me.getName().contains("Custom"))
+            if(me.getName().contains("Custom")&&me.getName().contains("AsThread"))
+                new GenericThread(me,methodObject,new GenericLoadingBarFrame(((JFrame)formObject).getLocationOnScreen()),fields).start();
+                //me.invoke(methodObject);
+            else if(me.getName().contains("Custom")&&!(me.getName().contains("AsThread")))
                 try {
                     me.invoke(methodObject);
                 } catch (IllegalAccessException e) {
@@ -126,6 +124,7 @@ public class FieldMapper implements ActionListener, ChangeListener, ListSelectio
                 } catch (InvocationTargetException e) {
                     e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
                 }
+
         }
     }
 
@@ -197,7 +196,7 @@ public class FieldMapper implements ActionListener, ChangeListener, ListSelectio
         if(m.getName().contains("asThread")){
                 Point point = ((JFrame)formObject).getLocationOnScreen();
                 GenericLoadingBarFrame frame = new GenericLoadingBarFrame(point);
-                new ThreadFactory(m, methodObject, frame, fields).execute();
+                new GenericThread(m, methodObject, frame, fields).start();
 
             }else
             {
@@ -217,7 +216,7 @@ public class FieldMapper implements ActionListener, ChangeListener, ListSelectio
         String compName = ((Component) o).getName();
         Method m = methodMap.get(compName);
             if(m.getName().contains("asThread")){
-                new ThreadFactory(m, methodObject);
+                new GenericThread(m, methodObject);
             }else
             {
                 try {
@@ -236,7 +235,7 @@ public class FieldMapper implements ActionListener, ChangeListener, ListSelectio
         String compName = ((Component)o).getName();
         Method m = methodMap.get(compName);
             if(m.getName().contains("asThread")){
-                new ThreadFactory(m, methodObject);
+                new GenericThread(m, methodObject);
             }else
             {
                 try {

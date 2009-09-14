@@ -11,9 +11,9 @@ package org.en.tealEye.printing.gui;/*
 
 
 import org.en.tealEye.printing.controller.ExtResourceBundle;
-import org.en.tealEye.printing.controller.ResourceBundleExt;
 
-import java.util.ResourceBundle;
+import javax.swing.*;
+
 
 /**
  *
@@ -21,7 +21,7 @@ import java.util.ResourceBundle;
  */
 public class EnvelopePrintFrame extends javax.swing.JFrame {
 
-    /** Creates new form EnvelopePrintFrame */
+
     public EnvelopePrintFrame() {
         initComponents();
     }
@@ -159,7 +159,7 @@ public class EnvelopePrintFrame extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         toolPanel.add(epGraphicCheckBox, gridBagConstraints);
 
-        epEnvelopeType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "DIN C3   324 × 458", "DIN E4   280 × 400", "DIN B4   250 × 353", "DIN C4   229 × 324", "DIN B5   176 × 250", "DIN C5   162 × 229", "DIN C5/6   114 x 229", "DIN DL C5/6   110 × 220", "DIN B6   125 × 176", "DIN C6   114 × 162" }));
+        epEnvelopeType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "DIN C3   324 × 458", "DIN B4   250 × 353", "DIN C4   229 × 324", "DIN B5   176 × 250", "DIN C5   162 × 229", "DIN C5/6   114 x 229", "DIN DL C5/6   110 × 220", "DIN B6   125 × 176", "DIN C6   114 × 162" }));
         epEnvelopeType.setMinimumSize(new java.awt.Dimension(150, 20));
         epEnvelopeType.setName("epEnvelopeType"); // NOI18N
         epEnvelopeType.setPreferredSize(new java.awt.Dimension(150, 20));
@@ -511,7 +511,9 @@ public class EnvelopePrintFrame extends javax.swing.JFrame {
             .addGap(0, 585, Short.MAX_VALUE)
         );
 
+        previewPanel.setBorder(BorderFactory.createEtchedBorder());
         jScrollPane2.setViewportView(previewPanel);
+
 
         jSplitPane1.setLeftComponent(jScrollPane2);
 
