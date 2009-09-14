@@ -13,14 +13,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.List;
 import java.awt.*;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.WindowListener;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
 
-public class FieldMapper implements ActionListener, ChangeListener, ListSelectionListener, PropertyChangeListener, WindowListener {
+public class FieldMapper implements ActionListener, ChangeListener, ListSelectionListener, PropertyChangeListener, WindowListener, MouseListener {
 
     private Object formObject;
     private Object methodObject;
@@ -232,6 +229,7 @@ public class FieldMapper implements ActionListener, ChangeListener, ListSelectio
     @Override
     public void valueChanged(ListSelectionEvent e) {
         Object o = e.getSource();
+        if(!e.getValueIsAdjusting()){
         String compName = ((Component)o).getName();
         Method m = methodMap.get(compName);
             if(m.getName().contains("asThread")){
@@ -246,6 +244,7 @@ public class FieldMapper implements ActionListener, ChangeListener, ListSelectio
                     e1.printStackTrace();
                 }
             }
+        }
     }
 
     @Override
@@ -295,6 +294,62 @@ public class FieldMapper implements ActionListener, ChangeListener, ListSelectio
 
     @Override
     public void windowDeactivated(WindowEvent e) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+
+    //Mouse Listener
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        Component o = e.getComponent();
+        String compName = o.getName();
+        System.out.println(compName);
+        Method m = methodMap.get(compName);
+            if(m.getName().contains("asThread")){
+                new GenericThread(m, methodObject);
+            }else
+            {
+                try {
+                    m.invoke(methodObject);
+                } catch (IllegalAccessException e1) {
+                    e1.printStackTrace();
+                } catch (InvocationTargetException e1) {
+                    e1.printStackTrace();
+                }
+            }    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        Component o = e.getComponent();
+        String compName = o.getName();
+        System.out.println(compName);
+        Method m = methodMap.get(compName);
+            if(m.getName().contains("asThread")){
+                new GenericThread(m, methodObject);
+            }else
+            {
+                try {
+                    m.invoke(methodObject);
+                } catch (IllegalAccessException e1) {
+                    e1.printStackTrace();
+                } catch (InvocationTargetException e1) {
+                    e1.printStackTrace();
+                }
+            }
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 }

@@ -35,6 +35,8 @@ public class EnvelopePrintFrameMethods {
         this.parentObject = parentObject;
     }
 
+    //CustomMethods will be invoked at startup__________________________________
+
     public void getFontPropertiesCustom(){
         service = new GlobalGuiService();
         components.get("epAddressFontPreviewTB").setFont(service.getFontMap().get("AddressFont"));
@@ -51,11 +53,23 @@ public class EnvelopePrintFrameMethods {
 
     public void loadInitialGraphicsCustomAsThread(GenericThread tf){
         this.tf = tf;
-        eps = new EnvelopePrintService(parentObject, tf, 10);
+        eps = new EnvelopePrintService(parentObject, tf, ((JCheckBox)components.get("epGraphicCheckBox")).isSelected(),
+                                                         ((JCheckBox)components.get("epSenderCheckBox")).isSelected(),
+                                                         ((JComboBox)components.get("epEnvelopeType")).getSelectedIndex(),
+                                                         ((JComboBox)components.get("epEnvelopeAxis")).getSelectedIndex(),
+                                                         ((JSpinner)components.get("epCount")).getValue(),
+                                                         ((JRadioButton)components.get("epOrderTable")).isSelected(),
+                                                         ((JRadioButton)components.get("epSenderLocCornerRB")).isSelected(),
+                                                         components.get("epAddressFontPreviewTB").getFont(),
+                                                         components.get("epSenderFontPreviewTB").getFont(),
+                                                         ((JTextField)components.get("epGraphicPathTB")).getText());
+
         panel = ((JPanel)components.get("previewPanel"));
         panel.setVisible(false);
         panel.setLayout(new BorderLayout());
-        panel.add(new JLabel(eps.getGraphic(pageIndex)),BorderLayout.CENTER);
+        ImageIcon icon = eps.getGraphic(pageIndex);
+        if(icon != null)
+        panel.add(new JLabel(icon),BorderLayout.CENTER);
         panel.repaint();
         panel.setVisible(true);
 
@@ -70,7 +84,10 @@ public class EnvelopePrintFrameMethods {
             }
             return null;    }
 
-    public void epPrintBtasThread(GenericThread tf){
+    //Field Method Assignment___________________________________________________
+
+    public void epPrintBt(){
+        eps.startPrinting();
         tf.setDone();
         System.out.println("PrintBT");                 
     }
@@ -79,6 +96,7 @@ public class EnvelopePrintFrameMethods {
         form.dispose();
         System.out.println("DeclineBT");
     }
+
     public void epGraphicBt(){
         JFileChooser chooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter(
@@ -100,6 +118,7 @@ public class EnvelopePrintFrameMethods {
         panel.setVisible(true);
         eps.getGraphic(pageIndex);
     }
+
     public void epHomeBt(){
         pageIndex = 0;
         panel.setVisible(false);
@@ -108,6 +127,7 @@ public class EnvelopePrintFrameMethods {
         panel.repaint();
         panel.setVisible(true);
     }
+
     public void epBackwardBt(){
         if(pageIndex>=1)
         pageIndex--;
@@ -118,7 +138,6 @@ public class EnvelopePrintFrameMethods {
         panel.setVisible(true);
     }
 
-
     public void epAddressFontBt(){
         new FieldMapper(GenericFontFrame.class, GenericFontFrameMethods.class, components.get("epAddressFontPreviewTB"));
     }
@@ -126,13 +145,66 @@ public class EnvelopePrintFrameMethods {
     public void epSenderFontBt(){
         new FieldMapper(GenericFontFrame.class, GenericFontFrameMethods.class, components.get("epSenderFontPreviewTB"));
     }
+
     public void epSenderValueBt(){
         new FieldMapper(SenderAddressFrame.class, SenderAddressFrameMethods.class, components.get("epSenderValueBt"));
     }
 
+    public void epCount(){
+        eps.setPages((Integer) ((JSpinner)components.get("epCount")).getValue());
+        panel.setVisible(false);
+        panel.removeAll();
+        panel.add(new JLabel(eps.getGraphic(pageIndex)),BorderLayout.CENTER);
+        panel.repaint();
+        panel.setVisible(true);
+        eps.getGraphic(pageIndex);
+    }
+
+    public void epGraphicCheckBox(){
+        eps.setWithGraphic(((JCheckBox)components.get("epGraphicCheckBox")).isSelected());
+    }
+
+    public void epSenderCheckBox(){
+        eps.setWithSender(((JCheckBox)components.get("epSenderCheckBox")).isSelected());
+    }
+
+    public void epEnvelopeType(){
+        eps.setFormat(((JComboBox)components.get("epEnvelopeType")).getSelectedIndex());
+    }
+
+    public void epEnvelopeAxis(){
+        eps.setOrientation(((JComboBox)components.get("epEnvelopeAxis")).getSelectedIndex());
+    }
+
+    public void epSenderLocCornerRB(){
+        if(((JRadioButton)components.get("epSenderLocCornerRB")).isSelected())
+        eps.setSenderPosition(true);
+    }
+
+    public void epSenderLocLineRB(){
+        if(((JRadioButton)components.get("epSenderLocLineRB")).isSelected())
+        eps.setSenderPosition(false);
+    }
+
+    public void epOrderTable(){
+        if(((JRadioButton)components.get("epOrderTable")).isSelected())
+        eps.setSenderPosition(true);
+
+    }
+
+    public void epOrderTeam(){
+        if(((JRadioButton)components.get("epOrderTeam")).isSelected())
+        eps.setSenderPosition(false);
+
+    }
+
+    //Getter_________________________________________________________
+
     public JFrame getForm(){
         return form;
     }
+
+    //DisposeMethod will be invoked while closing the parent frame
 
     public void DisposeMethod(){
         System.out.println("DisposeEnvelop");

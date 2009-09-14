@@ -12,7 +12,6 @@ import javax.swing.*;
 import javax.print.attribute.PrintRequestAttributeSet;
 import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.Attribute;
-import javax.print.attribute.standard.MediaSize;
 import javax.print.attribute.standard.MediaSizeName;
 import java.awt.*;
 import java.awt.print.*;
@@ -40,10 +39,15 @@ public class EnvelopePrintService {
     private int pages;
     private boolean withGraphic;
     private boolean withSender;
-    private boolean senderDefault;
+    private boolean senderPosition;
     private boolean orderByTable;
     private int format;
     private int orientation;
+    private Font addressFont;
+    private Font senderFont;
+    private Font additionalFont;
+    private String graphicPath;
+
 
     private double xAxisAddress;
     private double yAxisAddress;
@@ -62,25 +66,33 @@ public class EnvelopePrintService {
     private PrinterJob pj;
     private PageFormat pf;
 
-    public EnvelopePrintService(Object parentObject, GenericThread tf, int pages) {
+    public EnvelopePrintService(Object parentObject, GenericThread tf, boolean withGraphic, boolean withSender, int format, int orientation, Object pages, boolean orderByTable, boolean senderPosition, Font addressFont, Font senderFont, String graphicPath) {
         this.parentObject = parentObject;
-        this.pages = pages;
-        this.mediaSize = mediaSize;
-
-
+        this.pages = Integer.parseInt(pages.toString());
+        this.withGraphic = withGraphic;
+        this.withSender = withSender;
+        this.format = format;
+        this.orientation = orientation;
+        this.orderByTable = orderByTable;
+        this.senderPosition = senderPosition;
+        this.addressFont = addressFont;
+        this.senderFont = senderFont;
+        this.additionalFont = new Font("Arial",0,10);
+        this.graphicPath = graphicPath;
         startPrinterJob();
         aquireData();
-        fillBook();
-        drawEnvelope();
-        getStringArray();
-        getPaperWidth();
-        drawEnvelope();
+        initGraphics();
         tf.setDone();
-        //startPrinting();
-
     }
 
-    private void startPrinting() {
+    private void initGraphics() {
+        //getStringArray();
+        getPaperWidth();
+        imageIconVec.removeAllElements();
+        drawEnvelope();
+    }
+
+    public void startPrinting() {
         pj.setPageable(book);
         pj.setJobName("My book");
     if (pj.printDialog()) {
@@ -92,16 +104,7 @@ public class EnvelopePrintService {
     }
     }
 
-    private void fillBook() {
 
-    }
-
-
-    private void initGraphics2D(){
-        BufferedImage img = null;
-
-        Graphics2D g = img.createGraphics();
-    }
 
     private void drawEnvelope(){
             BufferedImage img;
@@ -110,7 +113,7 @@ public class EnvelopePrintService {
                     for (String[] g : group) {
                         img = new BufferedImage((int) (getPaperWidth().getImageableWidth()),(int) (getPaperWidth().getImageableHeight()),BufferedImage.TYPE_BYTE_INDEXED);
                         Graphics2D g2 = img.createGraphics();
-                        EnvelopePaint ep = new EnvelopePaint(g2, g, (int)getPaperWidth().getImageableWidth(), (int)getPaperWidth().getImageableHeight());
+                        new EnvelopePaint(g2, g, (int)getPaperWidth().getImageableWidth(), (int)getPaperWidth().getImageableHeight());
                         ImageIcon icon = new ImageIcon(img);
                         imageIconVec.add(icon);
                     }
@@ -126,13 +129,9 @@ public class EnvelopePrintService {
 
     private PageFormat getPaperWidth(){
         PrintRequestAttributeSet aset = new HashPrintRequestAttributeSet();
-        mediaSize = 6;
         aset.add(setMediaSize());
         pf = pj.getPageFormat(aset);
         pf.setOrientation(PageFormat.LANDSCAPE);
-        double[] size = new double[2];
-            size[0] = pf.getImageableWidth();
-            size[1] = pf.getImageableHeight();
         return pf;
     }
 
@@ -239,7 +238,48 @@ public class EnvelopePrintService {
     }
 
     public ImageIcon getGraphic(int page) {
+        if(!imageIconVec.isEmpty())
         return imageIconVec.get(page);
+        else return null;
+    }
+    
+    public void setPages(int pages) {
+        this.pages = pages;
+        initGraphics();
+    }
+
+    public void setWithGraphic(boolean withGraphic) {
+        this.withGraphic = withGraphic;
+        initGraphics();
+    }
+
+    public void setWithSender(boolean withSender) {
+        this.withSender = withSender;
+        initGraphics();
+    }
+
+    public void setSenderPosition(boolean senderPosition) {
+        this.senderPosition = senderPosition;
+        initGraphics();
+    }
+
+    public void setOrderByTable(boolean orderByTable) {
+        this.orderByTable = orderByTable;
+        initGraphics();
+    }
+
+    public void setFormat(int format) {
+        this.format = format;
+        initGraphics();
+    }
+
+    public void setOrientation(int orientation) {
+        this.orientation = orientation;
+        initGraphics();
+    }
+
+    public void setParentObject(Object parentObject) {
+        this.parentObject = parentObject;
     }
 
 
