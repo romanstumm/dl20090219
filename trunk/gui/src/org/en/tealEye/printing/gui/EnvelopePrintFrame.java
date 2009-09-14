@@ -48,7 +48,7 @@ public class EnvelopePrintFrame extends javax.swing.JFrame {
         epGraphicCheckBox = new javax.swing.JCheckBox();
         epEnvelopeType = new javax.swing.JComboBox();
         epEnvelopeAxis = new javax.swing.JComboBox();
-        enSenderCheckBox = new javax.swing.JCheckBox();
+        epSenderCheckBox = new javax.swing.JCheckBox();
         epPrintBt = new javax.swing.JButton();
         epDeclineBt = new javax.swing.JButton();
         epFowardBt = new javax.swing.JButton();
@@ -178,14 +178,14 @@ public class EnvelopePrintFrame extends javax.swing.JFrame {
         gridBagConstraints.gridy = 3;
         toolPanel.add(epEnvelopeAxis, gridBagConstraints);
 
-        enSenderCheckBox.setText(resourceMap.getString("enSenderCheckBox.text")); // NOI18N
-        enSenderCheckBox.setToolTipText(resourceMap.getString("enSenderCheckBox.toolTipText")); // NOI18N
-        enSenderCheckBox.setName("enSenderCheckBox"); // NOI18N
+        epSenderCheckBox.setText(resourceMap.getString("enSenderCheckBox.text")); // NOI18N
+        epSenderCheckBox.setToolTipText(resourceMap.getString("enSenderCheckBox.toolTipText")); // NOI18N
+        epSenderCheckBox.setName("epSenderCheckBox"); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 5;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
-        toolPanel.add(enSenderCheckBox, gridBagConstraints);
+        toolPanel.add(epSenderCheckBox, gridBagConstraints);
 
         epPrintBt.setIcon(resourceMap.getIcon("epPrintBt.icon")); // NOI18N
         epPrintBt.setMnemonic(1);
@@ -585,7 +585,7 @@ public class EnvelopePrintFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.ButtonGroup buttonGroup2;
-    private javax.swing.JCheckBox enSenderCheckBox;
+    private javax.swing.JCheckBox epSenderCheckBox;
     private javax.swing.JButton epAddressDownBt;
     private javax.swing.JButton epAddressFontBt;
     private javax.swing.JTextField epAddressFontPreviewTB;
