@@ -28,6 +28,8 @@ public class EnvelopePaint{
         Graphics2D g2 = (Graphics2D) gfx;
         g2.setColor(Color.white);
         g2.fillRect(0,0,(int)pf.getImageableWidth(),(int)pf.getImageableHeight());
+        g2.setColor(Color.lightGray);
+        g2.fillRect((int)pf.getImageableWidth()-100,(int)pf.getImageableHeight()-260,80,60);
         g2.setColor(Color.black);
         g2.drawString(g[0],200,100);
         g2.drawString(g[1],200,120);

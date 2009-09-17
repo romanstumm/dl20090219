@@ -176,7 +176,13 @@ public class EnvelopePrintFrameMethods {
     }
 
     public void epEnvelopeType(){
-        eps.setFormat(2);
+        eps.setFormat(((JComboBox)components.get("epEnvelopeType")).getSelectedIndex());
+        pageIndex = 0;
+        panel.setVisible(false);
+        panel.removeAll();
+        panel.add(new JLabel(eps.getGraphic(pageIndex)),BorderLayout.CENTER);
+        panel.repaint();
+        panel.setVisible(true);
     }
 
     public void epEnvelopeAxis(){
