@@ -19,6 +19,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.Vector;
+import java.util.concurrent.ExecutionException;
 
 import org.en.tealEye.framework.BeanTableModel;
 import org.en.tealEye.printing.controller.GenericThread;
@@ -33,7 +34,7 @@ import org.en.tealEye.printing.controller.GenericThread;
 public class EnvelopePrintService {
 
     private Object parentObject;
-    final Vector<Vector<String[]>> labelStrings = new Vector<Vector<String[]>>();
+    private Vector<Vector<String[]>> labelStrings = new Vector<Vector<String[]>>();
     private Vector<String[]> groupString = new Vector<String[]>();
 
     private int pages;
@@ -46,17 +47,17 @@ public class EnvelopePrintService {
     private Font addressFont;
     private Font senderFont;
     private Font additionalFont;
-    private String graphicPath;
 
 
-    private double xAxisAddress;
-    private double yAxisAddress;
 
-    private double xAxisSender;
-    private double yAxisSender;
+    private int xAxisAddress = 0;
+    private int yAxisAddress = 0;
 
-    private double xAxisGraphic;
-    private double yAxisGraphic;
+    private int xAxisSender = 0;
+    private int yAxisSender = 0;
+
+    private int xAxisGraphic = 0;
+    private int yAxisGraphic = 0;
 
     private int pagesToPrint;
     private Attribute mediaFormat;
@@ -65,9 +66,11 @@ public class EnvelopePrintService {
     private Book book;
     private PrinterJob pj;
     private PageFormat pf;
+    private String[] sender;
+    private String graphicPath;
 
 
-    public EnvelopePrintService(Object parentObject, boolean withGraphic, boolean withSender, int format, int orientation, Object pages, boolean orderByTable, boolean senderPosition, Font addressFont, Font senderFont, String graphicPath) {
+    public EnvelopePrintService(Object parentObject, boolean withGraphic, boolean withSender, int format, int orientation, Object pages, boolean orderByTable, boolean senderPosition, Font addressFont, Font senderFont, String graphicPath, String[] sender, String path) {
         this.parentObject = parentObject;
         this.pages = Integer.parseInt(pages.toString());
         this.withGraphic = withGraphic;
@@ -79,9 +82,19 @@ public class EnvelopePrintService {
         this.addressFont = addressFont;
         this.senderFont = senderFont;
         this.additionalFont = new Font("Arial",0,10);
+        this.sender = sender;
         this.graphicPath = graphicPath;
         startPrinterJob();
-        aquireData();
+        try {
+            Object obj = new ServiceWorker(parentObject).executeTransaction();
+            labelStrings = (Vector<Vector<String[]>>) obj;
+        } catch (InterruptedException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (ExecutionException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (Exception e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
         getPaperWidth();
         getStringArray();
     }
@@ -140,8 +153,7 @@ public class EnvelopePrintService {
                 for (int y = 0; y <pages; y++) {
                     for (String[] g : group) {
                         groupString.add(g);
-                        book.append(new EnvelopeBook(g),pf,1);
-
+                        book.append(new EnvelopeBook(g,pf,xAxisAddress, yAxisAddress, xAxisSender, yAxisSender, xAxisGraphic, yAxisGraphic, sender, graphicPath, addressFont, senderFont,withGraphic, senderPosition, withSender,pages*groupString.size()),pf,1);
                     }
                 }
             }
@@ -227,7 +239,7 @@ public class EnvelopePrintService {
         BufferedImage img = new BufferedImage((int)pf.getWidth(),(int)pf.getHeight(),BufferedImage.TYPE_BYTE_INDEXED);
         Graphics2D g2 = (Graphics2D) img.getGraphics();
         String[] g = groupString.get(page);
-        new EnvelopePaint(g2,g,pf);
+        new EnvelopePaint(g2,g,pf,xAxisAddress, yAxisAddress, xAxisSender, yAxisSender, xAxisGraphic, yAxisGraphic, sender, graphicPath, addressFont, senderFont,withGraphic, senderPosition, withSender);
         return new ImageIcon(img);
     }
     
@@ -267,9 +279,74 @@ public class EnvelopePrintService {
         initGraphics();
     }
 
+    public void setXAxisAddress(int xAxisAddress) {
+        this.xAxisAddress = this.xAxisAddress + xAxisAddress;
+        initGraphics();
+    }
+
+    public void setYAxisAddress(int yAxisAddress) {
+        this.yAxisAddress = this.yAxisAddress+yAxisAddress;
+        initGraphics();
+    }
+
+    public void setXAxisSender(int xAxisSender) {
+        this.xAxisSender = this.xAxisSender+xAxisSender;
+        initGraphics();
+    }
+
+    public void setYAxisSender(int yAxisSender) {
+        this.yAxisSender = this.yAxisSender+yAxisSender;
+        initGraphics();
+    }
+
+    public void setXAxisGraphic(int xAxisGraphic) {
+        this.xAxisGraphic = this.xAxisGraphic+xAxisGraphic;
+        initGraphics();
+    }
+
+    public void setYAxisGraphic(int yAxisGraphic) {
+        this.yAxisGraphic = this.yAxisGraphic+yAxisGraphic;
+        initGraphics();
+    }
+
     public void setParentObject(Object parentObject) {
         this.parentObject = parentObject;
     }
 
 
+    public void setSenderFont(Font font) {
+        this.senderFont = font;
+    }
+
+    public void setAddressFont(Font font) {
+        this.addressFont = font;
+    }
+
+    public int getXAxisAddress() {
+        return xAxisAddress;
+    }
+
+    public int getYAxisAddress() {
+        return yAxisAddress;
+    }
+
+    public int getXAxisSender() {
+        return xAxisSender;
+    }
+
+    public int getYAxisSender() {
+        return yAxisSender;
+    }
+
+    public int getXAxisGraphic() {
+        return xAxisGraphic;
+    }
+
+    public int getYAxisGraphic() {
+        return yAxisGraphic;
+    }
+
+    public void setGraphicPath(String text) {
+        this.graphicPath = text;
+    }
 }

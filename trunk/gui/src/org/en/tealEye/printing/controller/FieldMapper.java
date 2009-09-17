@@ -150,6 +150,8 @@ public class FieldMapper implements ActionListener, ChangeListener, ListSelectio
                     ((JRadioButton) c).addActionListener(this);
                 } else if (c instanceof JList) {
                     ((JList) c).addListSelectionListener(this);
+                } else if (c instanceof JTextField) {
+                    ((JTextField)c).addPropertyChangeListener(this);
                 }
         }
     }
@@ -251,8 +253,27 @@ public class FieldMapper implements ActionListener, ChangeListener, ListSelectio
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        evt.getPropagationId();
-    }
+        Object obj = evt.getSource();
+        if(obj instanceof JTextField){
+
+        String compName = ((JTextField)obj).getName();
+        Method m = methodMap.get(compName);
+            if(m.getName().contains("asThread")){
+                new GenericThread(m, methodObject);
+            }else
+            {
+                try {
+                    m.invoke(methodObject);
+                } catch (IllegalAccessException e1) {
+                    e1.printStackTrace();
+                } catch (InvocationTargetException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        }
+        System.out.println("PropertyChangeListener!");
+        }
+
 
 
     @Override

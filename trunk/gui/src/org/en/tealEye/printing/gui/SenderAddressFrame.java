@@ -49,7 +49,7 @@ public class SenderAddressFrame extends javax.swing.JFrame {
         senderAddressFrameDeclineBt = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         ResourceBundle resourceMap = ResourceBundle.getBundle("org.en.tealEye.resources.SenderAddressFrame");
         setTitle(resourceMap.getString("Form.title")); // NOI18N
         setName("Form"); // NOI18N
