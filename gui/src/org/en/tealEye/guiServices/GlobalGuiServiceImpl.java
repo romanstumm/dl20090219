@@ -42,6 +42,10 @@ public abstract class GlobalGuiServiceImpl implements GuiService {
         return iconMap;
     }
 
+    public String getProperty(String name){
+        return properties.getProperty(name);
+    }
+
     public void updateProps(Properties props) {
         properties.setProperties(props);
         properties.updateFile();

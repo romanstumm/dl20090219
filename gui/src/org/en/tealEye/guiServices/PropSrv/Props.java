@@ -19,17 +19,23 @@ public interface Props {
     public static final String DEFAULT_TABLE_FONT_TYPE = "Arial";
     public static final String DEFAULT_FORM_FONT_TYPE = "Arial";
     public static final String DEFAULT_ETI_FONT_TYPE = "Arial";
+    public static final String DEFAULT_SENDER_FONT_TYPE = "Arial";
+    public static final String DEFAULT_ADDRESS_FONT_TYPE = "Arial";
 
     public static final int DEFAULT_LABEL_FONT_STYLE = 0;
     public static final int DEFAULT_TABLE_FONT_STYLE = Font.BOLD;
     public static final int DEFAULT_FORM_FONT_STYLE = 0;
     public static final int DEFAULT_ETI_FONT_STYLE = 0;
+    public static final int DEFAULT_SENDER_FONT_STYLE = 0;
+    public static final int DEFAULT_ADDRESS_FONT_STYLE = 0;
 
 
     public static final int DEFAULT_LABEL_FONT_SIZE = 12;
     public static final int DEFAULT_TABLE_FONT_SIZE = 12;
     public static final int DEFAULT_FORM_FONT_SIZE = 12;
     public static final int DEFAULT_ETI_FONT_SIZE = 12;
+    public static final int DEFAULT_SENDER_FONT_SIZE = 12;
+    public static final int DEFAULT_ADDRESS_FONT_SIZE = 12;
 
     void setProperty(String key, String value);
 
