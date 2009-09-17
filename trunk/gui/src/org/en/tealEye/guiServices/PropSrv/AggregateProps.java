@@ -3,8 +3,7 @@ package org.en.tealEye.guiServices.PropSrv;
 import org.apache.log4j.Logger;
 
 import java.io.*;
-import java.util.InvalidPropertiesFormatException;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * Description: <br/>
@@ -78,7 +77,31 @@ public class AggregateProps implements Props {
         props.setProperty("EtiFontType", Props.DEFAULT_ETI_FONT_TYPE);
         props.setProperty("EtiFontStyle", String.valueOf(Props.DEFAULT_ETI_FONT_STYLE));
         props.setProperty("EtiFontSize", String.valueOf(Props.DEFAULT_ETI_FONT_SIZE));
+        props.setProperty("SenderFontType", Props.DEFAULT_SENDER_FONT_TYPE);
+        props.setProperty("SenderFontStyle", String.valueOf(Props.DEFAULT_SENDER_FONT_STYLE));
+        props.setProperty("SenderFontSize", String.valueOf(Props.DEFAULT_SENDER_FONT_SIZE));
+        props.setProperty("AddressFontType", Props.DEFAULT_SENDER_FONT_TYPE);
+        props.setProperty("AddressFontStyle", String.valueOf(Props.DEFAULT_SENDER_FONT_STYLE));
+        props.setProperty("AddressFontSize", String.valueOf(Props.DEFAULT_SENDER_FONT_SIZE));
+        props.setProperty("ImagePath", "null");
+        props.setProperty("epEnvelopeType",String.valueOf(0));
+        props.setProperty("epCount",String.valueOf(1));
+        props.setProperty("XAxisAddress",String.valueOf(0));
+        props.setProperty("YAxisAddress",String.valueOf(0));
+        props.setProperty("XAxisSender",String.valueOf(0));
+        props.setProperty("YAxisSender",String.valueOf(0));
+        props.setProperty("XAxisGraphic",String.valueOf(0));
+        props.setProperty("YAxisGraphic",String.valueOf(0));
+        props.setProperty("ShowSender",String.valueOf(true));
+        props.setProperty("ShowGraphic",String.valueOf(true));
+            props.setProperty("senderCorp", "null");
+            props.setProperty("senderName", "null");
+            props.setProperty("senderStreet", "null");
+            props.setProperty("senderPLZ", "null");
+            props.setProperty("senderLocation", "null");
+            props.setProperty("SenderInCorner","false");
 
+        
         try {
             FileOutputStream propOutFile =
                     new FileOutputStream(f);
@@ -105,7 +128,12 @@ public class AggregateProps implements Props {
     }
 
     public void setProperties(Properties props) {
-        this.props = props;
+        Set s = props.entrySet();
+        s.toArray();
+        for(Object e:s){
+            Map.Entry str = (Map.Entry) e;
+            this.props.setProperty((String)str.getKey(),(String)str.getValue());
+        }
     }
 
     public Properties getProperties() {
