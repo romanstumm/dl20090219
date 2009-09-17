@@ -25,7 +25,7 @@ public class EnvelopePrintFrameMethods {
     private Object parentObject;
     private EnvelopePrintService eps;
     private GenericThread tf;
-    private int pageIndex = 0;
+    private int pageIndex = 0; 
     private JPanel panel;
 
 
@@ -37,7 +37,12 @@ public class EnvelopePrintFrameMethods {
 
     //CustomMethods will be invoked at startup__________________________________
 
-    public void getFontPropertiesCustom(){
+    public void initCustom(){
+        getFontProperties();
+        loadInitialGraphics();
+    }
+
+    public void getFontProperties(){
         service = new GlobalGuiService();
         components.get("epAddressFontPreviewTB").setFont(service.getFontMap().get("AddressFont"));
         ((JTextField)components.get("epAddressFontPreviewTB")).setToolTipText(service.getFontMap().get("AddressFont").getFamily()+", "+getFontStyleName(service.getFontMap().get("AddressFont"))+", "+service.getFontMap().get("AddressFont").getSize());
@@ -49,11 +54,13 @@ public class EnvelopePrintFrameMethods {
                                                                     service.getProperty("senderStreet")+ " | "+
                                                                     service.getProperty("senderPLZ")+ " | "+
                                                                     service.getProperty("senderLocation"));
+        ((JComboBox)components.get("epEnvelopeType")).setSelectedIndex(Integer.parseInt(service.getProperty("epEnvelopeType")));
+        ((JSpinner)components.get("epCount")).setValue(Integer.parseInt(service.getProperty("epCount")));
     }
 
-    public void loadInitialGraphicsCustomAsThread(GenericThread tf){
-        this.tf = tf;
-        eps = new EnvelopePrintService(parentObject, tf, ((JCheckBox)components.get("epGraphicCheckBox")).isSelected(),
+    public void loadInitialGraphics(){
+
+        eps = new EnvelopePrintService(parentObject, ((JCheckBox)components.get("epGraphicCheckBox")).isSelected(),
                                                          ((JCheckBox)components.get("epSenderCheckBox")).isSelected(),
                                                          ((JComboBox)components.get("epEnvelopeType")).getSelectedIndex(),
                                                          ((JComboBox)components.get("epEnvelopeAxis")).getSelectedIndex(),
@@ -62,17 +69,18 @@ public class EnvelopePrintFrameMethods {
                                                          ((JRadioButton)components.get("epSenderLocCornerRB")).isSelected(),
                                                          components.get("epAddressFontPreviewTB").getFont(),
                                                          components.get("epSenderFontPreviewTB").getFont(),
-                                                         ((JTextField)components.get("epGraphicPathTB")).getText());
+                                                        ((JTextField)components.get("epGraphicPathTB")).getText());
+
+
 
         panel = ((JPanel)components.get("previewPanel"));
         panel.setVisible(false);
         panel.setLayout(new BorderLayout());
         ImageIcon icon = eps.getGraphic(pageIndex);
-        if(icon != null)
+        //if(icon != null)
         panel.add(new JLabel(icon),BorderLayout.CENTER);
         panel.repaint();
         panel.setVisible(true);
-
     }
 
     private String getFontStyleName(Font font) {
@@ -88,7 +96,7 @@ public class EnvelopePrintFrameMethods {
 
     public void epPrintBt(){
         eps.startPrinting();
-        tf.setDone();
+        
         System.out.println("PrintBT");                 
     }
 
@@ -157,7 +165,6 @@ public class EnvelopePrintFrameMethods {
         panel.add(new JLabel(eps.getGraphic(pageIndex)),BorderLayout.CENTER);
         panel.repaint();
         panel.setVisible(true);
-        eps.getGraphic(pageIndex);
     }
 
     public void epGraphicCheckBox(){
@@ -169,7 +176,7 @@ public class EnvelopePrintFrameMethods {
     }
 
     public void epEnvelopeType(){
-        eps.setFormat(((JComboBox)components.get("epEnvelopeType")).getSelectedIndex());
+        eps.setFormat(2);
     }
 
     public void epEnvelopeAxis(){
@@ -216,7 +223,10 @@ public class EnvelopePrintFrameMethods {
         props.setProperty("SenderFontStyle", String.valueOf(components.get("epSenderFontPreviewTB").getFont().getStyle()));
         props.setProperty("SenderFontSize", String.valueOf(components.get("epSenderFontPreviewTB").getFont().getSize()));
         props.setProperty("ImagePath", ((JTextField)components.get("epGraphicPathTB")).getText());
+        props.setProperty("epEnvelopeType",String.valueOf(((JComboBox)components.get("epEnvelopeType")).getSelectedIndex()));
+        props.setProperty("epCount",String.valueOf(((JSpinner)components.get("epCount")).getValue()));
         String toolTipText = ((JButton)components.get("epSenderValueBt")).getToolTipText();
+
         String[] tA = toolTipText.split(" | ");
         String[] t = new String[5];
         int i = 0;
