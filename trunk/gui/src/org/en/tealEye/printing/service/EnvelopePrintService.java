@@ -62,7 +62,7 @@ public class EnvelopePrintService {
     private Attribute mediaFormat;
     private int mediaSize;
 
-    private Book book = new Book();
+    private Book book;
     private PrinterJob pj;
     private PageFormat pf;
 
@@ -135,8 +135,9 @@ public class EnvelopePrintService {
     }
 
     private void getStringArray(){
+            book = new Book();
             for (Vector<String[]> group : labelStrings) {
-                for (int y = 0; y < pages; y++) {
+                for (int y = 0; y <pages; y++) {
                     for (String[] g : group) {
                         groupString.add(g);
                         book.append(new EnvelopeBook(g),pf,1);
@@ -231,7 +232,7 @@ public class EnvelopePrintService {
     }
     
     public void setPages(int pages) {
-        this.pages = pages-1;
+        this.pages = pages;
         initGraphics();
     }
 
