@@ -109,11 +109,13 @@ public class FieldMapper implements ActionListener, ChangeListener, ListSelectio
        int i = 0;
         Collection<Method> methods = methodMap.values();
         methods.toArray();
+
         for(Method me: methods){
-            if(me.getName().contains("Custom")&&me.getName().contains("AsThread"))
+             if(me.getName().contains("Custom")&&me.getName().contains("AsThread")){
                 new GenericThread(me,methodObject,new GenericLoadingBarFrame(((JFrame)formObject).getLocationOnScreen()),fields).start();
                 //me.invoke(methodObject);
-            else if(me.getName().contains("Custom")&&!(me.getName().contains("AsThread")))
+            }
+            else if(me.getName().contains("Custom")&&!(me.getName().contains("AsThread"))){
                 try {
                     me.invoke(methodObject);
                 } catch (IllegalAccessException e) {
@@ -121,7 +123,7 @@ public class FieldMapper implements ActionListener, ChangeListener, ListSelectio
                 } catch (InvocationTargetException e) {
                     e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
                 }
-
+            }
         }
     }
 

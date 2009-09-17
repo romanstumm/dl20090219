@@ -34,7 +34,7 @@ public class EnvelopePrintService {
 
     private Object parentObject;
     final Vector<Vector<String[]>> labelStrings = new Vector<Vector<String[]>>();
-    private Vector<ImageIcon> imageIconVec = new Vector<ImageIcon>();
+    private Vector<String[]> groupString = new Vector<String[]>();
 
     private int pages;
     private boolean withGraphic;
@@ -66,7 +66,8 @@ public class EnvelopePrintService {
     private PrinterJob pj;
     private PageFormat pf;
 
-    public EnvelopePrintService(Object parentObject, GenericThread tf, boolean withGraphic, boolean withSender, int format, int orientation, Object pages, boolean orderByTable, boolean senderPosition, Font addressFont, Font senderFont, String graphicPath) {
+
+    public EnvelopePrintService(Object parentObject, boolean withGraphic, boolean withSender, int format, int orientation, Object pages, boolean orderByTable, boolean senderPosition, Font addressFont, Font senderFont, String graphicPath) {
         this.parentObject = parentObject;
         this.pages = Integer.parseInt(pages.toString());
         this.withGraphic = withGraphic;
@@ -81,15 +82,13 @@ public class EnvelopePrintService {
         this.graphicPath = graphicPath;
         startPrinterJob();
         aquireData();
-        initGraphics();
-        tf.setDone();
+        getPaperWidth();
+        getStringArray();
     }
 
     private void initGraphics() {
-        //getStringArray();
         getPaperWidth();
-        imageIconVec.removeAllElements();
-        drawEnvelope();
+        getStringArray();
     }
 
     public void startPrinting() {
@@ -104,23 +103,6 @@ public class EnvelopePrintService {
     }
     }
 
-
-
-    private void drawEnvelope(){
-            BufferedImage img;
-            for (Vector<String[]> group : labelStrings) {
-                for (int y = 0; y < pages; y++) {
-                    for (String[] g : group) {
-                        img = new BufferedImage((int) (getPaperWidth().getImageableWidth()),(int) (getPaperWidth().getImageableHeight()),BufferedImage.TYPE_BYTE_INDEXED);
-                        Graphics2D g2 = img.createGraphics();
-                        new EnvelopePaint(g2, g, (int)getPaperWidth().getImageableWidth(), (int)getPaperWidth().getImageableHeight());
-                        ImageIcon icon = new ImageIcon(img);
-                        imageIconVec.add(icon);
-                    }
-                }
-            }
-    }
-
     private void startPrinterJob(){
         pj = PrinterJob.getPrinterJob();
     }
@@ -129,33 +111,36 @@ public class EnvelopePrintService {
 
     private PageFormat getPaperWidth(){
         PrintRequestAttributeSet aset = new HashPrintRequestAttributeSet();
-        aset.add(setMediaSize());
+        MediaSizeName ms = setMediaSize();
+        aset.add(ms);
         pf = pj.getPageFormat(aset);
         pf.setOrientation(PageFormat.LANDSCAPE);
         return pf;
     }
 
     private MediaSizeName setMediaSize(){
-        MediaSizeName ms = null;
-        switch(mediaSize){
-            case 0: ms = MediaSizeName.ISO_C3;break;
-            case 1: ms = MediaSizeName.ISO_B4;break;
-            case 2: ms = MediaSizeName.ISO_C4;break;
-            case 3: ms = MediaSizeName.ISO_B5;break;
-            case 4: ms = MediaSizeName.ISO_C5;break;
-            case 5: ms = MediaSizeName.ISO_C6;break;
-            case 6: ms = MediaSizeName.ISO_DESIGNATED_LONG;break;
-            case 7: ms = MediaSizeName.ISO_B6;break;
+        System.out.println(format);
+        switch(format){
+            case 0: return MediaSizeName.ISO_C3;
+            case 1: return MediaSizeName.ISO_B4;
+            case 2: return MediaSizeName.ISO_C4;
+            case 3: return MediaSizeName.ISO_B5;
+            case 4: return MediaSizeName.ISO_C5;
+            case 5: return MediaSizeName.ISO_C6;
+            case 6: return MediaSizeName.ISO_DESIGNATED_LONG;
+            case 7: return MediaSizeName.ISO_B6;
+            case 8: return MediaSizeName.ISO_C6;
         }
-         return ms;
-
+         return null;
     }
 
-    public void getStringArray(){
+    private void getStringArray(){
             for (Vector<String[]> group : labelStrings) {
                 for (int y = 0; y < pages; y++) {
                     for (String[] g : group) {
+                        groupString.add(g);
                         book.append(new EnvelopeBook(g),pf,1);
+
                     }
                 }
             }
@@ -238,13 +223,15 @@ public class EnvelopePrintService {
     }
 
     public ImageIcon getGraphic(int page) {
-        if(!imageIconVec.isEmpty())
-        return imageIconVec.get(page);
-        else return null;
+        BufferedImage img = new BufferedImage((int)pf.getWidth(),(int)pf.getHeight(),BufferedImage.TYPE_BYTE_INDEXED);
+        Graphics2D g2 = (Graphics2D) img.getGraphics();
+        String[] g = groupString.get(page);
+        new EnvelopePaint(g2,g,pf);
+        return new ImageIcon(img);
     }
     
     public void setPages(int pages) {
-        this.pages = pages;
+        this.pages = pages-1;
         initGraphics();
     }
 
@@ -271,6 +258,7 @@ public class EnvelopePrintService {
     public void setFormat(int format) {
         this.format = format;
         initGraphics();
+
     }
 
     public void setOrientation(int orientation) {

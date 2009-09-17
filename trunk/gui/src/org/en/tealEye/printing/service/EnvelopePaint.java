@@ -15,20 +15,24 @@ import java.awt.print.PrinterException;
  * To change this template use File | Settings | File Templates.
  */
 public class EnvelopePaint{
-    private ImageIcon imageIcon;
+    private String[] g;
+    private PageFormat pf;
 
-    public EnvelopePaint(Graphics2D g2, String[] g, int width, int height){
-        g2.setColor(Color.white);
-        g2.fillRect(0,0, width, height);
-        g2.setColor(Color.black);        
-        g2.drawString(g[0],160,160);
-        g2.drawString(g[1],160,120);
-        g2.drawString(g[2],160,126);
-        g2.drawString(g[3],160,126);
-        g2.drawString(g[4],160,126);
+    public EnvelopePaint(Graphics2D g2, String[] g, PageFormat pf){
+        this.g = g;
+        this.pf = pf;
+        paint(g2);
     }
 
-    public ImageIcon getImageIcon() {
-        return imageIcon;
+    public void paint(Graphics gfx){
+        Graphics2D g2 = (Graphics2D) gfx;
+        g2.setColor(Color.white);
+        g2.fillRect(0,0,(int)pf.getImageableWidth(),(int)pf.getImageableHeight());
+        g2.setColor(Color.black);
+        g2.drawString(g[0],200,100);
+        g2.drawString(g[1],200,120);
+        g2.drawString(g[2],200,160);
+        g2.drawString(g[3],200,180);
+        g2.drawString(g[4],200,200);
     }
 }

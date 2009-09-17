@@ -21,7 +21,7 @@ public class GenericThread extends Thread {
     private Object parentClass;
     private GenericLoadingBarFrame frame;
 
-    private volatile boolean done = false;
+    public volatile boolean done = false;
     
     public GenericThread(Method threadMethod, Object parentClass, GenericLoadingBarFrame frame, List components){
          this.threadMethod = threadMethod;
@@ -51,5 +51,10 @@ public class GenericThread extends Thread {
         done = true;
         System.out.println("GenericThread done!");
         frame.setVisible(false);
+        try {
+            this.finalize();
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
     }
 }
