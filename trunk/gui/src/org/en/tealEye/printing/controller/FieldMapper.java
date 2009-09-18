@@ -258,6 +258,7 @@ public class FieldMapper implements ActionListener, ChangeListener, ListSelectio
 
         String compName = ((JTextField)obj).getName();
         Method m = methodMap.get(compName);
+        if(m != null){
             if(m.getName().contains("asThread")){
                 new GenericThread(m, methodObject);
             }else
@@ -273,7 +274,7 @@ public class FieldMapper implements ActionListener, ChangeListener, ListSelectio
         }
         System.out.println("PropertyChangeListener!");
         }
-
+    }
 
 
     @Override

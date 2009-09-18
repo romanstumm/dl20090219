@@ -156,7 +156,9 @@ public class EnvelopePrintFrameMethods {
     }
 
     public void epFowardBt(){
+        if(pageIndex<eps.getMaxPages()-1)
         pageIndex++;
+
         updatePanel();
     }
 
@@ -227,11 +229,13 @@ public class EnvelopePrintFrameMethods {
     public void epSenderLocCornerRB(){
         if(((JRadioButton)components.get("epSenderLocCornerRB")).isSelected())
         eps.setSenderPosition(true);
+        updatePanel();
     }
 
     public void epSenderLocLineRB(){
         if(((JRadioButton)components.get("epSenderLocLineRB")).isSelected())
         eps.setSenderPosition(false);
+        updatePanel();
     }
 
     public void epOrderTable(){

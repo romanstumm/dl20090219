@@ -100,23 +100,23 @@ public class EnvelopePrintFrame extends javax.swing.JFrame {
         setTitle(resourceMap.getString("Form.title")); // NOI18N
         setName("Form"); // NOI18N
         getContentPane().setLayout(new java.awt.GridBagLayout());
-
-        jSplitPane1.setDividerLocation(500);
+        setSize(1024,768);
+        jSplitPane1.setDividerLocation(350);
         jSplitPane1.setDividerSize(10);
         jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
-        jSplitPane1.setResizeWeight(0.6);
+        //jSplitPane1.setResizeWeight(0.6);
         jSplitPane1.setName("jSplitPane1"); // NOI18N
 
         jScrollPane1.setName("jScrollPane1"); // NOI18N
         jScrollPane1.setViewportView(toolPanel);
 
-        jTabbedPane1.setMaximumSize(new java.awt.Dimension(1029, 200));
-        jTabbedPane1.setMinimumSize(new java.awt.Dimension(1029, 200));
+        jTabbedPane1.setMaximumSize(new java.awt.Dimension(1000, 200));
+        jTabbedPane1.setMinimumSize(new java.awt.Dimension(800, 200));
         jTabbedPane1.setName("jTabbedPane1"); // NOI18N
 
-        toolPanel.setMinimumSize(new java.awt.Dimension(1024, 200));
+        toolPanel.setMinimumSize(new java.awt.Dimension(1000, 160));
         toolPanel.setName("toolPanel"); // NOI18N
-        toolPanel.setPreferredSize(new java.awt.Dimension(1024, 200));
+        toolPanel.setPreferredSize(new java.awt.Dimension(1000, 160));
         toolPanel.setRequestFocusEnabled(false);
         toolPanel.setLayout(new java.awt.GridBagLayout());
 
@@ -497,18 +497,18 @@ public class EnvelopePrintFrame extends javax.swing.JFrame {
         jScrollPane2.setName("jScrollPane2"); // NOI18N
         jScrollPane2.setViewportView(previewPanel);
 
-        previewPanel.setMinimumSize(new java.awt.Dimension(1024, 500));
+        previewPanel.setMinimumSize(new java.awt.Dimension(1024, 400));
         previewPanel.setName("previewPanel"); // NOI18N
 
         javax.swing.GroupLayout previewPanelLayout = new javax.swing.GroupLayout(previewPanel);
         previewPanel.setLayout(previewPanelLayout);
         previewPanelLayout.setHorizontalGroup(
             previewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1099, Short.MAX_VALUE)
+            .addGap(0, 800, Short.MAX_VALUE)
         );
         previewPanelLayout.setVerticalGroup(
             previewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 585, Short.MAX_VALUE)
+            .addGap(0, 350, Short.MAX_VALUE)
         );
 
         previewPanel.setBorder(BorderFactory.createEtchedBorder());
