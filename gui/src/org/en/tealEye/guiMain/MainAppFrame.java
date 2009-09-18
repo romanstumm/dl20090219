@@ -80,6 +80,17 @@ public class MainAppFrame extends Component implements Licensable, ProgressIndic
                 }
             }
         });
+        //try {
+        //    UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+        //} catch (ClassNotFoundException e) {
+        //    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        //} catch (InstantiationException e) {
+        //    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        //} catch (IllegalAccessException e) {
+        //    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        //} catch (UnsupportedLookAndFeelException e) {
+        //    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        //}
     }
 
     //GUI-Erstellung
