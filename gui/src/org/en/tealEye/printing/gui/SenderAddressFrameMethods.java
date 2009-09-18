@@ -53,7 +53,7 @@ public class SenderAddressFrameMethods {
             props.setProperty("senderLocation", ((JTextField)components.get("senderAddressFrameLocationTF")).getText());
 
             service.updateProps(props);
-        //form.dispose();
+        form.dispose();
     }
     
     public void senderAddressFrameDeclineBt(){
