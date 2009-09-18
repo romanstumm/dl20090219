@@ -108,20 +108,20 @@ public class EnvelopePaint{
         for(String s:g){
             if(i==0){
                 if(s.equals("")){
-                    i--;
+                    
                 }else
-                g2.drawString(s,(int)(pf.getImageableWidth()*0.6)+xAxisAddress,(int)(pf.getImageableHeight()*0.5)+ yAxisAddress);
+                g2.drawString(s,(int)(pf.getImageableWidth()*0.6)+xAxisAddress,(int)(pf.getImageableHeight()*0.5)+(afm.getHeight()/2)+ yAxisAddress);
+                i++;
             }
             else{
-
                 if(s.equals("")){
-                    i--;
+                    
                 }
                 else{
                     g2.drawString(s,(int)(pf.getImageableWidth()*0.6)+xAxisAddress,(int)(pf.getImageableHeight()*0.5)+afm.getHeight()*i+(afm.getHeight()/2)+ yAxisAddress);
+                    i++;
                 }
             }
-            i++;
         }
     }
 }

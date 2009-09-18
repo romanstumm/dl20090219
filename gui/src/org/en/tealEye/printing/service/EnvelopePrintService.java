@@ -149,6 +149,7 @@ public class EnvelopePrintService {
 
     private void getStringArray(){
             book = new Book();
+            groupString.clear();
             for (Vector<String[]> group : labelStrings) {
                 for (int y = 0; y <pages; y++) {
                     for (String[] g : group) {
@@ -160,85 +161,13 @@ public class EnvelopePrintService {
     }
 
 
-    private void aquireData(){
-        ServiceFactory.runAsTransaction(new Runnable() {
-            public void run() {
-        JTable table = (JTable)parentObject;
-        int[] rowSelectionCount = table.getSelectedRows();
-        if(rowSelectionCount.length<1){
-            rowSelectionCount = new int[table.getRowCount()];
-            for(int i = 0; i<table.getRowCount();i++){
-                rowSelectionCount[i] = i;
-            }
-        }
-        GruppenService gs = ServiceFactory.get(GruppenService.class);
-        Spielort spielort = null;
-        String[] rowString;
 
-        ArrayList<Long> ortIdx = new ArrayList<Long>();
-        if(table.getName().equals("Table_Ligagruppe")){
-            for(int rowIndex:rowSelectionCount){
-                Object obj = ((BeanTableModel) table.getModel()).getObject(rowIndex);
-                Ligagruppe gruppe = ((Ligagruppe) obj);
-                ArrayList<Long> ortIds = new ArrayList<Long>();
-                Vector<String[]> groupVec = new Vector<String[]>();
-            for(int teamIndex = 1; teamIndex <= 8; teamIndex++){
-
-                    Ligateam lt;
-                    try {
-                        lt = gruppe.findSpiel(gs.findSpieleInGruppe(gruppe), teamIndex).getLigateam();
-                        
-                    } catch (NullPointerException e) {
-                        lt = null;
-                    }
-                    if (lt != null) {
-                        spielort = ServiceFactory.get(SpielortService.class)
-                                .findSpielortById(lt.getSpielort().getSpielortId());
-                    }
-                    if(!(lt==null)){
-                        if(!ortIds.contains(spielort.getSpielortId())){
-                            rowString = new String[5];
-                            String lines[] = StringUtils.wordWrap(spielort.getSpielortName(), 25);
-                            rowString[0] = lines[0];
-                            if(lines.length > 1) {
-                                rowString[1] = lines[1];
-                            } else {
-                                rowString[1] = "";
-                            }
-                            rowString[2] = spielort.getStrasse();
-
-                            rowString[3] = spielort.getPlzUndOrt();
-                            rowString[4] = "";
-                            groupVec.addElement(rowString);
-                            ortIds.add(spielort.getSpielortId());
-                            ortIdx.add(spielort.getSpielortId());
-                            //System.out.println(rowString[0]);
-                        }else{
-                            Set<Ligateam> teams = spielort.getLigateamsInGruppe(gruppe);
-                            int idx = ortIdx.lastIndexOf(spielort.getSpielortId());
-
-                            //String[] entries = labelStrings.get(idx);
-                            ortIds.add(spielort.getSpielortId());
-                            int tmpAnzahl = 0;
-                            for(Long anzahl : ortIds){
-                                if(anzahl == spielort.getSpielortId())
-                                    tmpAnzahl++;
-                            }
-                            //entries[4] = String.valueOf(tmpAnzahl);
-                        }
-                    }
-                }
-                    labelStrings.add(groupVec);
-            }
-        }
-    }
-        });
-    }
 
     public ImageIcon getGraphic(int page) {
         BufferedImage img = new BufferedImage((int)pf.getWidth(),(int)pf.getHeight(),BufferedImage.TYPE_BYTE_INDEXED);
         Graphics2D g2 = (Graphics2D) img.getGraphics();
         String[] g = groupString.get(page);
+        System.out.println(groupString.size());
         new EnvelopePaint(g2,g,pf,xAxisAddress, yAxisAddress, xAxisSender, yAxisSender, xAxisGraphic, yAxisGraphic, sender, graphicPath, addressFont, senderFont,withGraphic, senderPosition, withSender);
         return new ImageIcon(img);
     }
@@ -348,5 +277,9 @@ public class EnvelopePrintService {
 
     public void setGraphicPath(String text) {
         this.graphicPath = text;
+    }
+
+    public int getMaxPages(){
+        return groupString.size();
     }
 }

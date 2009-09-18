@@ -29,6 +29,7 @@ public class EnvelopeData {
 
     public EnvelopeData(Object parentObject){
         this.parentObject = parentObject;
+        aquireData();
     }
 
     private void aquireData(){
@@ -46,12 +47,13 @@ public class EnvelopeData {
         Spielort spielort = null;
         String[] rowString;
 
-        ArrayList<Long> ortIdx = new ArrayList<Long>();
+
         if(table.getName().equals("Table_Ligagruppe")){
             for(int rowIndex:rowSelectionCount){
                 Object obj = ((BeanTableModel) table.getModel()).getObject(rowIndex);
                 Ligagruppe gruppe = ((Ligagruppe) obj);
                 ArrayList<Long> ortIds = new ArrayList<Long>();
+                ArrayList<Long> ortIdx = new ArrayList<Long>();
                 Vector<String[]> groupVec = new Vector<String[]>();
             for(int teamIndex = 1; teamIndex <= 8; teamIndex++){
 
@@ -81,21 +83,24 @@ public class EnvelopeData {
                             rowString[3] = spielort.getPlzUndOrt();
                             rowString[4] = "";
                             groupVec.addElement(rowString);
+
                             ortIds.add(spielort.getSpielortId());
                             ortIdx.add(spielort.getSpielortId());
-                            //System.out.println(rowString[0]);
+                            System.out.println(ortIds.size());
+                            System.out.println(rowString[0]);
                         }else{
-                            Set<Ligateam> teams = spielort.getLigateamsInGruppe(gruppe);
+                            //Set<Ligateam> teams = spielort.getLigateamsInGruppe(gruppe);
                             int idx = ortIdx.lastIndexOf(spielort.getSpielortId());
 
-                            //String[] entries = labelStrings.get(idx);
+                            String[] entries = groupVec.get(idx);
                             ortIds.add(spielort.getSpielortId());
                             int tmpAnzahl = 0;
                             for(Long anzahl : ortIds){
                                 if(anzahl == spielort.getSpielortId())
                                     tmpAnzahl++;
                             }
-                            //entries[4] = String.valueOf(tmpAnzahl);
+                            entries[4] = String.valueOf(tmpAnzahl);
+
                         }
                     }
                 }
