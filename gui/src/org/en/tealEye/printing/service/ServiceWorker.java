@@ -54,13 +54,14 @@ public class ServiceWorker extends TransactionWorker{
         Spielort spielort = null;
         String[] rowString;
 
-        ArrayList<Long> ortIdx = new ArrayList<Long>();
+
         if(table.getName().equals("Table_Ligagruppe")){
             for(int rowIndex:rowSelectionCount){
                 Object obj = ((BeanTableModel) table.getModel()).getObject(rowIndex);
                 Ligagruppe gruppe = ((Ligagruppe) obj);
                 ArrayList<Long> ortIds = new ArrayList<Long>();
                 Vector<String[]> groupVec = new Vector<String[]>();
+                ArrayList<Long> ortIdx = new ArrayList<Long>();
             for(int teamIndex = 1; teamIndex <= 8; teamIndex++){
 
                     Ligateam lt;
@@ -95,15 +96,14 @@ public class ServiceWorker extends TransactionWorker{
                         }else{
                             Set<Ligateam> teams = spielort.getLigateamsInGruppe(gruppe);
                             int idx = ortIdx.lastIndexOf(spielort.getSpielortId());
-
-                            //String[] entries = labelStrings.get(idx);
+                            String[] entries = groupVec.get(idx);
                             ortIds.add(spielort.getSpielortId());
                             int tmpAnzahl = 0;
                             for(Long anzahl : ortIds){
                                 if(anzahl == spielort.getSpielortId())
                                     tmpAnzahl++;
                             }
-                            //entries[4] = String.valueOf(tmpAnzahl);
+                            entries[4] = String.valueOf(tmpAnzahl);
                         }
                     }
                 }

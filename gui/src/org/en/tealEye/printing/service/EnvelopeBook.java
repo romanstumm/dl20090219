@@ -108,23 +108,29 @@ public class EnvelopeBook implements Printable {
         }
         g2.setFont(addressFont);
         int i = 0;
-        for(String s: grp){
+            for(String s:grp){
             if(i==0){
                 if(s.equals("")){
-                    i--;
+
                 }else
-                g2.drawString(s,(int)(pf.getImageableWidth()*0.6)+xAxisAddress,(int)(pf.getImageableHeight()*0.5)+ yAxisAddress);
+                g2.drawString(s,(int)(pf.getImageableWidth()*0.6)+xAxisAddress,(int)(pf.getImageableHeight()*0.5)+(afm.getHeight()/2)+ yAxisAddress);
+                i++;
             }
             else{
-
                 if(s.equals("")){
-                    i--;
+
                 }
                 else{
+                    if(Character.isDigit(s.toCharArray()[0]) && s.length()<2){
+                    g2.setFont(new Font("Arial",Font.PLAIN,6));
+                    g2.drawString(s,(int)(pf.getImageableWidth()*0.6)+afm.stringWidth(grp[0])+ afm.stringWidth(grp[0])/3 +xAxisAddress,(int)(pf.getImageableHeight()*0.5)+(afm.getHeight()/2)+ yAxisAddress);
+                    i++;
+                    }else{
                     g2.drawString(s,(int)(pf.getImageableWidth()*0.6)+xAxisAddress,(int)(pf.getImageableHeight()*0.5)+afm.getHeight()*i+(afm.getHeight()/2)+ yAxisAddress);
+                    i++;
+                    }
                 }
             }
-            i++;
         }
 
     return Printable.PAGE_EXISTS;

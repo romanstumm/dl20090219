@@ -118,8 +118,14 @@ public class EnvelopePaint{
                     
                 }
                 else{
+                    if(Character.isDigit(s.toCharArray()[0]) && s.length()<2){
+                    g2.setFont(new Font("Arial",Font.PLAIN,6));                        
+                    g2.drawString(s,(int)(pf.getImageableWidth()*0.6)+afm.stringWidth(g[0])+ afm.stringWidth(g[0])/3 +xAxisAddress,(int)(pf.getImageableHeight()*0.5)+(afm.getHeight()/2)+ yAxisAddress);
+                    i++;   
+                    }else{
                     g2.drawString(s,(int)(pf.getImageableWidth()*0.6)+xAxisAddress,(int)(pf.getImageableHeight()*0.5)+afm.getHeight()*i+(afm.getHeight()/2)+ yAxisAddress);
                     i++;
+                    }
                 }
             }
         }
