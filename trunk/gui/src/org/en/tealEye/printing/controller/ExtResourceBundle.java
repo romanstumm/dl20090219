@@ -1,6 +1,5 @@
 package org.en.tealEye.printing.controller;
 
-import com.sun.xml.internal.ws.util.HandlerAnnotationProcessor;
 
 import javax.swing.*;
 import javax.imageio.ImageIO;
@@ -32,8 +31,6 @@ public class ExtResourceBundle implements ResourceBundleExt{
 
     public Icon getIcon(String resource) {
         String path = resourceBundle.getString(resource);
-
-        HandlerAnnotationProcessor KlassenName = null;
         return new ImageIcon(getClass().getResource("/org/en/tealEye/resources/"+path));
     }
 
