@@ -2,16 +2,39 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 <comment>properties</comment>
-<entry key="TableFontSize">13</entry>
-<entry key="EtiFontStyle">0</entry>
-<entry key="FormFontType">Arial</entry>
-<entry key="EtiFontType">Arial</entry>
+<entry key="SenderInCorner">false</entry>
+<entry key="senderName">null</entry>
+<entry key="ShowGraphic">true</entry>
+<entry key="YAxisSender">0</entry>
 <entry key="LabelFontType">Arial</entry>
-<entry key="FormFontStyle">0</entry>
-<entry key="FormFontSize">13</entry>
-<entry key="EtiFontSize">13</entry>
-<entry key="LabelFontSize">13</entry>
-<entry key="TableFontType">Arial</entry>
 <entry key="LabelFontStyle">0</entry>
-<entry key="TableFontStyle">0</entry>
+<entry key="SenderFontType">Arial</entry>
+<entry key="SenderFontStyle">0</entry>
+<entry key="FormFontStyle">0</entry>
+<entry key="XAxisGraphic">0</entry>
+<entry key="ShowSender">true</entry>
+<entry key="EtiFontSize">12</entry>
+<entry key="epEnvelopeType">0</entry>
+<entry key="FormFontType">Arial</entry>
+<entry key="XAxisAddress">0</entry>
+<entry key="AddressFontType">Arial</entry>
+<entry key="YAxisGraphic">0</entry>
+<entry key="EtiFontStyle">0</entry>
+<entry key="YAxisAddress">0</entry>
+<entry key="ImagePath">null</entry>
+<entry key="LabelFontSize">12</entry>
+<entry key="TableFontType">Arial</entry>
+<entry key="SenderFontSize">12</entry>
+<entry key="senderCorp">null</entry>
+<entry key="TableFontStyle">1</entry>
+<entry key="AddressFontStyle">0</entry>
+<entry key="FormFontSize">12</entry>
+<entry key="senderStreet">null</entry>
+<entry key="epCount">1</entry>
+<entry key="AddressFontSize">12</entry>
+<entry key="senderPLZ">null</entry>
+<entry key="EtiFontType">Arial</entry>
+<entry key="XAxisSender">0</entry>
+<entry key="TableFontSize">12</entry>
+<entry key="senderLocation">null</entry>
 </properties>
