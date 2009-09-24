@@ -245,10 +245,12 @@ public class EnvelopePrintService {
 
     public void setSenderFont(Font font) {
         this.senderFont = font;
+        initGraphics();
     }
 
     public void setAddressFont(Font font) {
         this.addressFont = font;
+        initGraphics();
     }
 
     public int getXAxisAddress() {
