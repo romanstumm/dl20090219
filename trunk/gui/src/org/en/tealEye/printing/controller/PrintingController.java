@@ -3,10 +3,7 @@ package org.en.tealEye.printing.controller;
 import de.liga.dart.common.service.ServiceFactory;
 import org.en.tealEye.guiExt.ExtPanel.ExtJTablePanel;
 import org.en.tealEye.guiMain.MainAppFrame;
-import org.en.tealEye.printing.gui.PrintingDialogFrame;
-import org.en.tealEye.printing.gui.TablePrintingFrame;
-import org.en.tealEye.printing.gui.EnvelopePrintFrame;
-import org.en.tealEye.printing.gui.EnvelopePrintFrameMethods;
+import org.en.tealEye.printing.gui.*;
 
 import javax.swing.*;
 import java.awt.event.*;

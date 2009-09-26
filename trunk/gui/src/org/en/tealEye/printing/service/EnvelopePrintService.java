@@ -284,4 +284,8 @@ public class EnvelopePrintService {
     public int getMaxPages(){
         return groupString.size();
     }
+
+    public void setSender(String[] sender){
+        this.sender = sender;
+    }
 }
