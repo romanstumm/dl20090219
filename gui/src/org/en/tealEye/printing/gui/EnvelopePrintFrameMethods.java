@@ -181,10 +181,11 @@ public class EnvelopePrintFrameMethods {
 
     public void epSenderFontBt(){
         new FieldMapper(GenericFontFrame.class, GenericFontFrameMethods.class, components.get("epSenderFontPreviewTB"));
+
     }
 
     public void epSenderValueBt(){
-        new FieldMapper(SenderAddressFrame.class, SenderAddressFrameMethods.class, components.get("epSenderValueBt"));
+        new FieldMapper(SenderAddressFrame.class, SenderAddressFrameMethods.class, sender, components.get("epSenderValueBt"));
     }
 
     public void epAddressFontPreviewTB(){
@@ -194,6 +195,7 @@ public class EnvelopePrintFrameMethods {
 
     public void epSenderFontPreviewTB(){
         eps.setSenderFont(((JTextField)components.get("epSenderFontPreviewTB")).getFont());
+        service = new GlobalGuiService();
         updatePanel();
     }
 
@@ -214,6 +216,7 @@ public class EnvelopePrintFrameMethods {
 
     public void epSenderCheckBox(){
         eps.setWithSender(((JCheckBox)components.get("epSenderCheckBox")).isSelected());
+        eps.setSender(sender);
         updatePanel();
     }
 
@@ -352,5 +355,11 @@ public class EnvelopePrintFrameMethods {
 
         service.updateProps(props);    
     }
+
+    public void ChangeMethod(){
+
+        updatePanel();
+    }
+
 
 }

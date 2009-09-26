@@ -18,7 +18,7 @@ import java.io.File;
  * Time: 04:32:18
  * To change this template use File | Settings | File Templates.
  */
-public class ExtResourceBundle implements ResourceBundleExt{
+public class ExtResourceBundle {
 
     private ResourceBundle resourceBundle;
 

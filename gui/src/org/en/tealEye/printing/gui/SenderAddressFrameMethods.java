@@ -19,14 +19,16 @@ import java.util.Properties;
 public class SenderAddressFrameMethods {
 
     private Map<String, Component> components = new HashMap<String, Component>();
-    private Component targetComponent;
+    private String[] targetComponent;
+    private Component component;
     private JFrame form;
     private GlobalGuiService service;
 
-    public SenderAddressFrameMethods(Map<String, Component> components, Object form, Component targetComponent) {
+    public SenderAddressFrameMethods(Map<String, Component> components, Object form, String[] targetComponent, Component component) {
         this.components = components;
         this.targetComponent = targetComponent;
         this.form = (JFrame) form;
+        this.component = component;
         service = new GlobalGuiService();
     }
 
@@ -39,7 +41,13 @@ public class SenderAddressFrameMethods {
     }
 
     public void senderAddressFrameAcceptBt(){
-            ((JButton)targetComponent).setToolTipText(((JTextField)components.get("senderAddressFrameCorpTF")).getText()+" | "+
+            targetComponent[0] = ((JTextField)components.get("senderAddressFrameCorpTF")).getText();
+            targetComponent[1] = ((JTextField)components.get("senderAddressFrameNameTF")).getText();
+            targetComponent[2] = ((JTextField)components.get("senderAddressFrameStreetTF")).getText();
+            targetComponent[3] = ((JTextField)components.get("senderAddressFramePLZTF")).getText();
+            targetComponent[4] = ((JTextField)components.get("senderAddressFrameLocationTF")).getText();
+
+            ((JButton)component).setToolTipText (((JTextField)components.get("senderAddressFrameCorpTF")).getText()+" | "+
                                                   ((JTextField)components.get("senderAddressFrameNameTF")).getText()+" | "+
                                                   ((JTextField)components.get("senderAddressFrameStreetTF")).getText()+" | "+
                                                   ((JTextField)components.get("senderAddressFramePLZTF")).getText()+" | "+
