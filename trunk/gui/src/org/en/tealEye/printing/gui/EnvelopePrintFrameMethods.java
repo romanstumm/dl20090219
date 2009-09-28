@@ -369,6 +369,7 @@ public class EnvelopePrintFrameMethods {
         System.out.println("menü3");
     }
     public void jMenuItem4(){
+        DisposeMethod();
         form.dispose();
     }
 
