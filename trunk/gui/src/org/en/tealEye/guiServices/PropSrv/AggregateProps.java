@@ -100,6 +100,8 @@ public class AggregateProps implements Props {
             props.setProperty("senderPLZ", " ");
             props.setProperty("senderLocation", " ");
             props.setProperty("SenderInCorner","false");
+            props.setProperty("SliderSender","0");
+            props.setProperty("SliderAddress","0");
 
         
         try {
