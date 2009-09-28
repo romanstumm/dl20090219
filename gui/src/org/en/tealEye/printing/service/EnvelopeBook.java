@@ -101,12 +101,13 @@ public class EnvelopeBook implements Printable {
                 if(senderInCorner){
                     int i = 0;
                     for(String s : sender){
-                        if(i>3){
-                        g2.drawString(s,(int)(pf.getImageableWidth()*0.1)+d+5+xAxisSender, (int)(pf.getImageableHeight()*0.1)+sfm.getHeight()*(i-1)+sfm.getHeight()/2+sliderSender+yAxisSender);
-                        }else if(i==0){
+                        if(i==0){
                         g2.drawString(s,(int)(pf.getImageableWidth()*0.1)+xAxisSender, (int)(pf.getImageableHeight()*0.1)+sfm.getHeight()*i+sfm.getHeight()/2+yAxisSender);
-                        }else if(i>0){
-                        g2.drawString(s,(int)(pf.getImageableWidth()*0.1)+xAxisSender, (int)(pf.getImageableHeight()*0.1)+sfm.getHeight()*i+sfm.getHeight()/2+sliderSender+yAxisSender);
+                        }else {
+                            if(i>3)
+                                g2.drawString(s,(int)(pf.getImageableWidth()*0.1)+5+d+xAxisSender, (int)(pf.getImageableHeight()*0.1)+sfm.getHeight()*(i-1)+sfm.getHeight()/2+sliderSender*(i-1)+yAxisSender);
+                            else
+                                g2.drawString(s,(int)(pf.getImageableWidth()*0.1)+xAxisSender, (int)(pf.getImageableHeight()*0.1)+sfm.getHeight()*i+sfm.getHeight()/2+sliderSender*(i)+yAxisSender);
                         }
                         i++;
                     }
@@ -126,7 +127,7 @@ public class EnvelopeBook implements Printable {
                 if(s.equals("")){
 
                 }else
-                g2.drawString(s,(int)(pf.getImageableWidth()*0.6)+xAxisAddress,(int)(pf.getImageableHeight()*0.5)+(afm.getHeight()/2)+sliderAddress+ yAxisAddress);
+                g2.drawString(s,(int)(pf.getImageableWidth()*0.6)+xAxisAddress,(int)(pf.getImageableHeight()*0.5)+(afm.getHeight()/2)+sliderAddress*i+ yAxisAddress);
                 i++;
             }
             else{
@@ -136,10 +137,10 @@ public class EnvelopeBook implements Printable {
                 else{
                     if(Character.isDigit(s.toCharArray()[0]) && s.length()<2){
                     g2.setFont(new Font("Arial",Font.PLAIN,6));
-                    g2.drawString(s,(int)(pf.getImageableWidth()*0.6)+afm.stringWidth(grp[0])+ afm.stringWidth(grp[0])/3 +xAxisAddress,(int)(pf.getImageableHeight()*0.5)+(afm.getHeight()/2)+sliderAddress+ yAxisAddress);
+                    g2.drawString(s,(int)(pf.getImageableWidth()*0.6)+afm.stringWidth(grp[0])+ afm.stringWidth(grp[0])/3 +xAxisAddress,(int)(pf.getImageableHeight()*0.5)+(afm.getHeight()/2)+ yAxisAddress);
                     i++;
                     }else{
-                    g2.drawString(s,(int)(pf.getImageableWidth()*0.6)+xAxisAddress,(int)(pf.getImageableHeight()*0.5)+afm.getHeight()*i+(afm.getHeight()/2)+sliderAddress+ yAxisAddress);
+                    g2.drawString(s,(int)(pf.getImageableWidth()*0.6)+xAxisAddress,(int)(pf.getImageableHeight()*0.5)+afm.getHeight()*i+(afm.getHeight()/2)+sliderAddress*i+ yAxisAddress);
                     i++;
                     }
                 }
