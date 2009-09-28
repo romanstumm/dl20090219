@@ -60,6 +60,9 @@ public class EnvelopePrintService {
     private int xAxisGraphic = 0;
     private int yAxisGraphic = 0;
 
+    private int sliderSender;
+    private int sliderAddress;
+
     private int pagesToPrint;
     private Attribute mediaFormat;
     private int mediaSize;
@@ -134,7 +137,6 @@ public class EnvelopePrintService {
     }
 
     private MediaSizeName setMediaSize(){
-        System.out.println(format);
         switch(format){
             case 0: return MediaSizeName.ISO_C3;
             case 1: return MediaSizeName.ISO_B4;
@@ -156,7 +158,7 @@ public class EnvelopePrintService {
                 for (int y = 0; y <pages; y++) {
                     for (String[] g : group) {
                         groupString.add(g);
-                        book.append(new EnvelopeBook(g,pf,xAxisAddress, yAxisAddress, xAxisSender, yAxisSender, xAxisGraphic, yAxisGraphic, sender, graphicPath, addressFont, senderFont,withGraphic, senderPosition, withSender,pages*groupString.size()),pf,1);
+                        book.append(new EnvelopeBook(g,pf,xAxisAddress, yAxisAddress, xAxisSender, yAxisSender, xAxisGraphic, yAxisGraphic, sender, graphicPath, addressFont, senderFont,withGraphic, senderPosition, withSender,pages*groupString.size(), sliderSender, sliderAddress),pf,1);
                     }
                 }
             }
@@ -169,8 +171,7 @@ public class EnvelopePrintService {
         BufferedImage img = new BufferedImage((int)pf.getWidth(),(int)pf.getHeight(),BufferedImage.TYPE_BYTE_INDEXED);
         Graphics2D g2 = (Graphics2D) img.getGraphics();
         String[] g = groupString.get(page);
-        System.out.println(groupString.size());
-        new EnvelopePaint(g2,g,pf,xAxisAddress, yAxisAddress, xAxisSender, yAxisSender, xAxisGraphic, yAxisGraphic, sender, graphicPath, addressFont, senderFont,withGraphic, senderPosition, withSender);
+        new EnvelopePaint(g2,g,pf,xAxisAddress, yAxisAddress, xAxisSender, yAxisSender, xAxisGraphic, yAxisGraphic, sender, graphicPath, addressFont, senderFont,withGraphic, senderPosition, withSender, sliderSender, sliderAddress);
         return new ImageIcon(img);
     }
     
@@ -277,6 +278,22 @@ public class EnvelopePrintService {
 
     public int getYAxisGraphic() {
         return yAxisGraphic;
+    }
+
+    public void setSliderSender(int i){
+        sliderSender = i;
+    }
+
+    public void setSliderAddress(int i){
+        sliderAddress = i;
+    }
+
+    public int getSliderSender(){
+        return sliderSender;
+    }
+
+    public int getSliderAddress(){
+        return sliderAddress;
     }
 
     public void setGraphicPath(String text) {

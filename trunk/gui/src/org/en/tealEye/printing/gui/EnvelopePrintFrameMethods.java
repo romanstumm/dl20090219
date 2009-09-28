@@ -82,6 +82,8 @@ public class EnvelopePrintFrameMethods {
         sender[3] = service.getProperty("senderPLZ");
         sender[4] = service.getProperty("senderLocation");
         graphicPath = service.getProperty("ImagePath");
+        ((JSlider)components.get("epSliderSender")).setValue(Integer.parseInt(service.getProperty("SliderSender")));
+        ((JSlider)components.get("epSliderAddress")).setValue(Integer.parseInt(service.getProperty("SliderAddress")));
     }
 
     public void loadInitialGraphics(){
@@ -105,8 +107,16 @@ public class EnvelopePrintFrameMethods {
         eps.setYAxisGraphic(Integer.parseInt(service.getProperty("YAxisGraphic")));
         eps.setAddressFont(((JTextField)components.get("epAddressFontPreviewTB")).getFont());
         eps.setSenderFont(((JTextField)components.get("epSenderFontPreviewTB")).getFont());
+        eps.setSliderAddress(((JSlider)components.get("epSliderAddress")).getValue());
+        eps.setSliderSender(((JSlider)components.get("epSliderSender")).getValue());
 
-
+//TODO Funktionen baue ich noch ein, sind momentan nicht weiter relevant
+        ((JMenuItem)components.get("jMenuItem1")).setEnabled(false);
+        ((JMenuItem)components.get("jMenuItem2")).setEnabled(false);
+        ((JMenuItem)components.get("jMenuItem3")).setEnabled(false);
+        ((JRadioButton)components.get("epOrderTable")).setEnabled(false);
+        ((JRadioButton)components.get("epOrderTeam")).setEnabled(false);
+        ((JComboBox)components.get("epEnvelopeAxis")).setEnabled(false);
 
 
         panel = ((JPanel)components.get("previewPanel"));
@@ -339,6 +349,29 @@ public class EnvelopePrintFrameMethods {
         updatePanel();
     }
 
+    public void epSliderAddress(){
+        eps.setSliderAddress(((JSlider)components.get("epSliderAddress")).getValue());
+        updatePanel();
+    }
+
+    public void epSliderSender(){
+        eps.setSliderSender(((JSlider)components.get("epSliderSender")).getValue());
+        updatePanel();
+    }
+
+    public void jMenuItem1(){
+        System.out.println("menü1");
+    }
+    public void jMenuItem2(){
+        System.out.println("menü2");
+    }
+    public void jMenuItem3(){
+        System.out.println("menü3");
+    }
+    public void jMenuItem4(){
+        form.dispose();
+    }
+
     public void epSetStringArray(String[] s){
         eps.setSender(s);
         updatePanel();
@@ -380,6 +413,9 @@ public class EnvelopePrintFrameMethods {
         props.setProperty("YAxisSender",String.valueOf(eps.getYAxisSender()));
         props.setProperty("XAxisGraphic",String.valueOf(eps.getXAxisGraphic()));
         props.setProperty("YAxisGraphic",String.valueOf(eps.getYAxisGraphic()));
+        props.setProperty("SliderSender", String.valueOf(eps.getSliderSender()));
+        props.setProperty("SliderAddress", String.valueOf(eps.getSliderAddress()));
+
         if(((JCheckBox)components.get("epSenderCheckBox")).isSelected())
         props.setProperty("ShowSender","true");
         else
