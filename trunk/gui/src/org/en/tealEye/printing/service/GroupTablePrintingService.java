@@ -206,18 +206,23 @@ public class GroupTablePrintingService extends JPanel implements TablePrinting {
     }
 
     private Vector<String[]> generatePrintableData(JTable jTable) {
-        int rowC = jTable.getRowCount();
+        final Vector<String[]> lgv = new Vector<String[]>();
+        final JTable jTable1 = jTable;
+                ServiceFactory.runAsTransaction(new Runnable() {
+                    public void run() {
+
+        int rowC = jTable1.getRowCount();
 //        int cCount = jTable.getColumnModel().getColumnCount();
-        Vector<String[]> lgv = new Vector<String[]>();
+
         GruppenService gs = ServiceFactory.get(GruppenService.class);
 //        int rpp = printingUtils.getRowsPerPage(jTable.getRowHeight(), mediaHeight);
         Spielort service;
         int laufendeNummer = 0;
         Map<Long, OSetting> settingCache = new HashMap();
 //        Vector<String> c = new Vector<String>();
-        if (jTable.getName().equals("Table_Ligagruppe")) {
+        if (jTable1.getName().equals("Table_Ligagruppe")) {
             for (int i = 0; i < rowC; i++) {
-                Object obj = ((BeanTableModel) jTable.getModel()).getObject(i);
+                Object obj = ((BeanTableModel) jTable1.getModel()).getObject(i);
                 Ligagruppe lg = ((Ligagruppe) obj);
                 // hole Setting für diese Liga...
                 OSetting oset = settingCache.get(lg.getLiga().getLigaId());
@@ -276,8 +281,10 @@ public class GroupTablePrintingService extends JPanel implements TablePrinting {
         } else {
 
         }
+        //return lgv;
+    }});
         return lgv;
-    }
+   }
 
     @SuppressWarnings({"SuspiciousNameCombination"})
     public void rotate() {

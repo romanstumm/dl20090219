@@ -161,6 +161,8 @@ public class  LabelPrintingService extends JPanel implements LabelPrinting {
     }
 
     private void sievePrintableData(){
+        ServiceFactory.runAsTransaction(new Runnable() {
+            public void run() {
         int[] rowSelectionCount;
               rowSelectionCount = sourceTable.getSelectedRows();
         if(rowSelectionCount.length<1){
@@ -224,7 +226,7 @@ public class  LabelPrintingService extends JPanel implements LabelPrinting {
                     }
                 }
             }
-        }
+        }}});
     }
     public void paintCanvas(){
         BufferedImage im;
