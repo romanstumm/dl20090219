@@ -129,7 +129,6 @@ public class GlobalListenerService implements GlobalListener, MouseMotionListene
     }
 
     public void valueChanged(ListSelectionEvent e) {
-        System.out.println("ValueChange");
         Object obj = e.getSource();
             CentralDispatch.invokeMethod(((Component)obj).getName());
     }
@@ -143,7 +142,6 @@ public class GlobalListenerService implements GlobalListener, MouseMotionListene
     }
 
     public void windowClosed(WindowEvent e) {
-        System.out.println("WindowClosed!");
         Object obj = e.getSource();
             CentralDispatch.removeComponentClass(obj);
     }

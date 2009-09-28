@@ -16,8 +16,6 @@ import java.util.*;
 import java.util.List;
 
 import org.en.tealEye.printing.controller.annotationClasses.*;
-import org.en.tealEye.printing.gui.SenderAddressFrameMethods;
-import com.sun.xml.internal.bind.v2.util.QNameMap;
 
 /**
  * Created by IntelliJ IDEA.

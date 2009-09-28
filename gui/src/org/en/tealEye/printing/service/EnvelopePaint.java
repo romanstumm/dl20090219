@@ -35,9 +35,11 @@ public class EnvelopePaint{
     private boolean senderInCorner;
     private boolean showGraphic;
     private boolean showSender;
+    private int sliderSender;
+    private int sliderAddress;
 
 
-    public EnvelopePaint(Graphics2D g2, String[] g, PageFormat pf, int xAxisAddress, int yAxisAddress, int xAxisSender, int yAxisSender, int xAxisGraphic, int yAxisGraphic, String[] sender, String graphicPath, Font addressFont, Font senderFont, boolean showGraphic, boolean leftCornerSender, boolean showSender){
+    public EnvelopePaint(Graphics2D g2, String[] g, PageFormat pf, int xAxisAddress, int yAxisAddress, int xAxisSender, int yAxisSender, int xAxisGraphic, int yAxisGraphic, String[] sender, String graphicPath, Font addressFont, Font senderFont, boolean showGraphic, boolean leftCornerSender, boolean showSender, int sliderSender, int sliderAddress){
         this.g = g;
         this.pf = pf;
         this.xAxisAddress = xAxisAddress;
@@ -53,6 +55,8 @@ public class EnvelopePaint{
         this.senderInCorner = leftCornerSender;
         this.showGraphic = showGraphic;
         this.showSender = showSender;
+        this.sliderSender = sliderSender;
+        this.sliderAddress = sliderAddress;
 
         paint(g2);
     }
@@ -91,10 +95,13 @@ public class EnvelopePaint{
                 if(senderInCorner){
                     int i = 0;
                     for(String s : sender){
-                        if(i>3){
-                        g2.drawString(s,(int)(pf.getImageableWidth()*0.1)+d+5+xAxisSender, (int)(pf.getImageableHeight()*0.1)+sfm.getHeight()*(i-1)+sfm.getHeight()/2+yAxisSender);
-                        }else{
+                        if(i==0){
                         g2.drawString(s,(int)(pf.getImageableWidth()*0.1)+xAxisSender, (int)(pf.getImageableHeight()*0.1)+sfm.getHeight()*i+sfm.getHeight()/2+yAxisSender);
+                        }else {
+                            if(i>3)
+                                g2.drawString(s,(int)(pf.getImageableWidth()*0.1)+5+d+xAxisSender, (int)(pf.getImageableHeight()*0.1)+sfm.getHeight()*(i-1)+sfm.getHeight()/2+sliderSender*(i-1)+yAxisSender);
+                            else
+                                g2.drawString(s,(int)(pf.getImageableWidth()*0.1)+xAxisSender, (int)(pf.getImageableHeight()*0.1)+sfm.getHeight()*i+sfm.getHeight()/2+sliderSender*(i)+yAxisSender);
                         }
                         i++;
                     }
@@ -114,7 +121,7 @@ public class EnvelopePaint{
                 if(s.equals("")){
                     
                 }else
-                g2.drawString(s,(int)(pf.getImageableWidth()*0.6)+xAxisAddress,(int)(pf.getImageableHeight()*0.5)+(afm.getHeight()/2)+ yAxisAddress);
+                g2.drawString(s,(int)(pf.getImageableWidth()*0.6)+xAxisAddress,(int)(pf.getImageableHeight()*0.5)+(afm.getHeight()/2)+sliderAddress*i+ yAxisAddress);
                 i++;
             }
             else{
@@ -127,7 +134,7 @@ public class EnvelopePaint{
                     g2.drawString(s,(int)(pf.getImageableWidth()*0.6)+afm.stringWidth(g[0])+ afm.stringWidth(g[0])/3 +xAxisAddress,(int)(pf.getImageableHeight()*0.5)+(afm.getHeight()/2)+ yAxisAddress);
                     i++;   
                     }else{
-                    g2.drawString(s,(int)(pf.getImageableWidth()*0.6)+xAxisAddress,(int)(pf.getImageableHeight()*0.5)+afm.getHeight()*i+(afm.getHeight()/2)+ yAxisAddress);
+                    g2.drawString(s,(int)(pf.getImageableWidth()*0.6)+xAxisAddress,(int)(pf.getImageableHeight()*0.5)+afm.getHeight()*i+(afm.getHeight()/2)+sliderAddress*i+ yAxisAddress);
                     i++;
                     }
                 }

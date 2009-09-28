@@ -427,8 +427,11 @@ public class EnvelopePrintFrame extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         jPanel14.add(jLabel3, gridBagConstraints);
 
-        epSliderSender.setMajorTickSpacing(20);
-        epSliderSender.setMinorTickSpacing(10);
+        epSliderSender.setMajorTickSpacing(2);
+        epSliderSender.setMinorTickSpacing(1);
+        epSliderSender.setMaximum(10);
+        epSliderSender.setMinimum(0);
+        epSliderSender.setValue(0);
         epSliderSender.setSnapToTicks(true);
         epSliderSender.setToolTipText(resourceMap.getString("epSliderSender.toolTipText")); // NOI18N
         epSliderSender.setName("epSliderSender"); // NOI18N
@@ -447,9 +450,12 @@ public class EnvelopePrintFrame extends javax.swing.JFrame {
         gridBagConstraints.gridy = 0;
         jPanel14.add(jLabel2, gridBagConstraints);
 
-        epSliderAddress.setMajorTickSpacing(20);
-        epSliderAddress.setMinorTickSpacing(10);
+        epSliderAddress.setMajorTickSpacing(2);
+        epSliderAddress.setMinorTickSpacing(1);
         epSliderAddress.setSnapToTicks(true);
+        epSliderAddress.setMaximum(10);
+        epSliderAddress.setMinimum(0);
+        epSliderAddress.setValue(0);
         epSliderAddress.setToolTipText(resourceMap.getString("epSliderAddress.toolTipText")); // NOI18N
         epSliderAddress.setName("epSliderAddress"); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
