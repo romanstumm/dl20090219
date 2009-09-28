@@ -83,7 +83,7 @@ public class AggregateProps implements Props {
         props.setProperty("AddressFontType", Props.DEFAULT_SENDER_FONT_TYPE);
         props.setProperty("AddressFontStyle", String.valueOf(Props.DEFAULT_SENDER_FONT_STYLE));
         props.setProperty("AddressFontSize", String.valueOf(Props.DEFAULT_SENDER_FONT_SIZE));
-        props.setProperty("ImagePath", "null");
+        props.setProperty("ImagePath", " ");
         props.setProperty("epEnvelopeType",String.valueOf(0));
         props.setProperty("epCount",String.valueOf(1));
         props.setProperty("XAxisAddress",String.valueOf(0));
@@ -94,11 +94,11 @@ public class AggregateProps implements Props {
         props.setProperty("YAxisGraphic",String.valueOf(0));
         props.setProperty("ShowSender",String.valueOf(true));
         props.setProperty("ShowGraphic",String.valueOf(true));
-            props.setProperty("senderCorp", "null");
-            props.setProperty("senderName", "null");
-            props.setProperty("senderStreet", "null");
-            props.setProperty("senderPLZ", "null");
-            props.setProperty("senderLocation", "null");
+            props.setProperty("senderCorp", " ");
+            props.setProperty("senderName", " ");
+            props.setProperty("senderStreet", " ");
+            props.setProperty("senderPLZ", " ");
+            props.setProperty("senderLocation", " ");
             props.setProperty("SenderInCorner","false");
 
         
