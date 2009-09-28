@@ -1,6 +1,8 @@
 package org.en.tealEye.printing.gui;
 
 import org.en.tealEye.guiServices.GlobalGuiService;
+import org.en.tealEye.printing.controller.CentralDispatch;
+import org.en.tealEye.printing.controller.annotationClasses.CustomMethod;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,12 +24,12 @@ public class GenericFontFrameMethods {
         private Component targetComponent;
         private Font font;
 
-        public GenericFontFrameMethods(Map<String, Component> components, Object form, Component targetComponent) {
-            this.components = components;
-            this.form = (Frame) form;
-            this.targetComponent = targetComponent;
+        public GenericFontFrameMethods() {
+            this.components = CentralDispatch.getComponents();
+            this.form = (JFrame) CentralDispatch.getComponentClassObject("org.en.tealEye.printing.gui.GenericFontFrame");
         }
-        
+    
+        @CustomMethod
         public void getFontPropertiesCustom(){
             components.get("genericFontFramePreviewArea").setFont(targetComponent.getFont());
             ((JList)components.get("genericFontFrameTypeList")).setSelectedValue(targetComponent.getFont().getFamily(),true);    
@@ -37,6 +39,9 @@ public class GenericFontFrameMethods {
 
         public void genericFontFrameHeaderLabel(){
 
+        }
+        public void setGenericFontFrameTargetComponent(Component c){
+            this.targetComponent = c;
         }
 
         public void genericFontFrameTypeList(){
@@ -87,7 +92,6 @@ public class GenericFontFrameMethods {
         }
 
         public void DisposeMethod(){
-            System.out.println("Dispose");            
         }
 
 }

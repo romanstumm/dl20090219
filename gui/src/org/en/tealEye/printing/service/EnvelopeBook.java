@@ -57,15 +57,16 @@ public class EnvelopeBook implements Printable {
         this.maximumPages = maximumPages;
     }
   @Override
-  public int print(Graphics g, PageFormat pf, int pageIndex) throws PrinterException {
+  public int print(Graphics gfx, PageFormat pf, int pageIndex) throws PrinterException {
     System.out.println("Page index = " + pageIndex);
     // pageIndex 1 corresponds to page number 2.
     if (pageIndex > maximumPages)
       return Printable.NO_SUCH_PAGE;
 
-    Graphics2D g2 = (Graphics2D) g;
-
-
+        Graphics2D g2 = (Graphics2D) gfx;
+        //g2.setColor(Color.white);
+        //g2.fillRect(0,0,(int)pf.getImageableWidth(),(int)pf.getImageableHeight());
+        //g2.setColor(Color.lightGray);
         FontMetrics sfm = g2.getFontMetrics(senderFont);
         FontMetrics afm = g2.getFontMetrics(addressFont);
         int a = sfm.stringWidth(sender[0]);
@@ -73,6 +74,7 @@ public class EnvelopeBook implements Printable {
         int c = sfm.stringWidth(sender[2]);
         int d = sfm.stringWidth(sender[3]);
         int e = sfm.stringWidth(sender[4]);
+        //g2.fillRect((int)(pf.getImageableWidth()*0.85),(int)(pf.getImageableHeight()*0.1),80,60);
         g2.setColor(Color.black);
         if(showGraphic){
             BufferedImage img = null;
@@ -94,7 +96,11 @@ public class EnvelopeBook implements Printable {
                 if(senderInCorner){
                     int i = 0;
                     for(String s : sender){
+                        if(i>3){
+                        g2.drawString(s,(int)(pf.getImageableWidth()*0.1)+d+5+xAxisSender, (int)(pf.getImageableHeight()*0.1)+sfm.getHeight()*(i-1)+sfm.getHeight()/2+yAxisSender);
+                        }else{
                         g2.drawString(s,(int)(pf.getImageableWidth()*0.1)+xAxisSender, (int)(pf.getImageableHeight()*0.1)+sfm.getHeight()*i+sfm.getHeight()/2+yAxisSender);
+                        }
                         i++;
                     }
                }else{
@@ -108,7 +114,7 @@ public class EnvelopeBook implements Printable {
         }
         g2.setFont(addressFont);
         int i = 0;
-            for(String s:grp){
+        for(String s:grp){
             if(i==0){
                 if(s.equals("")){
 

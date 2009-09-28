@@ -88,7 +88,7 @@ public class SenderAddressFrame extends javax.swing.JFrame {
         senderPLZLabel.setName("senderPLZLabel"); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
@@ -98,7 +98,7 @@ public class SenderAddressFrame extends javax.swing.JFrame {
         senderLocationLabel.setName("senderLocationLabel"); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
@@ -108,7 +108,7 @@ public class SenderAddressFrame extends javax.swing.JFrame {
         senderStreetLabel.setName("senderStreetLabel"); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
@@ -139,7 +139,7 @@ public class SenderAddressFrame extends javax.swing.JFrame {
         senderAddressFramePLZTF.setPreferredSize(new java.awt.Dimension(50, 20));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
         getContentPane().add(senderAddressFramePLZTF, gridBagConstraints);
@@ -148,7 +148,7 @@ public class SenderAddressFrame extends javax.swing.JFrame {
         senderAddressFrameLocationTF.setName("senderAddressFrameLocationTF"); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
         getContentPane().add(senderAddressFrameLocationTF, gridBagConstraints);
@@ -157,7 +157,7 @@ public class SenderAddressFrame extends javax.swing.JFrame {
         senderAddressFrameStreetTF.setName("senderAddressFrameStreetTF"); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
         getContentPane().add(senderAddressFrameStreetTF, gridBagConstraints);
@@ -195,7 +195,6 @@ public class SenderAddressFrame extends javax.swing.JFrame {
         pack();
         setVisible(true);
     }// </editor-fold>
-
     /**
     * @param args the command line arguments
     */

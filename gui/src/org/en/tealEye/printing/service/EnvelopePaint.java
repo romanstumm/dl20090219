@@ -91,7 +91,11 @@ public class EnvelopePaint{
                 if(senderInCorner){
                     int i = 0;
                     for(String s : sender){
+                        if(i>3){
+                        g2.drawString(s,(int)(pf.getImageableWidth()*0.1)+d+5+xAxisSender, (int)(pf.getImageableHeight()*0.1)+sfm.getHeight()*(i-1)+sfm.getHeight()/2+yAxisSender);
+                        }else{
                         g2.drawString(s,(int)(pf.getImageableWidth()*0.1)+xAxisSender, (int)(pf.getImageableHeight()*0.1)+sfm.getHeight()*i+sfm.getHeight()/2+yAxisSender);
+                        }
                         i++;
                     }
                }else{
