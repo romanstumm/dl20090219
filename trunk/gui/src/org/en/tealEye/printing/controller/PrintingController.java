@@ -35,8 +35,7 @@ public class PrintingController implements ActionListener, MouseListener, Window
     public void actionPerformed(final ActionEvent e) {
         final String action = e.getActionCommand();
         Object obj = e.getSource();
-        ServiceFactory.runAsTransaction(new Runnable() {
-            public void run() {
+
 
 
                 if (action.equals("Drucken")) {
@@ -57,12 +56,22 @@ public class PrintingController implements ActionListener, MouseListener, Window
                         tablePrintFrame =
                                 new TablePrintingFrame(PrintingController.this, getPrintableTable(),
                                         mode, winCon);
-                    if (mode.equals("envelope"))
-                        new FieldMapper(EnvelopePrintFrame.class, EnvelopePrintFrameMethods.class, getPrintableTable());
+                    if (mode.equals("envelope")){
+                        //new FieldMapper(EnvelopePrintFrame.class, EnvelopePrintFrameMethods.class, getPrintableTable());
+                        GlobalListenerService gls = new GlobalListenerService();
+                        CacheStack cache = new CacheStack();
+                        CentralDispatch.setListenerService(gls);
+                        CentralDispatch.setupCacheStack(cache);
+                        CentralDispatch.storeBoundMethodClass(this);
+                        CentralDispatch.storeClassBundle(EnvelopePrintFrame.class,EnvelopePrintFrameMethods.class);
+                        CentralDispatch.invokeCustomMethods();
+                        CentralDispatch.addListener();
+
+                    }
                     pframe.dispose();
                 }
-                               }
-        });
+                               
+
                  if (action.equals("Abbrechen")) {
                     pframe.dispose();
                 } else if (action.equals("forward")) {
@@ -88,7 +97,7 @@ public class PrintingController implements ActionListener, MouseListener, Window
 
     }
 
-    private JTable getPrintableTable() {
+    public JTable getPrintableTable() {
         ExtJTablePanel panel = mainApp.getActiveFramePanel();
         return panel.getPanelTable();
     }

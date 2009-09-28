@@ -2,6 +2,10 @@ package org.en.tealEye.printing.gui;
 
 import org.en.tealEye.printing.controller.FieldMapper;
 import org.en.tealEye.printing.controller.GenericThread;
+import org.en.tealEye.printing.controller.CentralDispatch;
+import org.en.tealEye.printing.controller.annotationClasses.CustomMethod;
+import org.en.tealEye.printing.controller.annotationClasses.CustomListener;
+import org.en.tealEye.printing.controller.annotationClasses.DisposeMethod;
 import org.en.tealEye.printing.service.EnvelopePrintService;
 import org.en.tealEye.guiServices.GlobalGuiService;
 import org.apache.poi.hssf.record.formula.functions.T;
@@ -32,14 +36,15 @@ public class EnvelopePrintFrameMethods {
     private String graphicPath;
 
 
-    public EnvelopePrintFrameMethods(Map<String, Component> components, Object form, Object parentObject){
-        this.form = (JFrame) form;
-        this.components = components;
-        this.parentObject = parentObject;
+    public EnvelopePrintFrameMethods(){
+        this.form = (JFrame) CentralDispatch.getComponentClassObject("org.en.tealEye.printing.gui.EnvelopePrintFrame");
+        this.components = CentralDispatch.getComponents();
+        this.parentObject = CentralDispatch.invokeMethod("getPrintableTable");
     }
 
     //CustomMethods will be invoked at startup__________________________________
 
+    @CustomMethod
     public void initCustom(){
         getFontProperties();
         loadInitialGraphics();
@@ -135,13 +140,11 @@ public class EnvelopePrintFrameMethods {
 
     public void epPrintBt(){
         eps.startPrinting();
-        
-        System.out.println("PrintBT");                 
+        DisposeMethod();
     }
 
     public void epDeclineBt(){
         form.dispose();
-        System.out.println("DeclineBT");
     }
 
     public void epGraphicBt(){
@@ -153,6 +156,8 @@ public class EnvelopePrintFrameMethods {
         int returnVal = chooser.showOpenDialog(form);
         if(returnVal == JFileChooser.APPROVE_OPTION) {
            ((JTextField)components.get("epGraphicPathTB")).setText(chooser.getSelectedFile().getAbsolutePath());
+           eps.setGraphicPath(chooser.getSelectedFile().getAbsolutePath());
+           updatePanel();
         }
     }
 
@@ -176,16 +181,26 @@ public class EnvelopePrintFrameMethods {
     }
 
     public void epAddressFontBt(){
-        new FieldMapper(GenericFontFrame.class, GenericFontFrameMethods.class, components.get("epAddressFontPreviewTB"));
+        CentralDispatch.storeClassBundle(GenericFontFrame.class,GenericFontFrameMethods.class);
+        CentralDispatch.invokeMethod("setGenericFontFrameTargetComponent", components.get("epAddressFontPreviewTB"));
+        CentralDispatch.invokeCustomMethods(GenericFontFrameMethods.class);
+        CentralDispatch.addListener();
+        //new FieldMapper(GenericFontFrame.class, GenericFontFrameMethods.class, components.get("epAddressFontPreviewTB"));
     }
 
     public void epSenderFontBt(){
-        new FieldMapper(GenericFontFrame.class, GenericFontFrameMethods.class, components.get("epSenderFontPreviewTB"));
-
+        CentralDispatch.storeClassBundle(GenericFontFrame.class,GenericFontFrameMethods.class);
+        CentralDispatch.invokeMethod("setGenericFontFrameTargetComponent", components.get("epSenderFontPreviewTB"));
+        CentralDispatch.invokeCustomMethods(GenericFontFrameMethods.class);
+        CentralDispatch.addListener();
+        //new FieldMapper(GenericFontFrame.class, GenericFontFrameMethods.class, components.get("epSenderFontPreviewTB"));
     }
 
     public void epSenderValueBt(){
-        new FieldMapper(SenderAddressFrame.class, SenderAddressFrameMethods.class, sender, components.get("epSenderValueBt"));
+        CentralDispatch.storeClassBundle(SenderAddressFrame.class, SenderAddressFrameMethods.class);
+        CentralDispatch.invokeCustomMethods(SenderAddressFrameMethods.class);
+        CentralDispatch.addListener();
+        //new FieldMapper(SenderAddressFrame.class, SenderAddressFrameMethods.class, sender, components.get("epSenderValueBt"));
     }
 
     public void epAddressFontPreviewTB(){
@@ -252,65 +267,93 @@ public class EnvelopePrintFrameMethods {
         eps.setSenderPosition(false);
     }
 
+    @CustomListener(listenerType = "MouseListener", listenerSection = "mousePressed", customClass = false, customClassName = "")
     public void epAddressUpBt(){
         eps.setYAxisAddress(-1);
         updatePanel();
     }
 
+    @CustomListener(listenerType = "MouseListener", listenerSection = "mousePressed", customClass = false, customClassName = "")
     public void epAddressRightBt(){
         eps.setXAxisAddress(1);
         updatePanel();
     }
 
+    @CustomListener(listenerType = "MouseListener", listenerSection = "mousePressed", customClass = false, customClassName = "")
     public void epAddressLeftBt(){
         eps.setXAxisAddress(-1);
         updatePanel();
     }
 
+    @CustomListener(listenerType = "MouseListener", listenerSection = "mousePressed", customClass = false, customClassName = "")
     public void epAddressDownBt(){
         eps.setYAxisAddress(1);
         updatePanel();
     }
 
+    @CustomListener(listenerType = "MouseListener", listenerSection = "mousePressed", customClass = false, customClassName = "")
     public void epSenderUpBt(){
         eps.setYAxisSender(-1);
         updatePanel();
     }
 
+    @CustomListener(listenerType = "MouseListener", listenerSection = "mousePressed", customClass = false, customClassName = "")
     public void epSenderRightBt(){
         eps.setXAxisSender(1);
         updatePanel();
     }
 
+    @CustomListener(listenerType = "MouseListener", listenerSection = "mousePressed", customClass = false, customClassName = "")
     public void epSenderLeftBt(){
         eps.setXAxisSender(-1);
         updatePanel();
     }
 
+    @CustomListener(listenerType = "MouseListener", listenerSection = "mousePressed", customClass = false, customClassName = "")
     public void epSenderDownBt(){
         eps.setYAxisSender(1);
         updatePanel();
     }
 
+    @CustomListener(listenerType = "MouseListener", listenerSection = "mousePressed", customClass = false, customClassName = "")
     public void epGraphicUpBt(){
         eps.setYAxisGraphic(-1);
         updatePanel();
     }
 
+    @CustomListener(listenerType = "MouseListener", listenerSection = "mousePressed", customClass = false, customClassName = "")
     public void epGraphicRightBt(){
         eps.setXAxisGraphic(1);
         updatePanel();
     }
 
+    @CustomListener(listenerType = "MouseListener", listenerSection = "mousePressed", customClass = false, customClassName = "")
     public void epGraphicLeftBt(){
         eps.setXAxisGraphic(-1);
         updatePanel();
     }
 
+    @CustomListener(listenerType = "MouseListener", listenerSection = "mousePressed", customClass = false, customClassName = "")
     public void epGraphicDownBt(){
         eps.setYAxisGraphic(1);
         updatePanel();
     }
+
+    public void epSetStringArray(String[] s){
+        eps.setSender(s);
+        updatePanel();
+    }
+
+    public void epSetAddressFont(Font f){
+        eps.setAddressFont(f);
+        updatePanel();
+    }
+
+    public void epSetSenderFont(Font f){
+        eps.setSenderFont(f);
+        updatePanel();
+    }
+
 
     //Getter_________________________________________________________
 
@@ -319,9 +362,8 @@ public class EnvelopePrintFrameMethods {
     }
 
     //DisposeMethod will be invoked while closing the parent frame
-
+    @DisposeMethod
     public void DisposeMethod(){
-        System.out.println("DisposeEnvelop");
         Properties props = new Properties();
         props.setProperty("AddressFontType", components.get("epAddressFontPreviewTB").getFont().getFamily());
         props.setProperty("AddressFontStyle", String.valueOf(components.get("epAddressFontPreviewTB").getFont().getStyle()));
@@ -356,10 +398,6 @@ public class EnvelopePrintFrameMethods {
         service.updateProps(props);    
     }
 
-    public void ChangeMethod(){
-
-        updatePanel();
-    }
 
 
 }

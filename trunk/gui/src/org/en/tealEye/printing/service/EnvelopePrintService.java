@@ -19,6 +19,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.Vector;
+import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
 import org.en.tealEye.framework.BeanTableModel;
@@ -106,7 +107,8 @@ public class EnvelopePrintService {
 
     public void startPrinting() {
         pj.setPageable(book);
-        pj.setJobName("My book");
+        Date date = new Date();
+        pj.setJobName(date.toString());
     if (pj.printDialog()) {
       try {
         pj.print();

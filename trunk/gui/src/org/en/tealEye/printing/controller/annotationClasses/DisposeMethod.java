@@ -1,0 +1,16 @@
+package org.en.tealEye.printing.controller.annotationClasses;
+
+/**
+ * Created by IntelliJ IDEA.
+ * User: Stephan Pudras
+ * Date: 28.09.2009
+ * Time: 19:01:56
+ * To change this template use File | Settings | File Templates.
+ */
+import java.lang.annotation.*;
+import static java.lang.annotation.ElementType.*;
+@Target( { TYPE, METHOD, CONSTRUCTOR, PACKAGE } )
+@Retention( RetentionPolicy.RUNTIME )
+
+public @interface DisposeMethod {
+}
