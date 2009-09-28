@@ -63,7 +63,6 @@ public class EnvelopeBook implements Printable {
     }
   @Override
   public int print(Graphics gfx, PageFormat pf, int pageIndex) throws PrinterException {
-    System.out.println("Page index = " + pageIndex);
     // pageIndex 1 corresponds to page number 2.
     if (pageIndex > maximumPages)
       return Printable.NO_SUCH_PAGE;
