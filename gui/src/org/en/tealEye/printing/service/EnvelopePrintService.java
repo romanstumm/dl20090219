@@ -282,10 +282,12 @@ public class EnvelopePrintService {
 
     public void setSliderSender(int i){
         sliderSender = i;
+        initGraphics();
     }
 
     public void setSliderAddress(int i){
         sliderAddress = i;
+        initGraphics();
     }
 
     public int getSliderSender(){
