@@ -38,6 +38,7 @@
             <fileset dir="src">
                 <include name="**/*.properties"/>
                 <include name="**/*.xml"/>
+                <include name="**/*.png"/>
             </fileset>
             <fileset dir="config"/>
         </jar>
