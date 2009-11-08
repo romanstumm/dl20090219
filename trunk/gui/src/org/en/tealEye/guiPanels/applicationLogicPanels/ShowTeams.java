@@ -50,7 +50,7 @@ public class ShowTeams extends ShowTablePanel
         showGroupsLeagueLabel = new javax.swing.JLabel();
         showGroupsLeagueClassLabel = new javax.swing.JLabel();
         showGroupsLeague.setName("Combo_LigaMitLeer");
-        showGroupsLeagueClass.setName("Combo_LigaklasseMitLeer");
+        showGroupsLeagueClass.setName("Combo_LigaklasseFilterOptions");
         showGroupsLocationLabel = new javax.swing.JLabel();
         showGroupsVendorLabel = new javax.swing.JLabel();
         tablePanel = new javax.swing.JPanel();

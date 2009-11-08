@@ -5,6 +5,7 @@ import de.liga.dart.common.service.ServiceFactory;
 import de.liga.dart.gruppen.service.GruppenService;
 import de.liga.dart.liga.service.LigaService;
 import de.liga.dart.ligaklasse.service.LigaklasseService;
+import de.liga.dart.ligaklasse.model.LigaklasseFilter;
 import de.liga.dart.ligateam.model.TeamWunsch;
 import de.liga.dart.ligateam.model.WunschArt;
 import de.liga.dart.ligateam.service.LigateamService;
@@ -112,7 +113,7 @@ public class DartComponentRegistry extends ComponentRegistry {
                     keineGruppe = ((ShowTeams) panel).getKeineGruppe().isSelected();
                 }
                 Spielort ort = SelectionUtil.getSpielort(panel);
-                Ligaklasse klasse = SelectionUtil.getLigaklasse(panel);
+                LigaklasseFilter klasse = SelectionUtil.getLigaklasseFilter(panel);
                 model.setObjects(ServiceFactory
                         .get(LigateamService.class).findTeamsByLigaKlasseOrt(liga, klasse,
                         ort, keineGruppe));
@@ -337,6 +338,29 @@ public class DartComponentRegistry extends ComponentRegistry {
                 DefaultComboBoxModel model = new DefaultComboBoxModel();
                 List<Ligaklasse> klassen = ServiceFactory
                         .get(LigaklasseService.class).findAllLigaklasse();
+                LigaklasseFilter filter = new LigaklasseFilter("-alle-");
+                model.addElement(filter);
+                Ligaklasse bez=null, a=null, b=null, c=null;
+                for (Ligaklasse each : klassen) {
+                    if(each.getKlassenName().equals("Bez")) bez = each;
+                    else if(each.getKlassenName().equals("A")) a = each;
+                    else if(each.getKlassenName().equals("B")) b = each;
+                    else if(each.getKlassenName().equals("C")) c = each;
+                    model.addElement(new LigaklasseFilter(each));
+                }
+                model.addElement(new LigaklasseFilter("Bez+A+B", bez, a, b));
+                model.addElement(new LigaklasseFilter("A+B+C", a, b, c));
+                return model;
+            }
+        };
+        comboModels.put("Combo_LigaklasseFilterOptions", modelFactory);
+
+        modelFactory = new ModelFactory() {
+
+            public Object create(JPanel panel) {
+                DefaultComboBoxModel model = new DefaultComboBoxModel();
+                List<Ligaklasse> klassen = ServiceFactory
+                        .get(LigaklasseService.class).findAllLigaklasse();
                 model.addElement("-alle-");
                 for (Ligaklasse each : klassen) {
                     model.addElement(each);
@@ -344,7 +368,6 @@ public class DartComponentRegistry extends ComponentRegistry {
                 return model;
             }
         };
-        comboModels.put("Combo_LigaklasseMitLeer", modelFactory);
         comboModels.put("Combo_WunschListLigaklasse", modelFactory);
 
         comboModels.put("Combo_AufstellerMitLeer", new ModelFactory() {

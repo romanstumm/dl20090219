@@ -8,6 +8,7 @@ import de.liga.dart.model.Liga;
 import de.liga.dart.model.Ligaklasse;
 import de.liga.dart.model.Ligateam;
 import de.liga.dart.model.Spielort;
+import de.liga.dart.ligaklasse.model.LigaklasseFilter;
 
 import java.util.List;
 import java.util.Map;
@@ -47,8 +48,16 @@ public interface LigateamService extends Service {
      * @param keineGruppe - false: keine Auswirkung, true: nur Teams, die derzeit keinem LigateamSpiel zugeordnet sind
      * @return
      */
-    List<Ligateam> findTeamsByLigaKlasseOrt(Liga liga, Ligaklasse klasse,
+    List<Ligateam> findTeamsByLigaKlasseOrt(Liga liga, LigaklasseFilter klasse,
                                             Spielort ort, boolean keineGruppe);
+
+    /**
+     * Volltextsuche nach teamnamen
+     * @param liga   -  leer (alle Ligen) oder eine Liga
+     * @param pattern - Namensbestandteil (nicht case-sensitiv)
+     * @return
+     */
+    List<Ligateam> findTeamsLikeNameByLiga(String pattern, Liga liga);
 
     List<Ligateam> findAllTeams();
 
