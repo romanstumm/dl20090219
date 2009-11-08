@@ -1,12 +1,12 @@
 package de.liga.dart.ligateam.service;
 
 import de.liga.dart.common.service.AbstractService;
-import de.liga.dart.common.service.util.HibernateUtil;
 import de.liga.dart.exception.DartException;
 import de.liga.dart.exception.DartValidationException;
 import de.liga.dart.exception.ValidationMessage;
 import static de.liga.dart.exception.ValidationReason.MISSING;
 import static de.liga.dart.exception.ValidationReason.WRONG;
+import de.liga.dart.ligaklasse.model.LigaklasseFilter;
 import de.liga.dart.ligateam.model.TeamWunsch;
 import de.liga.dart.model.*;
 import org.apache.commons.lang.StringUtils;
@@ -100,7 +100,8 @@ public class LigateamServiceImpl extends AbstractService implements LigateamServ
         return query.list();
     }
 
-    public List<Ligateam> findTeamsByLigaKlasseOrt(Liga liga, Ligaklasse klasse, Spielort ort,
+    public List<Ligateam> findTeamsByLigaKlasseOrt(Liga liga, LigaklasseFilter klasseFilter,
+                                                   Spielort ort,
                                                    boolean keineGruppe) {
         Query query;
         StringBuilder buf = new StringBuilder("select t from Ligateam t ");
@@ -115,16 +116,49 @@ public class LigateamServiceImpl extends AbstractService implements LigateamServ
             where = and(where, buf);
             buf.append("t.liga=:liga ");
         }
-        if (klasse != null) {
-            params.put("klasse", klasse);
+        if (klasseFilter != null && klasseFilter.getKlassen() != null) {
+            int i = 0;
             where = and(where, buf);
-            buf.append("t.ligaklasse=:klasse ");
+            boolean or = false;
+            buf.append("(");
+            for (Ligaklasse klasse : klasseFilter.getKlassen()) {
+                if (or) buf.append("or ");
+                buf.append("t.ligaklasse=:klasse").append(i).append(" ");
+                params.put("klasse" + i, klasse);
+                i++;
+                or = true;
+            }
+            buf.append(") ");
         }
         if (ort != null) {
             params.put("ort", ort);
             //noinspection UnusedAssignment
             where = and(where, buf);
             buf.append("t.spielort=:ort ");
+        }
+        buf.append("order by t.teamName");
+        query = getSession().createQuery(buf.toString());
+        for (Map.Entry<String, Object> entry : params.entrySet()) {
+            query.setParameter(entry.getKey(), entry.getValue());
+        }
+        return query.list();
+    }
+
+    public List<Ligateam> findTeamsLikeNameByLiga(String pattern, Liga liga) {
+        Query query;
+        StringBuilder buf = new StringBuilder("select t from Ligateam t ");
+        Map<String, Object> params = new HashMap();
+        boolean where = false;
+        if (liga != null) {
+            params.put("liga", liga);
+            where = and(where, buf);
+            buf.append("t.liga=:liga ");
+        }
+        if (pattern != null) {
+            params.put("teamName", "%" + pattern.toLowerCase() + "%");
+            //noinspection UnusedAssignment
+            where = and(where, buf);
+            buf.append("lower(t.teamName) like :teamName ");
         }
         buf.append("order by t.teamName");
         query = getSession().createQuery(buf.toString());
@@ -151,11 +185,11 @@ public class LigateamServiceImpl extends AbstractService implements LigateamServ
     }
 
     public void deleteLigateam(Ligateam team, boolean validate)
-            throws DartException, DartValidationException {
+            throws DartException {
         if (team.getLigateamId() > 0) {
             // reload: needed for wunschlist deletion!
             team = findLigateamById(team.getLigateamId());
-            if(team == null) return;
+            if (team == null) return;
             if (validate) {
                 if (team.getLigateamspiel() != null) {
                     throw new DartValidationException("Löschen verhindert: \"" + team.getTeamName()

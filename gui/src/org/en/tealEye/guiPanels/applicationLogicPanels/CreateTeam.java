@@ -10,6 +10,7 @@ import org.en.tealEye.guiExt.ExtPanel.ExtJEditPanel;
 import org.en.tealEye.guiExt.ExtPanel.JExtTextField;
 import org.en.tealEye.guiMain.DartComponentRegistry;
 import org.en.tealEye.guiMain.util.LigaSelectable;
+import org.en.tealEye.guiMain.util.LigaklasseSelectable;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -19,7 +20,7 @@ import java.awt.event.*;
 
 /** @author Stephan */
 public class CreateTeam extends ExtJEditPanel
-      implements LigaSelectable, ActionListener, FocusListener {
+      implements LigaSelectable, LigaklasseSelectable, ActionListener, FocusListener {
     private JButton teamNew;
     private JButton teamInfo;
     private JComboBox teamWunschListSortCombo;
