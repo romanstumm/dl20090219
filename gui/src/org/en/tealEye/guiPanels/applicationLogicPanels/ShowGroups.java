@@ -82,8 +82,8 @@ public class ShowGroups extends ShowTablePanel implements LigaSelectable, Spielo
         comboPanel.add(showGroupsLeague, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.insets = new java.awt.Insets(1, 10, 1, 10);
         comboPanel.add(showGroupsLocation, gridBagConstraints);
 
@@ -102,8 +102,8 @@ public class ShowGroups extends ShowTablePanel implements LigaSelectable, Spielo
 
         showGroupsLocationLabel.setText("Spielort");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(1, 2, 1, 2);
         comboPanel.add(showGroupsLocationLabel, gridBagConstraints);
