@@ -8,6 +8,7 @@ import org.en.tealEye.guiMain.util.SpielortSelectable;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
+import java.awt.*;
 
 /**
  * @author Stephan
@@ -15,6 +16,8 @@ import java.awt.event.KeyEvent;
 public class ShowTeams extends ShowTablePanel
         implements LigaSelectable, LigaklasseSelectable, SpielortSelectable {
     private JCheckBox keineGruppe;
+    private boolean searchActive;
+
 
     /**
      * Creates new form ShowGroups
@@ -56,6 +59,11 @@ public class ShowTeams extends ShowTablePanel
         tablePanel = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        searchTextTF = new JTextField("Suchtext eingeben");
+        searchButtonBT = new JButton("Suchen");
+        searchButtonBT.setName("suchenBT");
+        searchButtonBT.setActionCommand("suchenBT");
+        
 
         keineGruppe = new javax.swing.JCheckBox();
         keineGruppe.setText("In keiner Gruppe");
@@ -169,6 +177,18 @@ public class ShowTeams extends ShowTablePanel
         comboPanel.add(getToggleDelete(), gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.insets = new java.awt.Insets(1, 10, 1, 10);
+        comboPanel.add(searchTextTF, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 6;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.insets = new java.awt.Insets(1, 10, 1, 10);
+        comboPanel.add(searchButtonBT, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 0.2;
@@ -223,6 +243,13 @@ public class ShowTeams extends ShowTablePanel
     private javax.swing.JLabel showGroupsLocationLabel;
     private javax.swing.JLabel showGroupsVendorLabel;
     private javax.swing.JPanel tablePanel;
+    private JTextField searchTextTF;
+
+    public JButton getSearchButtonBT() {
+        return searchButtonBT;
+    }
+
+    private JButton searchButtonBT;
 
     // Ende der Variablendeklaration
     public JComboBox getSpielort() {
@@ -239,5 +266,17 @@ public class ShowTeams extends ShowTablePanel
 
     public JCheckBox getKeineGruppe() {
         return keineGruppe;
+    }
+
+    public JTextField getSuchenTextTF() {
+        return searchTextTF;
+    }
+
+    public boolean isSearchActive() {
+        return searchActive;
+    }
+
+    public void setSearchActivity(boolean search){
+        searchActive = search;
     }
 }
