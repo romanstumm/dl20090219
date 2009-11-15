@@ -2,8 +2,10 @@ package org.en.tealEye.controller;
 
 import de.liga.dart.ligateam.model.TeamWunsch;
 import de.liga.dart.ligateam.service.LigateamService;
+import de.liga.dart.ligateam.service.LigateamServiceImpl;
 import de.liga.dart.model.Ligateam;
 import de.liga.dart.model.Spielort;
+import de.liga.dart.model.Liga;
 import de.liga.dart.common.service.ServiceFactory;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -205,6 +207,9 @@ public class TeamController extends PanelController {
                                 "Infos zu " + team.getTeamName());
                     }
                 });
+            }else if("suchenBT".equals(ac)){
+                showTeams.setSearchActivity(true);
+                DartComponentRegistry.getInstance().setTableModel(showTeams.getPanelTable(), showTeams);
             }
         }
     }

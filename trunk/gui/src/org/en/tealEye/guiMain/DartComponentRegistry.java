@@ -114,9 +114,14 @@ public class DartComponentRegistry extends ComponentRegistry {
                 }
                 Spielort ort = SelectionUtil.getSpielort(panel);
                 LigaklasseFilter klasse = SelectionUtil.getLigaklasseFilter(panel);
-                model.setObjects(ServiceFactory
+                if(((ShowTeams)panel).isSearchActive() != true){
+                    model.setObjects(ServiceFactory
                         .get(LigateamService.class).findTeamsByLigaKlasseOrt(liga, klasse,
                         ort, keineGruppe));
+                }else{
+                    model.setObjects(ServiceFactory
+                        .get(LigateamService.class).findTeamsLikeNameByLiga(((ShowTeams)panel).getSuchenTextTF().getText(),(Liga)((ShowTeams)panel).getLiga().getSelectedItem()));
+                }
                 model.touch();
                 return model;
             }
