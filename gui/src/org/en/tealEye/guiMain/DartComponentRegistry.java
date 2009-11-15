@@ -121,6 +121,7 @@ public class DartComponentRegistry extends ComponentRegistry {
                 }else{
                     model.setObjects(ServiceFactory
                         .get(LigateamService.class).findTeamsLikeNameByLiga(((ShowTeams)panel).getSuchenTextTF().getText(),(Liga)((ShowTeams)panel).getLiga().getSelectedItem()));
+                //TODO Hab Datenbankdump nicht einlesen können, daher nicht getestet!
                 }
                 model.touch();
                 return model;
