@@ -22,7 +22,7 @@ public abstract class ComponentRegistry {
             if (modelFactory != null) {
                 int idx = comboBox.getSelectedIndex();
                 comboBox.setModel(modelFactory.create(panel));
-                if (idx >= 0) {
+                if (idx >= 0 && idx < comboBox.getModel().getSize()) {
                     comboBox.setSelectedIndex(idx);
                 }
             }
