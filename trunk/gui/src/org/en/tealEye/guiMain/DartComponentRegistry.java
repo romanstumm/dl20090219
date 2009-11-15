@@ -107,23 +107,27 @@ public class DartComponentRegistry extends ComponentRegistry {
             public Object createTransacted(JPanel panel) {
                 BeanTableModel model = new BeanTableModel(TABLE_LIGATEAM);
                 Liga liga = SelectionUtil.getLiga(panel);
-//                SelectionUtil.OPTION option = SelectionUtil.getLigaklasseOption(panel);
-                boolean keineGruppe = false;
+                ShowTeams showTeams = null;
                 if (panel instanceof ShowTeams) {
-                    keineGruppe = ((ShowTeams) panel).getKeineGruppe().isSelected();
+                    showTeams = (ShowTeams) panel;
                 }
-                Spielort ort = SelectionUtil.getSpielort(panel);
-                LigaklasseFilter klasse = SelectionUtil.getLigaklasseFilter(panel);
-                if(((ShowTeams)panel).isSearchActive() != true){
-                    model.setObjects(ServiceFactory
-                        .get(LigateamService.class).findTeamsByLigaKlasseOrt(liga, klasse,
-                        ort, keineGruppe));
-                }else{
-                    model.setObjects(ServiceFactory
-                        .get(LigateamService.class).findTeamsLikeNameByLiga(((ShowTeams)panel).getSuchenTextTF().getText(),(Liga)((ShowTeams)panel).getLiga().getSelectedItem()));
-                //TODO Hab Datenbankdump nicht einlesen können, daher nicht getestet!
+                if (showTeams != null) {
+                    if (!showTeams.getFullTextMode().isSelected()) {
+                        boolean keineGruppe = showTeams.getKeineGruppe().isSelected();
+                        Spielort ort = SelectionUtil.getSpielort(panel);
+                        LigaklasseFilter klasse = SelectionUtil.getLigaklasseFilter(panel);
+                                            
+                        model.setObjects(ServiceFactory
+                                .get(LigateamService.class).findTeamsByLigaKlasseOrt(liga, klasse,
+                                ort, keineGruppe));
+                    } else {
+                        model.setObjects(ServiceFactory
+                                .get(LigateamService.class).findTeamsLikeNameByLiga(
+                                showTeams.getSuchenTextTF().getText(),
+                                liga));
+                    }
+                    model.touch();
                 }
-                model.touch();
                 return model;
             }
         });
@@ -346,12 +350,12 @@ public class DartComponentRegistry extends ComponentRegistry {
                         .get(LigaklasseService.class).findAllLigaklasse();
                 LigaklasseFilter filter = new LigaklasseFilter("-alle-");
                 model.addElement(filter);
-                Ligaklasse bez=null, a=null, b=null, c=null;
+                Ligaklasse bez = null, a = null, b = null, c = null;
                 for (Ligaklasse each : klassen) {
-                    if(each.getKlassenName().equals("Bez")) bez = each;
-                    else if(each.getKlassenName().equals("A")) a = each;
-                    else if(each.getKlassenName().equals("B")) b = each;
-                    else if(each.getKlassenName().equals("C")) c = each;
+                    if (each.getKlassenName().equals("Bez")) bez = each;
+                    else if (each.getKlassenName().equals("A")) a = each;
+                    else if (each.getKlassenName().equals("B")) b = each;
+                    else if (each.getKlassenName().equals("C")) c = each;
                     model.addElement(new LigaklasseFilter(each));
                 }
                 model.addElement(new LigaklasseFilter("Bez+A+B", bez, a, b));

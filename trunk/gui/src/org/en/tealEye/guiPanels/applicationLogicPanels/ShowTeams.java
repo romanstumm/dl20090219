@@ -7,8 +7,9 @@ import org.en.tealEye.guiMain.util.LigaklasseSelectable;
 import org.en.tealEye.guiMain.util.SpielortSelectable;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.awt.*;
 
 /**
  * @author Stephan
@@ -16,8 +17,6 @@ import java.awt.*;
 public class ShowTeams extends ShowTablePanel
         implements LigaSelectable, LigaklasseSelectable, SpielortSelectable {
     private JCheckBox keineGruppe;
-    private boolean searchActive;
-
 
     /**
      * Creates new form ShowGroups
@@ -55,15 +54,18 @@ public class ShowTeams extends ShowTablePanel
         showGroupsLeague.setName("Combo_LigaMitLeer");
         showGroupsLeagueClass.setName("Combo_LigaklasseFilterOptions");
         showGroupsLocationLabel = new javax.swing.JLabel();
-        showGroupsVendorLabel = new javax.swing.JLabel();
         tablePanel = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        searchTextTF = new JTextField("Suchtext eingeben");
-        searchButtonBT = new JButton("Suchen");
-        searchButtonBT.setName("suchenBT");
-        searchButtonBT.setActionCommand("suchenBT");
-        
+        searchTextTF = new JTextField("");
+        searchTextTF.setColumns(20);
+        fullTextMode = new JCheckBox("Team-Name:");
+        fullTextMode.setMnemonic(KeyEvent.VK_T);
+        fullTextMode.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                disableOrEnable();
+            }
+        });
 
         keineGruppe = new javax.swing.JCheckBox();
         keineGruppe.setText("In keiner Gruppe");
@@ -123,12 +125,6 @@ public class ShowTeams extends ShowTablePanel
         comboPanel.add(showGroupsLocation, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.insets = new java.awt.Insets(1, 10, 1, 10);
-        //comboPanel.add(showGroupsVendor, gridBagConstraints);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 0;
         comboPanel.add(getBtShowGroupsDelete(), gridBagConstraints);
@@ -157,16 +153,8 @@ public class ShowTeams extends ShowTablePanel
         gridBagConstraints.insets = new java.awt.Insets(1, 2, 1, 2);
         comboPanel.add(showGroupsLocationLabel, gridBagConstraints);
 
-        showGroupsVendorLabel.setText("Aufsteller");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(1, 2, 1, 2);
-        //comboPanel.add(showGroupsVendorLabel, gridBagConstraints);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 1;
         comboPanel.add(getBtShowGroupsSort(), gridBagConstraints);
 
@@ -177,16 +165,16 @@ public class ShowTeams extends ShowTablePanel
         comboPanel.add(getToggleDelete(), gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.insets = new java.awt.Insets(1, 10, 1, 10);
         comboPanel.add(searchTextTF, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 6;
+        gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.insets = new java.awt.Insets(1, 10, 1, 10);
-        comboPanel.add(searchButtonBT, gridBagConstraints);
+        comboPanel.add(fullTextMode, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
@@ -241,15 +229,14 @@ public class ShowTeams extends ShowTablePanel
     private javax.swing.JLabel showGroupsLeagueLabel;
     private javax.swing.JComboBox showGroupsLocation;
     private javax.swing.JLabel showGroupsLocationLabel;
-    private javax.swing.JLabel showGroupsVendorLabel;
     private javax.swing.JPanel tablePanel;
     private JTextField searchTextTF;
 
-    public JButton getSearchButtonBT() {
-        return searchButtonBT;
+    public JCheckBox getFullTextMode() {
+        return fullTextMode;
     }
 
-    private JButton searchButtonBT;
+    private JCheckBox fullTextMode;
 
     // Ende der Variablendeklaration
     public JComboBox getSpielort() {
@@ -272,11 +259,22 @@ public class ShowTeams extends ShowTablePanel
         return searchTextTF;
     }
 
-    public boolean isSearchActive() {
-        return searchActive;
+    protected void doUpdatePanel() {
+        super.doUpdatePanel();    // call super!
+        disableOrEnable();
     }
 
-    public void setSearchActivity(boolean search){
-        searchActive = search;
+    private void disableOrEnable() {
+        if (fullTextMode.isSelected()) {
+            getSuchenTextTF().setEditable(true);
+            getKeineGruppe().setEnabled(false);
+            getLigaklasse().setEnabled(false);
+            getSpielort().setEnabled(false);
+        } else {
+            getSuchenTextTF().setEditable(false);
+            getKeineGruppe().setEnabled(true);
+            getLigaklasse().setEnabled(true);
+            getSpielort().setEnabled(true);
+        }
     }
 }
