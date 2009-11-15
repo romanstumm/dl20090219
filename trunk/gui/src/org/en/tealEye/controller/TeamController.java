@@ -210,6 +210,7 @@ public class TeamController extends PanelController {
             }else if("suchenBT".equals(ac)){
                 showTeams.setSearchActivity(true);
                 DartComponentRegistry.getInstance().setTableModel(showTeams.getPanelTable(), showTeams);
+                //TODO Hab Datenbankdump nicht einlesen können, daher nicht getestet!
             }
         }
     }
