@@ -138,7 +138,11 @@ public final class GroupOptimizer extends GroupCalculator {
             boolean showProgressOnly = optimal == null;
             if (showProgressOnly || current.isBetterThan(optimal)) {
                 if (showProgressOnly) {
-                    optimal = initial;
+                    if(current.isBetterThan(initial)) {
+                       optimal = current.deepCopy();
+                    } else {
+                       optimal = initial;
+                    }
                 } else {
                     optimal = current.deepCopy();
                 }
@@ -271,7 +275,7 @@ public final class GroupOptimizer extends GroupCalculator {
                 boolean t1 = c1.execute(conflict.getPosition1());
                 boolean t2 = c2.execute(conflict.getPosition2());
                 if (t1 || t2) {
-                    triedToOptimize = optimize(conflict);
+                    triedToOptimize = optimize(conflict);  // recursion!
                 }
                 if (isStopSignaled()) return true;
                 if (t1) c1.undo(conflict.getPosition1());

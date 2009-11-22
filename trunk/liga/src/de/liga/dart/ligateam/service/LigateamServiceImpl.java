@@ -122,11 +122,13 @@ public class LigateamServiceImpl extends AbstractService implements LigateamServ
             boolean or = false;
             buf.append("(");
             for (Ligaklasse klasse : klasseFilter.getKlassen()) {
-                if (or) buf.append("or ");
-                buf.append("t.ligaklasse=:klasse").append(i).append(" ");
-                params.put("klasse" + i, klasse);
-                i++;
-                or = true;
+                if (klasse != null) {
+                    if (or) buf.append("or ");
+                    buf.append("t.ligaklasse=:klasse").append(i).append(" ");
+                    params.put("klasse" + i, klasse);
+                    i++;
+                    or = true;
+                }
             }
             buf.append(") ");
         }
