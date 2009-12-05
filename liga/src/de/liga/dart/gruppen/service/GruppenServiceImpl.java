@@ -128,6 +128,69 @@ public class GruppenServiceImpl extends AbstractService implements GruppenServic
         }
     }
 
+    public List<Ligagruppe> findGruppenLikeName(Liga liga, String pattern) {
+        StringBuilder buf = new StringBuilder("select g2 from Ligagruppe g2 where g2 in (select g from ");
+        Map<String, Object> params = new HashMap();
+        boolean where = false;
+        if (pattern != null && pattern.length() > 0) {
+            buf.append("Ligateamspiel s inner join s.ligagruppe g inner join " +
+                    "s.ligateam t where (lower(t.teamName) like :pattern or " +
+                    "lower(g.ligaklasse.klassenName || g.gruppenNr) like :pattern)");
+
+            where = true;
+            params.put("pattern", "%" + pattern.toLowerCase() + "%");
+        } else {
+            buf.append("Ligagruppe g ");
+        }
+        if (liga != null) {
+            //noinspection UnusedAssignment
+            where = and(where, buf);
+            buf.append("g.liga=:liga order by g.ligaklasse.rang asc, g.gruppenNr asc");
+            params.put("liga", liga);
+        }
+        buf.append(") order by g2.ligaklasse.rang asc, g2.gruppenNr asc");
+        Query query;
+        query = getSession().createQuery(buf.toString());
+        for (Map.Entry<String, Object> entry : params.entrySet()) {
+            query.setParameter(entry.getKey(), entry.getValue());
+        }
+        return query.list();
+    }
+
+
+    public List<Ligateam> findTeamsLikeNameByLiga(String pattern, Liga liga) {
+        Query query;
+        StringBuilder buf = new StringBuilder("select t from Ligateam t ");
+        Map<String, Object> params = new HashMap();
+        boolean where = false;
+        if (liga != null) {
+            params.put("liga", liga);
+            where = and(where, buf);
+            buf.append("t.liga=:liga ");
+        }
+        if (pattern != null) {
+            params.put("teamName", "%" + pattern.toLowerCase() + "%");
+            //noinspection UnusedAssignment
+            where = and(where, buf);
+            buf.append("lower(t.teamName) like :teamName ");
+        }
+        buf.append("order by t.teamName");
+        query = getSession().createQuery(buf.toString());
+        for (Map.Entry<String, Object> entry : params.entrySet()) {
+            query.setParameter(entry.getKey(), entry.getValue());
+        }
+        return query.list();
+    }
+
+    private boolean and(boolean where, StringBuilder buf) {
+        if (!where) {
+            buf.append("where ");
+        } else {
+            buf.append("and ");
+        }
+        return true;
+    }
+
     /**
      * Nur die teams, die in der angeg. liga sind
      * UND noch in keiner ligagruppe sind
@@ -295,13 +358,15 @@ public class GruppenServiceImpl extends AbstractService implements GruppenServic
             final PositionStatusInfo info;
             if (pos.isTeam()) {
                 OTeam other = ((OTeam) pos).getOther();
-                OTeam team = (OTeam)pos;
+                OTeam team = (OTeam) pos;
                 StringBuilder text = new StringBuilder();
-                if(!team.getUnerfuellteWuensche().isEmpty()) {
-                    int w=0;
-                    for(OWunsch each : team.getUnerfuellteWuensche()) {
-                        if(w++==0) text.append(": "); else text.append("; ");
-                        Ligateam otherTeam = teamService.findLigateamById(each.getOtherTeam().getTeamId());
+                if (!team.getUnerfuellteWuensche().isEmpty()) {
+                    int w = 0;
+                    for (OWunsch each : team.getUnerfuellteWuensche()) {
+                        if (w++ == 0) text.append(": ");
+                        else text.append("; ");
+                        Ligateam otherTeam =
+                                teamService.findLigateamById(each.getOtherTeam().getTeamId());
                         text.append(TeamWunsch.name(each.getWunschArt()));
                         text.append("mit ");
                         text.append(otherTeam.getTeamName());
