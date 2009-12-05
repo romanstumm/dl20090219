@@ -6,6 +6,9 @@ import org.en.tealEye.guiMain.util.LigaSelectable;
 import org.en.tealEye.guiMain.util.SpielortSelectable;
 
 import javax.swing.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 /**
  * @author Stephan
@@ -54,6 +57,16 @@ public class ShowGroups extends ShowTablePanel implements LigaSelectable, Spielo
 
         setLayout(new java.awt.GridBagLayout());
 
+        searchTextTF = new JTextField("");
+        searchTextTF.setColumns(20);
+        fullTextMode = new JCheckBox("Team-Name:");
+        fullTextMode.setMnemonic(KeyEvent.VK_T);
+        fullTextMode.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                disableOrEnable();
+            }
+        });
+
         headerPanel.setLayout(new java.awt.GridBagLayout());
 
         headerPanel.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(153, 153, 153), 1, true));
@@ -88,7 +101,7 @@ public class ShowGroups extends ShowTablePanel implements LigaSelectable, Spielo
         comboPanel.add(showGroupsLocation, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
         comboPanel.add(getBtShowGroupsDelete(), gridBagConstraints);
 
@@ -109,12 +122,12 @@ public class ShowGroups extends ShowTablePanel implements LigaSelectable, Spielo
         comboPanel.add(showGroupsLocationLabel, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 2;
         comboPanel.add(getBtShowGroupsSort(), gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.insets = new java.awt.Insets(1, 10, 1, 10);
         comboPanel.add(getToggleDelete(), gridBagConstraints);
@@ -125,6 +138,19 @@ public class ShowGroups extends ShowTablePanel implements LigaSelectable, Spielo
         gridBagConstraints.weighty = 0.2;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         formPanel.add(comboPanel, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.insets = new java.awt.Insets(1, 10, 1, 10);
+        comboPanel.add(fullTextMode, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.insets = new java.awt.Insets(1, 10, 1, 10);
+        comboPanel.add(searchTextTF, gridBagConstraints);
+
 
         tablePanel.setLayout(new java.awt.GridBagLayout());
 
@@ -169,8 +195,33 @@ public class ShowGroups extends ShowTablePanel implements LigaSelectable, Spielo
     private javax.swing.JComboBox showGroupsLocation;
     private javax.swing.JLabel showGroupsLocationLabel;
     private javax.swing.JPanel tablePanel;
+
+    private JTextField searchTextTF;
+    private JCheckBox fullTextMode;
     // Ende der Variablendeklaration
 
+    public JCheckBox getFullTextMode() {
+        return fullTextMode;
+    }
+
+    public JTextField getSuchenTextTF() {
+        return searchTextTF;
+    }
+      @Override
+      protected void doUpdatePanel() {
+        super.doUpdatePanel();    // call super!
+        disableOrEnable();
+    }
+
+    private void disableOrEnable() {
+        if (fullTextMode.isSelected()) {
+            getSuchenTextTF().setEditable(true);
+            getSpielort().setEnabled(false);
+        } else {
+            getSuchenTextTF().setEditable(false);
+            getSpielort().setEnabled(true);
+        }
+    }
 
     public JComboBox getLiga() {
         return showGroupsLeague;

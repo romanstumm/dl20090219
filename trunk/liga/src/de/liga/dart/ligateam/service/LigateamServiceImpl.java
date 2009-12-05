@@ -156,7 +156,7 @@ public class LigateamServiceImpl extends AbstractService implements LigateamServ
             where = and(where, buf);
             buf.append("t.liga=:liga ");
         }
-        if (pattern != null) {
+        if (pattern != null && pattern.length()>0) {
             params.put("teamName", "%" + pattern.toLowerCase() + "%");
             //noinspection UnusedAssignment
             where = and(where, buf);

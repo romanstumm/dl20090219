@@ -165,16 +165,16 @@ public class ShowTeams extends ShowTablePanel
         comboPanel.add(getToggleDelete(), gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.insets = new java.awt.Insets(1, 10, 1, 10);
-        comboPanel.add(searchTextTF, gridBagConstraints);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.insets = new java.awt.Insets(1, 10, 1, 10);
         comboPanel.add(fullTextMode, gridBagConstraints);
+        
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.insets = new java.awt.Insets(1, 10, 1, 10);
+        comboPanel.add(searchTextTF, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
@@ -259,6 +259,7 @@ public class ShowTeams extends ShowTablePanel
         return searchTextTF;
     }
 
+    @Override
     protected void doUpdatePanel() {
         super.doUpdatePanel();    // call super!
         disableOrEnable();

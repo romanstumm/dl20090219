@@ -42,6 +42,14 @@ public interface GruppenService extends Service {
     List<Ligagruppe> findGruppenAndOrt(Liga liga, Spielort ort);
 
     /**
+     * Textsuche für Gruppen nach ...
+     * @param liga null oder die Liga zur Einschränkung
+     * @param text .. Suchtext: TeamName oder Gruppenname (Vorkommen + case-insentiv)
+     * @return die gefundenen gruppen
+     */
+    List<Ligagruppe> findGruppenLikeName(Liga liga, String text);
+
+    /**
      * Nur die teams, die in der angeg. liga sind
      * UND noch in keiner ligagruppe sind
      * UND der angegebenen ligaklasse angeh�ren
@@ -149,4 +157,5 @@ public interface GruppenService extends Service {
      * die Ligaklasse ist ggf. die nächste
      */
     Ligagruppe findNextGroup(Ligagruppe gruppe);
+
 }

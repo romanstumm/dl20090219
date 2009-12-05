@@ -21,6 +21,7 @@ import org.en.tealEye.guiMain.util.WeekdayHandler;
 import org.en.tealEye.guiPanels.applicationLogicPanels.CreateGroup;
 import org.en.tealEye.guiPanels.applicationLogicPanels.CreateTeam;
 import org.en.tealEye.guiPanels.applicationLogicPanels.ShowTeams;
+import org.en.tealEye.guiPanels.applicationLogicPanels.ShowGroups;
 
 import javax.swing.*;
 import java.util.HashSet;
@@ -116,7 +117,7 @@ public class DartComponentRegistry extends ComponentRegistry {
                         boolean keineGruppe = showTeams.getKeineGruppe().isSelected();
                         Spielort ort = SelectionUtil.getSpielort(panel);
                         LigaklasseFilter klasse = SelectionUtil.getLigaklasseFilter(panel);
-                                            
+
                         model.setObjects(ServiceFactory
                                 .get(LigateamService.class).findTeamsByLigaKlasseOrt(liga, klasse,
                                 ort, keineGruppe));
@@ -192,8 +193,19 @@ public class DartComponentRegistry extends ComponentRegistry {
                         BeanTableModel model = new BeanTableModel(TABLE_GRUPPEN);
                         Liga liga = SelectionUtil.getLiga(panel);
                         Spielort ort = SelectionUtil.getSpielort(panel);
-                        model.setObjects(ServiceFactory
-                                .get(GruppenService.class).findGruppenAndOrt(liga, ort));
+                        ShowGroups showGroups = null;
+                        if (panel instanceof ShowGroups) {
+                            showGroups = (ShowGroups) panel;
+                        }
+
+                        if (!showGroups.getFullTextMode().isSelected()) {
+                            model.setObjects(ServiceFactory
+                                    .get(GruppenService.class).findGruppenAndOrt(liga, ort));
+                        } else {
+                           model.setObjects(ServiceFactory
+                                .get(GruppenService.class).findGruppenLikeName(
+                                   liga, showGroups.getSuchenTextTF().getText()));
+                        }
                         model.touch();
                         return model;
                     }
@@ -358,8 +370,10 @@ public class DartComponentRegistry extends ComponentRegistry {
                     else if (each.getKlassenName().equals("C")) c = each;
                     model.addElement(new LigaklasseFilter(each));
                 }
-                model.addElement(new LigaklasseFilter("Bez+A+B", bez, a, b));
                 model.addElement(new LigaklasseFilter("A+B+C", a, b, c));
+                model.addElement(new LigaklasseFilter("Bez+A", bez, a));
+                model.addElement(new LigaklasseFilter("Bez+A+B", bez, a, b));
+                model.addElement(new LigaklasseFilter("B+C", b, c));
                 return model;
             }
         };
