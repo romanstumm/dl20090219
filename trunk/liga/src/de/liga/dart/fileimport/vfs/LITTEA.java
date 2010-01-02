@@ -16,5 +16,5 @@ class LITTEA {
     //String TEA_KAPIT;
     String TEA_SPIELT; // Freitag ...
     int TEA_UHRZEI; // N(5) 72000 (20:00) 68400 (:60:60 = 19:00)
-    String TEA_STATUS; // D = Spielfrei
+    String TEA_STATUS; // D = Spielfrei bzw. Team disqualifiziert
 }
