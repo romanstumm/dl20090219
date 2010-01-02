@@ -23,6 +23,7 @@ import org.apache.commons.logging.LogFactory;
 public class DbfImportErgebnis extends DbfIO {
     private static final Log log = LogFactory.getLog(DbfImportErgebnis.class);
     private List<LITTEA> litteams;
+    private Set<Integer> disqualifiedTeaNr;
     private List<VfsTeam> teams;
     private Map<Integer, VfsLiga> ligen;
     private Map<Integer, Integer> abzug; // team-nr -> abzug_punkte
@@ -77,6 +78,8 @@ public class DbfImportErgebnis extends DbfIO {
     private void computeRangListe() {
         teams = new ArrayList(litteams.size());
         for (final LITTEA eachTEAM : getLitteams()) {
+            if(disqualifiedTeaNr.contains(eachTEAM.TEA_NR)) continue; // keine Berechnung, Team disqualifiziert
+
             final VfsTeam team = new VfsTeam();
             teams.add(team);
             team.setTeamNr(eachTEAM.TEA_NR);
@@ -125,7 +128,8 @@ public class DbfImportErgebnis extends DbfIO {
 
     private void iterateGast(LITTEA eachTEAM, RangCalculator calc) {
         for (VfsErgebnis eachERG : getErgebnisse()) {
-            if (eachTEAM.TEA_NR == eachERG.gast().getTEA_NR()) {
+            if (eachTEAM.TEA_NR == eachERG.gast().getTEA_NR() &&
+                    !disqualifiedTeaNr.contains(eachERG.heim().getTEA_NR())) {
                 calc.visit(eachERG);
             }
         }
@@ -133,7 +137,8 @@ public class DbfImportErgebnis extends DbfIO {
 
     private void iterateHeim(LITTEA eachTEAM, RangCalculator calc) {
         for (VfsErgebnis eachERG : getErgebnisse()) {
-            if (eachTEAM.TEA_NR == eachERG.heim().getTEA_NR()) {
+            if (eachTEAM.TEA_NR == eachERG.heim().getTEA_NR() &&
+                    !disqualifiedTeaNr.contains(eachERG.gast().getTEA_NR())) {
                 calc.visit(eachERG);
             }
         }
@@ -297,6 +302,7 @@ public class DbfImportErgebnis extends DbfIO {
         provideSaison(pstmt, 1);
         ResultSet resultSet = pstmt.executeQuery();
         litteams = new ArrayList(100);
+        disqualifiedTeaNr = new HashSet();
         ligen = new HashMap();
         try {
             while (resultSet.next()) {
@@ -307,6 +313,8 @@ public class DbfImportErgebnis extends DbfIO {
                         VfsLiga liga = createLiga(resultSet, litteam.LIG_NR);
                         ligen.put(liga.getNr(), liga);
                     }
+                } else {
+                    disqualifiedTeaNr.add(litteam.TEA_NR);
                 }
             }
         } finally {
