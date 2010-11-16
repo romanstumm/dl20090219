@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module version="4" relativePaths="true" type="JAVA_MODULE">
+<module relativePaths="true" type="JAVA_MODULE" version="4">
   <component name="FacetManager">
     <facet type="hibernate" name="Hibernate">
       <configuration>
-        <setting name="validation-enabled" value="false" />
         <datasource-map>
           <unit-entry name="config/hibernate.cfg.xml" />
         </datasource-map>
-        <deploymentDescriptor name="hibernate.cfg.xml" url="file://$MODULE_DIR$/config/hibernate.cfg.xml" optional="false" version="3.0" />
+        <deploymentDescriptor name="hibernate.cfg.xml" url="file://$MODULE_DIR$/config/hibernate.cfg.xml" />
       </configuration>
     </facet>
   </component>
-  <component name="ModuleRootManager" />
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
     <content url="file://$MODULE_DIR$">
@@ -135,7 +133,6 @@
     </orderEntry>
     <orderEntry type="library" exported="" name="hibernate3.3.1" level="project" />
     <orderEntry type="library" exported="" name="groovy1.6.2" level="project" />
-    <orderEntryProperties />
   </component>
 </module>
 

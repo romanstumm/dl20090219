@@ -4,6 +4,7 @@ import org.apache.commons.lang.StringUtils;
 
 import javax.swing.*;
 import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,6 +50,7 @@ public abstract class ComponentRegistry {
             if (modelFactory != null) {
                 int[] index = jTable.getSelectedRows();
                 TableModel model = modelFactory.create(panel);
+                jTable.setRowSorter(new TableRowSorter(model));
                 jTable.setModel(model);
                 for (int i : index) {
                     jTable.getSelectionModel().addSelectionInterval(i, i);
