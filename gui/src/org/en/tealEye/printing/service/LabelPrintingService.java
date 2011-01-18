@@ -55,7 +55,7 @@ public class  LabelPrintingService extends JPanel implements LabelPrinting {
 
     final JTable sourceTable;
     final Vector<String[]> labelStrings = new Vector<String[]>();
-    private final Vector<BufferedImage> imageVector = new Vector<BufferedImage>();
+    private Vector<BufferedImage> imageVector = new Vector<BufferedImage>();
     private BufferedImage lastImage;
     private String[] entries;
     private double ScaleX;
@@ -234,7 +234,7 @@ public class  LabelPrintingService extends JPanel implements LabelPrinting {
         im = new BufferedImage((int) (paperWidth),(int) (paperHeight),BufferedImage.TYPE_BYTE_INDEXED);
         Graphics2D g2 = im.createGraphics();
                 drawPage(g2,i);
-            imageVector.addElement(im);
+            //imageVector.addElement(im);
         }
 
     }
@@ -287,12 +287,60 @@ public class  LabelPrintingService extends JPanel implements LabelPrinting {
     }
 
     public BufferedImage getPaintingCanvas(int pageNum) {
-        if(!(pageNum>=getAllPagesNeeded())){
-            lastImage = imageVector.get(pageNum);
-            return imageVector.get(pageNum);
+
+        BufferedImage im;
+        im = new BufferedImage((int) (paperWidth),(int) (paperHeight),BufferedImage.TYPE_BYTE_INDEXED);
+        boolean trigger = false;
+        int lpp = utils.getLabelsPerPage(labelWidth,labelHeight);
+        int seitenProLabel = utils.getPagesPerLabel(lpp,this.labelsWanted);
+
+        if(seitenProLabel<pageNum){
+                double t;
+                     t = Math.ceil(pageNum/seitenProLabel);
+
+                int th = (int) ((int)t*seitenProLabel);
+                int pageOfStringBlock = pageNum-th;
+                int stringBlock = (int) t;
+            String[] strings = labelStrings.get(stringBlock);
+                if(!strings[4].equals("")){
+                    if(seitenProLabel-1 == pageOfStringBlock){
+                        System.out.println("beep");
+                    }
+                }
+            System.out.println("Seite von Stringblock:"+pageOfStringBlock);
+            System.out.println("Stringblock:"+stringBlock);
+            System.out.println("Seite:"+ pageNum);
+
+                System.out.println(strings[0]);
+                System.out.println(strings[1]);
+                System.out.println(strings[2]);
+                System.out.println(strings[3]);
+
+        }else{
+                double t;
+                    t = Math.ceil(pageNum/seitenProLabel);
+                int th = (int) ((int)t*seitenProLabel);
+                int pageOfStringBlock = pageNum-th;
+                int stringBlock = (int) t;
+             String[] strings = labelStrings.get(stringBlock);
+                 if(!strings[4].equals("")){
+                    if(seitenProLabel-1 == pageOfStringBlock){
+                        System.out.println("beep");
+                    }
+                }
+                System.out.println("Seite von Stringblock:"+pageOfStringBlock);
+                System.out.println("Stringblock:"+stringBlock);
+                System.out.println("Seite:"+ pageNum);
+
+                System.out.println(strings[0]);
+                System.out.println(strings[1]);
+                System.out.println(strings[2]);
+                System.out.println(strings[3]);
+
         }
-        else
-            return lastImage;// do nothing
+        Graphics2D g2 = im.createGraphics();
+                drawPage(g2,pageNum);
+         return im;
     }
 
     @SuppressWarnings({"SuspiciousNameCombination"})
@@ -360,5 +408,11 @@ public class  LabelPrintingService extends JPanel implements LabelPrinting {
 
     public void setGuides(boolean b) {
         guides = b;
+    }
+
+    public void cleanUp(){
+        imageVector = null;
+        System.gc();
+        this.removeAll();
     }
 }
