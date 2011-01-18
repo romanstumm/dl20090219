@@ -62,7 +62,7 @@ public class TeamController extends PanelController {
                     //mainApp.insertInternalFrame("CreateTeam", false);
                     JPanel p = h.showPanel("CreateTeam");
                     Object obje = ((BeanTableModel) ((JTable) obj).getModel())
-                            .getObject(((JTable) obj).getSelectedRow());
+                            .getObject(((JTable)obj).convertRowIndexToModel(((JTable) obj).getSelectedRow()));
                     try {
                         TransactionWorker instance =
                                 new EditThreadWorker(this, (ExtJEditPanel) p, obje, mainApp);

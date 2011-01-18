@@ -36,7 +36,7 @@ public class LocationController extends PanelController {
             if (e.getClickCount() == 2) {
                 //mainApp.insertInternalFrame("CreateLocation", false);
                 JPanel p = h.showPanel("CreateLocation");
-                Object obje = ((BeanTableModel) ((JTable) obj).getModel()).getObject(((JTable) obj).getSelectedRow());
+                Object obje = ((BeanTableModel) ((JTable) obj).getModel()).getObject(((JTable)obj).convertRowIndexToModel(((JTable) obj).getSelectedRow()));
                 try {
                     TransactionWorker instance = new EditThreadWorker(
                             this, (ExtJEditPanel) p, obje, mainApp);
