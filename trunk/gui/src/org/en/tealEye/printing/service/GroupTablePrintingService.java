@@ -222,7 +222,7 @@ public class GroupTablePrintingService extends JPanel implements TablePrinting {
 //        Vector<String> c = new Vector<String>();
         if (jTable1.getName().equals("Table_Ligagruppe")) {
             for (int i = 0; i < rowC; i++) {
-                Object obj = ((BeanTableModel) jTable1.getModel()).getObject(i);
+                Object obj = ((BeanTableModel) jTable1.getModel()).getObject(jTable1.convertRowIndexToModel(i));
                 Ligagruppe lg = ((Ligagruppe) obj);
                 // hole Setting für diese Liga...
                 OSetting oset = settingCache.get(lg.getLiga().getLigaId());
