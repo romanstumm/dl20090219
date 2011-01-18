@@ -78,7 +78,7 @@ public class ShowGroupsController extends PanelController {
             if (e.getClickCount() == 2) {
                 //mainApp.insertInternalFrame("CreateGroup", false);
                 Object obje = ((BeanTableModel) ((JTable) obj).getModel())
-                        .getObject(((JTable) obj).getSelectedRow());
+                        .getObject(((JTable)obj).convertRowIndexToModel(((JTable) obj).getSelectedRow()));
                 try {
                     JPanel p = h.showPanel("CreateGroup");
                     TransactionWorker instance = new EditThreadWorker(
