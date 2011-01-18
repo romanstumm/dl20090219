@@ -178,7 +178,7 @@ public class  LabelPrintingService extends JPanel implements LabelPrinting {
         ArrayList<Long> ortIdx = new ArrayList<Long>();
         if(sourceTable.getName().equals("Table_Ligagruppe")){
             for(int rowIndex:rowSelectionCount){
-                Object obj = ((BeanTableModel) sourceTable.getModel()).getObject(rowIndex);
+                Object obj = ((BeanTableModel) sourceTable.getModel()).getObject(sourceTable.convertRowIndexToModel(rowIndex));
                 Ligagruppe gruppe = ((Ligagruppe) obj);
                 ArrayList<Long> ortIds = new ArrayList<Long>();
             for(int teamIndex = 1; teamIndex <= 8; teamIndex++){

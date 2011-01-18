@@ -57,7 +57,7 @@ public class ServiceWorker extends TransactionWorker{
 
         if(table.getName().equals("Table_Ligagruppe")){
             for(int rowIndex:rowSelectionCount){
-                Object obj = ((BeanTableModel) table.getModel()).getObject(rowIndex);
+                Object obj = ((BeanTableModel) table.getModel()).getObject(table.convertRowIndexToModel(rowIndex));
                 Ligagruppe gruppe = ((Ligagruppe) obj);
                 ArrayList<Long> ortIds = new ArrayList<Long>();
                 Vector<String[]> groupVec = new Vector<String[]>();
