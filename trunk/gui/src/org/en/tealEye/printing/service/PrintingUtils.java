@@ -34,8 +34,8 @@ public class PrintingUtils {
         aset.add(OrientationRequested.PORTRAIT);
         job = PrinterJob.getPrinterJob();
         PageFormat pf = job.getPageFormat(aset);
-        mediaSize[0] = pf.getImageableWidth();
-        mediaSize[1] = pf.getImageableHeight();
+        mediaSize[0] = Math.max(1000, pf.getImageableWidth());
+        mediaSize[1] = Math.max(1000, pf.getImageableHeight());
         log.debug(pf.getImageableHeight() + pf.getImageableWidth());
         mediaWidth = mediaSize[0];
         mediaHeight = mediaSize[1];

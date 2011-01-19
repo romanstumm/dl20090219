@@ -66,7 +66,7 @@ public abstract class PanelController
     public void commitEditTransaction(ExtendedJPanelImpl p, JTable jtable) {
 
         Object obje = ((BeanTableModel) jtable.getModel())
-                .getObject(jtable.getSelectedRow());
+                .getObject(jtable.convertRowIndexToModel(jtable.getSelectedRow()));
         try {
             TransactionWorker instance = new EditThreadWorker(this,
                     (ExtJEditPanel) p, obje, mainApp);

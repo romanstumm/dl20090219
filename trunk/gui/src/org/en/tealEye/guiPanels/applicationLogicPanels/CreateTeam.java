@@ -582,7 +582,7 @@ public class CreateTeam extends ExtJEditPanel
 
     public Spielort getSelectedTableObject() {
         return (Spielort) ((BeanTableModel) teamLocationTable.getModel())
-              .getObject(teamLocationTable.getSelectedRow());
+              .getObject(teamLocationTable.convertRowIndexToModel(teamLocationTable.getSelectedRow()));
     }
 
 
