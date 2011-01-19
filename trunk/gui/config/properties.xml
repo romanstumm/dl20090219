@@ -3,7 +3,7 @@
 <properties>
 <comment>properties</comment>
 <entry key="AddressFontSize">12</entry>
-<entry key="TableFontType">Arial</entry>
+<entry key="TableFontType">Arial Fett</entry>
 <entry key="ImagePath">null</entry>
 <entry key="YAxisGraphic">0</entry>
 <entry key="SliderSender">0</entry>
@@ -20,7 +20,7 @@
 <entry key="FormFontStyle">0</entry>
 <entry key="XAxisGraphic">0</entry>
 <entry key="ShowGraphic">true</entry>
-<entry key="EtiFontType">Arial</entry>
+<entry key="EtiFontType">Arial Fett</entry>
 <entry key="YAxisSender">0</entry>
 <entry key="epCount">1</entry>
 <entry key="SenderFontSize">12</entry>
@@ -28,7 +28,7 @@
 <entry key="SliderAddress">0</entry>
 <entry key="senderStreet">null</entry>
 <entry key="YAxisAddress">0</entry>
-<entry key="EtiFontSize">12</entry>
+<entry key="EtiFontSize">9</entry>
 <entry key="AddressFontType">Arial</entry>
 <entry key="senderName">null</entry>
 <entry key="EtiFontStyle">0</entry>
@@ -37,6 +37,6 @@
 <entry key="FormFontType">Arial</entry>
 <entry key="LabelFontType">Arial</entry>
 <entry key="senderCorp">null</entry>
-<entry key="senderLocation">null</entry>
 <entry key="LabelFontStyle">0</entry>
+<entry key="senderLocation">null</entry>
 </properties>
