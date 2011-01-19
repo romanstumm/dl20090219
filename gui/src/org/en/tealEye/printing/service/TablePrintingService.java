@@ -22,14 +22,14 @@ import java.util.Date;
 public class TablePrintingService extends JPanel implements TablePrinting {
     private static final Log log = LogFactory.getLog(TablePrintingService.class);
 
-    private final JTable jTable;
+    private JTable jTable;
     private final PrintingUtils printingUtils;
     private double mediaWidth;
     private double mediaHeight;
 
     private final int padX = 20;
     private final int padY = 20;
-
+    private JTable table;
 //    private int pageIndex = 0;
     private double resizeFactor;
     private String pageOrientation = "Hochformat";
@@ -44,7 +44,8 @@ public class TablePrintingService extends JPanel implements TablePrinting {
         this.printingUtils = new PrintingUtils();
         aquireValues();
         this.setBackground(Color.WHITE);
-        generatePrintableData(objects);
+        table = (JTable)objects;
+        generatePrintableData();
         paintTable();
     }
 
@@ -179,8 +180,9 @@ public class TablePrintingService extends JPanel implements TablePrinting {
         } else return i;
     }
 
-    private void generatePrintableData(JTable jTable) {
+    private void generatePrintableData() {
         int rowC = jTable.getRowCount();
+        table = jTable;
         int cCount = jTable.getColumnModel().getColumnCount();
 //        Object[][] v = new String[rowC + 1][];
         Object[] row;

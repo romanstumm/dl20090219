@@ -3,12 +3,14 @@ package org.en.tealEye.printing.service;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import javax.print.PrintException;
 import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
 import javax.print.attribute.standard.MediaSizeName;
 import javax.print.attribute.standard.OrientationRequested;
 import javax.swing.*;
 import java.awt.print.PageFormat;
+import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 
 /**
@@ -33,12 +35,30 @@ public class PrintingUtils {
         aset.add(MediaSizeName.ISO_A4);
         aset.add(OrientationRequested.PORTRAIT);
         job = PrinterJob.getPrinterJob();
+        if(job == null ){
+            try {
+                throw new PrintException("Printing not possible");
+            } catch (PrintException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
+        }
         PageFormat pf = job.getPageFormat(aset);
-        mediaSize[0] = Math.max(1000, pf.getImageableWidth());
-        mediaSize[1] = Math.max(1000, pf.getImageableHeight());
+        if(pf.getImageableWidth() == 0){
+            throw new NumberFormatException("pf.getImageableWidth() returned 0");
+        }else if(pf.getImageableHeight() == 0){
+            throw new NumberFormatException("pf.getImageableHeight() returned 0");
+        }
+        //mediaSize[0] = Math.max(1000, pf.getImageableWidth());
+        //mediaSize[1] = Math.max(1000, pf.getImageableHeight());
+        mediaSize[0] = pf.getImageableWidth();
+        mediaSize[1] = pf.getImageableHeight();
         log.debug(pf.getImageableHeight() + pf.getImageableWidth());
         mediaWidth = mediaSize[0];
         mediaHeight = mediaSize[1];
+        if(mediaWidth == 0)
+               mediaWidth = 571.2;
+        if(mediaHeight == 0)
+               mediaHeight = 817.68;
     }
 
 

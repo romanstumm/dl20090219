@@ -19,7 +19,7 @@ import java.awt.event.KeyListener;
 public class TablePrintingFrame extends JFrame implements ActionListener, KeyListener, ChangeListener {
 
 
-    private final JTable sourceTable;
+    private JTable sourceTable;
     private TablePrinting tablePrintService = null;
     private final PrintingController pControl;
     private int pageIndex = 0;
@@ -74,7 +74,8 @@ public class TablePrintingFrame extends JFrame implements ActionListener, KeyLis
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        setTitle("Druck Vorschau");
+        setTitle("Druckvorschau");
+        setName("TablePrintingFrame");
         jToolBar1 = new javax.swing.JToolBar();
         jToolBar3 = new javax.swing.JToolBar();
         jPanel2 = new javax.swing.JPanel();
@@ -524,6 +525,7 @@ public class TablePrintingFrame extends JFrame implements ActionListener, KeyLis
                     rotateAndUpdate();
                 } else if (ac.equals("Abbrechen")) {
                     TablePrintingFrame.this.dispose();
+
                 } else if (ac.equals("Beenden")) {
                     TablePrintingFrame.this.dispose();
                 } else if (ac.equals("fontConfig")) {
@@ -681,4 +683,5 @@ public class TablePrintingFrame extends JFrame implements ActionListener, KeyLis
             }
 
     }
+
 }
