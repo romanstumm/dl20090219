@@ -232,7 +232,7 @@ public class PanelMapper {
             JTable jtable = ((JTable) jcomponent);
             if (jtable.getModel() instanceof BeanTableModel) {
                 return ((BeanTableModel) jtable.getModel())
-                        .getObject(jtable.getSelectedRow());
+                        .getObject(jtable.convertRowIndexToModel(jtable.getSelectedRow()));
             } /*else {
                 return jtable.getModel().getValueAt(jtable.getSelectedRow(),
                         jtable.getSelectedColumn());

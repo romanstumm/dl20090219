@@ -94,7 +94,7 @@ public class MenuController extends PanelController {
             SwingUtils.createOkDialog(mainAppFrame,
                     Application.APPLICATION_NAME + " " + Application.APPLICATION_VERSION +
                             "\nAutoren: Stephan Pudras (pudras@gmx.net), Roman Stumm (roman.stumm@gmx.de)" +
-                            "\nGruppensortierung und Verwaltung von Dartligen (2007-2009)" +
+                            "\nGruppensortierung und Verwaltung von Dartligen (2007-2011)" +
                             "\nLizenz: " + mainAppFrame.getLicense().getInfoMessage(),
                     "Info über...");
         } else if (action.equals("Beenden")) {
@@ -161,7 +161,7 @@ public class MenuController extends PanelController {
             } else if ("Table_Gruppe".equals(comp.getName())) {
                 JTable table = (JTable) comp;
                 ligateam =
-                        (Ligateam) table.getValueAt(table.getSelectedRow(), CreateGroup.C_TEAMNAME);
+                        (Ligateam) table.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), CreateGroup.C_TEAMNAME);
             }
             if (ligateam != null) {
                 try {
@@ -181,12 +181,12 @@ public class MenuController extends PanelController {
             if ("Table_Gruppe".equals(comp.getName())) {
                 JTable table = (JTable) comp;
                 Ligateam ligateam =
-                        (Ligateam) table.getValueAt(table.getSelectedRow(), CreateGroup.C_TEAMNAME);
+                        (Ligateam) table.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), CreateGroup.C_TEAMNAME);
                 if (ligateam != null) location = ligateam.getSpielort();
             } else if (comp instanceof JTable) {
                 JTable table = (JTable) comp;
                 location = (Spielort)
-                        ((BeanTableModel) table.getModel()).getObject(table.getSelectedRow());
+                        ((BeanTableModel) table.getModel()).getObject(table.convertRowIndexToModel(table.getSelectedRow()));
             }
             if (location != null) {
                 try {
@@ -206,11 +206,11 @@ public class MenuController extends PanelController {
             if ("Table_SpielortProLiga".equals(comp.getName())) {
                 Spielort spielort =
                     (Spielort) ((BeanTableModel) comp.getModel())
-                            .getObject(comp.getSelectedRow());
+                            .getObject(comp.convertRowIndexToModel(comp.getSelectedRow()));
                  if(spielort != null) aufsteller = spielort.getAutomatenaufsteller();
             } else {
                 aufsteller = (Automatenaufsteller) ((BeanTableModel) comp.getModel())
-                                            .getObject(comp.getSelectedRow());
+                                            .getObject(comp.convertRowIndexToModel(comp.getSelectedRow()));
             }
             if (aufsteller != null) {
                 try {

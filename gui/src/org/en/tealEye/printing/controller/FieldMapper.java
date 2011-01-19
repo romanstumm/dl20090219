@@ -1,5 +1,7 @@
 package org.en.tealEye.printing.controller;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.en.tealEye.printing.gui.GenericLoadingBarFrame;
 
 import javax.swing.*;
@@ -18,7 +20,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
 
 public class FieldMapper implements ActionListener, ChangeListener, ListSelectionListener, PropertyChangeListener, WindowListener, MouseListener {
-
+    protected static final Log log = LogFactory.getLog(FieldMapper.class);
     private Object formObject;
     private Object methodObject;
     private List<Field> fields = new ArrayList();
@@ -33,19 +35,19 @@ public class FieldMapper implements ActionListener, ChangeListener, ListSelectio
             ((JFrame)formObject).addWindowListener(this);
             }
         } catch (InstantiationException e) {
-            e.printStackTrace();
+             log.error(e.getMessage(), e);
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+             log.error(e.getMessage(), e);
         }
             registerFields();
         try {
             methodObject = methodClass.getDeclaredConstructors()[0].newInstance(components, formObject, parentObject);
         } catch (InstantiationException e) {
-            e.printStackTrace();
+             log.error(e.getMessage(), e);
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+             log.error(e.getMessage(), e);
         } catch (InvocationTargetException e) {
-            e.printStackTrace();
+             log.error(e.getMessage(), e);
         }
             registerMethods();
             evokeCustomMethods();
@@ -59,19 +61,19 @@ public class FieldMapper implements ActionListener, ChangeListener, ListSelectio
             ((JFrame)formObject).addWindowListener(this);
             }
         } catch (InstantiationException e) {
-            e.printStackTrace();
+             log.error(e.getMessage(), e);
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+             log.error(e.getMessage(), e);
         }
             registerFields();
         try {
             methodObject = methodClass.getDeclaredConstructors()[0].newInstance(components, formObject, parentObject, targetComponent);
         } catch (InstantiationException e) {
-            e.printStackTrace();
+             log.error(e.getMessage(), e);
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+             log.error(e.getMessage(), e);
         } catch (InvocationTargetException e) {
-            e.printStackTrace();
+             log.error(e.getMessage(), e);
         }
             registerMethods();
             evokeCustomMethods();
@@ -85,19 +87,19 @@ public class FieldMapper implements ActionListener, ChangeListener, ListSelectio
                 ((JFrame)formObject).addWindowListener(this);
                 }
             } catch (InstantiationException e) {
-                e.printStackTrace();
+                 log.error(e.getMessage(), e);
             } catch (IllegalAccessException e) {
-                e.printStackTrace();
+                 log.error(e.getMessage(), e);
             }
                 registerFields();
             try {
                 methodObject = methodClass.getDeclaredConstructors()[0].newInstance(components, formObject);
             } catch (InstantiationException e) {
-                e.printStackTrace();
+                 log.error(e.getMessage(), e);
             } catch (IllegalAccessException e) {
-                e.printStackTrace();
+                 log.error(e.getMessage(), e);
             } catch (InvocationTargetException e) {
-                e.printStackTrace();
+                 log.error(e.getMessage(), e);
             }
                 registerMethods();
                 evokeCustomMethods();
@@ -119,9 +121,9 @@ public class FieldMapper implements ActionListener, ChangeListener, ListSelectio
                 try {
                     me.invoke(methodObject);
                 } catch (IllegalAccessException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                     log.error(e.getMessage(), e);  //To change body of catch statement use File | Settings | File Templates.
                 } catch (InvocationTargetException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                     log.error(e.getMessage(), e);  //To change body of catch statement use File | Settings | File Templates.
                 }
             }
         }
@@ -174,7 +176,7 @@ public class FieldMapper implements ActionListener, ChangeListener, ListSelectio
                 try {
                     o = f.get(formObject);
                 } catch (IllegalAccessException e) {
-                    e.printStackTrace();
+                     log.error(e.getMessage(), e);
                 }
                 if(o instanceof Component){
                     Component c = (Component)o;
@@ -185,7 +187,6 @@ public class FieldMapper implements ActionListener, ChangeListener, ListSelectio
         }
     }
 
-    @Override
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
         String compName = ((Component) o).getName();
@@ -204,14 +205,13 @@ public class FieldMapper implements ActionListener, ChangeListener, ListSelectio
                 try {
                     m.invoke(methodObject);
                 } catch (IllegalAccessException e1) {
-                    e1.printStackTrace();
+                     log.error(e1.getMessage(), e1);
                 } catch (InvocationTargetException e1) {
-                    e1.printStackTrace();
+                     log.error(e1.getMessage(), e1);
                 }
             }
         }
 
-    @Override
     public void stateChanged(ChangeEvent e) {
         Object o = e.getSource();
         String compName = ((Component) o).getName();
@@ -223,14 +223,13 @@ public class FieldMapper implements ActionListener, ChangeListener, ListSelectio
                 try {
                     m.invoke(methodObject);
                 } catch (IllegalAccessException e1) {
-                    e1.printStackTrace();
+                     log.error(e1.getMessage(), e1);
                 } catch (InvocationTargetException e1) {
-                    e1.printStackTrace();
+                     log.error(e1.getMessage(), e1);
                 }
             }
     }
 
-    @Override
     public void valueChanged(ListSelectionEvent e) {
         Object o = e.getSource();
         if(!e.getValueIsAdjusting()){
@@ -243,15 +242,14 @@ public class FieldMapper implements ActionListener, ChangeListener, ListSelectio
                 try {
                     m.invoke(methodObject);
                 } catch (IllegalAccessException e1) {
-                    e1.printStackTrace();
+                     log.error(e1.getMessage(), e1);
                 } catch (InvocationTargetException e1) {
-                    e1.printStackTrace();
+                     log.error(e1.getMessage(), e1);
                 }
             }
         }
     }
 
-    @Override
     public void propertyChange(PropertyChangeEvent evt) {
         Object obj = evt.getSource();
         if(obj instanceof JTextField){
@@ -266,9 +264,9 @@ public class FieldMapper implements ActionListener, ChangeListener, ListSelectio
                 try {
                     m.invoke(methodObject);
                 } catch (IllegalAccessException e1) {
-                    e1.printStackTrace();
+                     log.error(e1.getMessage(), e1);
                 } catch (InvocationTargetException e1) {
-                    e1.printStackTrace();
+                     log.error(e1.getMessage(), e1);
                 }
             }
         }
@@ -277,12 +275,10 @@ public class FieldMapper implements ActionListener, ChangeListener, ListSelectio
     }
 
 
-    @Override
     public void windowOpened(WindowEvent e) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    @Override
     public void windowClosing(WindowEvent e) {
         System.out.println("Dispose");
         Method dispose = methodMap.get("DisposeMethod");
@@ -290,40 +286,34 @@ public class FieldMapper implements ActionListener, ChangeListener, ListSelectio
             try {
                 dispose.invoke(methodObject);
             } catch (IllegalAccessException e1) {
-                e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                 log.error(e1.getMessage(), e1);  //To change body of catch statement use File | Settings | File Templates.
             } catch (InvocationTargetException e1) {
-                e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                 log.error(e1.getMessage(), e1);  //To change body of catch statement use File | Settings | File Templates.
             }
     }
 
-    @Override
     public void windowClosed(WindowEvent e) {
 
     }
 
-    @Override
     public void windowIconified(WindowEvent e) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    @Override
     public void windowDeiconified(WindowEvent e) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    @Override
     public void windowActivated(WindowEvent e) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    @Override
     public void windowDeactivated(WindowEvent e) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
 
     //Mouse Listener
-    @Override
     public void mouseClicked(MouseEvent e) {
         Component o = e.getComponent();
         String compName = o.getName();
@@ -336,18 +326,16 @@ public class FieldMapper implements ActionListener, ChangeListener, ListSelectio
                 try {
                     m.invoke(methodObject);
                 } catch (IllegalAccessException e1) {
-                    e1.printStackTrace();
+                     log.error(e1.getMessage(), e1);
                 } catch (InvocationTargetException e1) {
-                    e1.printStackTrace();
+                     log.error(e1.getMessage(), e1);
                 }
             }    }
 
-    @Override
     public void mousePressed(MouseEvent e) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    @Override
     public void mouseReleased(MouseEvent e) {
         Component o = e.getComponent();
         String compName = o.getName();
@@ -360,19 +348,17 @@ public class FieldMapper implements ActionListener, ChangeListener, ListSelectio
                 try {
                     m.invoke(methodObject);
                 } catch (IllegalAccessException e1) {
-                    e1.printStackTrace();
+                     log.error(e1.getMessage(), e1);
                 } catch (InvocationTargetException e1) {
-                    e1.printStackTrace();
+                     log.error(e1.getMessage(), e1);
                 }
             }
     }
 
-    @Override
     public void mouseEntered(MouseEvent e) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    @Override
     public void mouseExited(MouseEvent e) {
         //To change body of implemented methods use File | Settings | File Templates.
     }

@@ -15,6 +15,8 @@ import java.awt.event.*;
 import java.util.*;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.en.tealEye.printing.controller.annotationClasses.*;
 
 /**
@@ -25,7 +27,8 @@ import org.en.tealEye.printing.controller.annotationClasses.*;
  * To change this template use File | Settings | File Templates.
  */
 public abstract class CentralDispatch {
-
+    protected static final Log log = LogFactory.getLog(CentralDispatch.class);
+    
     private static Map<String, Object> componentClassObjects = new HashMap<String, Object>();
     private static Map<String, Object> methodClassObjects = new HashMap<String, Object>();
     private static Map<String, Component> componentMap = new HashMap<String, Component>();
@@ -51,9 +54,9 @@ public abstract class CentralDispatch {
                     componentMap.put(((Component)o).getName(),(Component)o);
             }
         } catch (InstantiationException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            log.error(e.getMessage(), e);
         } catch (IllegalAccessException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+             log.error(e.getMessage(), e);
         }
         addContainerListener(componentClassObjects.get(c.getName()));
     }
@@ -123,9 +126,9 @@ public abstract class CentralDispatch {
                 }
             }
         } catch (InstantiationException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+             log.error(e.getMessage(), e);
         } catch (IllegalAccessException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+             log.error(e.getMessage(), e);
         }
     }
 
@@ -178,9 +181,9 @@ public abstract class CentralDispatch {
                     m.invoke(methodMapReverse.get(m));
                     }
                 } catch (IllegalAccessException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                     log.error(e.getMessage(), e);
                 } catch (InvocationTargetException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                     log.error(e.getMessage(), e);
                 }
             }
     }
@@ -201,9 +204,9 @@ public abstract class CentralDispatch {
                     m.invoke(methodMapReverse.get(m));
                     }
                 } catch (IllegalAccessException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                     log.error(e.getMessage(), e);
                 } catch (InvocationTargetException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                     log.error(e.getMessage(), e);
                 }
             }
     }
@@ -216,9 +219,9 @@ public abstract class CentralDispatch {
                         if(((Method) ((Map.Entry)m).getValue()).isAnnotationPresent(CustomMethod.class))
                         ((Method)((Map.Entry)m).getValue()).invoke(((Map.Entry)m).getKey());
                     } catch (IllegalAccessException e) {
-                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                         log.error(e.getMessage(), e);
                     } catch (InvocationTargetException e) {
-                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                         log.error(e.getMessage(), e);
                     }
                }
            }
@@ -231,9 +234,9 @@ public abstract class CentralDispatch {
                      try {
                          ((Method)((Map.Entry)m).getValue()).invoke(((Map.Entry)m).getKey());
                      } catch (IllegalAccessException e) {
-                         e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                          log.error(e.getMessage(), e);
                      } catch (InvocationTargetException e) {
-                         e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                          log.error(e.getMessage(), e);
                      }
                 }
             }
@@ -246,9 +249,9 @@ public abstract class CentralDispatch {
                      try {
                          ((Method)((Map.Entry)m).getValue()).invoke(((Map.Entry)m).getKey(), parameter);
                      } catch (IllegalAccessException e) {
-                         e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                          log.error(e.getMessage(), e);
                      } catch (InvocationTargetException e) {
-                         e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                          log.error(e.getMessage(), e);
                      }
                 }
             }
@@ -261,9 +264,9 @@ public abstract class CentralDispatch {
                      try {
                          ((Method)((Map.Entry)m).getValue()).invoke(((Map.Entry)m).getKey(), parameter, parameter2);
                      } catch (IllegalAccessException e) {
-                         e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                          log.error(e.getMessage(), e);
                      } catch (InvocationTargetException e) {
-                         e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                          log.error(e.getMessage(), e);
                      }
                 }
             }
@@ -430,11 +433,11 @@ public abstract class CentralDispatch {
                             listener = c.newInstance();
                         }
                     } catch (ClassNotFoundException e) {
-                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                         log.error(e.getMessage(), e);
                     } catch (IllegalAccessException e) {
-                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                         log.error(e.getMessage(), e);
                     } catch (InstantiationException e) {
-                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                         log.error(e.getMessage(), e);
                     }
         if(component instanceof JButton){
               if(type.equals("MouseListener"))
@@ -783,9 +786,9 @@ public abstract class CentralDispatch {
                 }
             }
         } catch (IllegalAccessException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+             log.error(e.getMessage(), e);
         } catch (InvocationTargetException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+             log.error(e.getMessage(), e);
         }
         return null;
     }
@@ -810,9 +813,9 @@ public abstract class CentralDispatch {
                 }
 
         } catch (IllegalAccessException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+             log.error(e.getMessage(), e);
         } catch (InvocationTargetException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+             log.error(e.getMessage(), e);
         }
         return null;
     }
@@ -824,9 +827,9 @@ public abstract class CentralDispatch {
                 try {
                     m.invoke(methodMapReverse.get(m));
                 } catch (IllegalAccessException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                     log.error(e.getMessage(), e);
                 } catch (InvocationTargetException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                     log.error(e.getMessage(), e);
                 }
         }
     }

@@ -1,5 +1,7 @@
 package org.en.tealEye.printing.controller;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.en.tealEye.printing.gui.GenericLoadingBarFrame;
 
 import java.lang.reflect.Method;
@@ -16,45 +18,45 @@ import de.liga.util.thread.ThreadManager;
  * To change this template use File | Settings | File Templates.
  */
 public class GenericThread extends Thread {
-
+    protected static final Log log = LogFactory.getLog(GenericThread.class);
     private Method threadMethod;
     private Object parentClass;
     private GenericLoadingBarFrame frame;
 
     public volatile boolean done = false;
-    
-    public GenericThread(Method threadMethod, Object parentClass, GenericLoadingBarFrame frame, List components){
-         this.threadMethod = threadMethod;
-         this.parentClass = parentClass;
-         this.frame = frame;
+
+    public GenericThread(Method threadMethod, Object parentClass, GenericLoadingBarFrame frame, List components) {
+        this.threadMethod = threadMethod;
+        this.parentClass = parentClass;
+        this.frame = frame;
         ThreadManager.getInstance().addThread(this);
     }
 
-    public GenericThread(Method threadMethod, Object parentClass){
-             this.threadMethod = threadMethod;
-             this.parentClass = parentClass;
+    public GenericThread(Method threadMethod, Object parentClass) {
+        this.threadMethod = threadMethod;
+        this.parentClass = parentClass;
     }
 
-    public void run(){
-        while(!done){
-        try {
-            threadMethod.invoke(parentClass, this);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
+    public void run() {
+        while (!done) {
+            try {
+                threadMethod.invoke(parentClass, this);
+            } catch (IllegalAccessException e) {
+                 log.error(e.getMessage(), e);
+            } catch (InvocationTargetException e) {
+                 log.error(e.getMessage(), e);
+            }
         }
     }
 
-    public void setDone(){
+    public void setDone() {
         done = true;
         System.out.println("GenericThread done!");
         frame.setVisible(false);
         try {
             this.finalize();
         } catch (Throwable throwable) {
-            throwable.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            log.error(throwable.getMessage(), throwable);
         }
     }
 }

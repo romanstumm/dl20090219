@@ -1,7 +1,7 @@
 @echo off
-SET JAVA_HOME=D:\jdk\jdk1.6.0_02
-SET JAVA_CMD=start %JAVA_HOME%\bin\javaw.exe
-rem SET JAVA_CMD=%JAVA_HOME%\bin\java.exe
+rem SET JAVA_HOME=D:\jdk\jdk1.6.0_02
+rem SET JAVA_CMD=start %JAVA_HOME%\bin\javaw.exe
+SET JAVA_CMD=java.exe
 rem SET JAVA_CMD=%JAVA_HOME%\bin\java -Xdebug -Xrunjdwp:transport=dt_socket,address=5005,server=y,suspend=y
 SET MYCP=config;lib\antlr-2.7.6.jar;lib\bsh-core-2.0b4.jar;lib\commons-beanutils-core.jar
 SET MYCP=%MYCP%;lib\commons-collections-3.2.1.jar;lib\commons-lang-2.4.jar;lib\commons-logging-1.1.1.jar

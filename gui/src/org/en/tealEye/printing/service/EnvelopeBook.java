@@ -1,5 +1,8 @@
 package org.en.tealEye.printing.service;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import javax.imageio.ImageIO;
 import java.awt.print.*;
 import java.awt.*;
@@ -17,6 +20,7 @@ import java.io.IOException;
  * To change this template use File | Settings | File Templates.
  */
 public class EnvelopeBook implements Printable {
+    protected static final Log log = LogFactory.getLog(EnvelopeBook.class);
     private String[] grp;
 
     private int xAxisAddress = 0;
@@ -87,7 +91,7 @@ public class EnvelopeBook implements Printable {
             try {
                 img = ImageIO.read(f);
             } catch (IOException x) {
-                x.printStackTrace();
+                log.error(x.getMessage(), x);
             }
             }
             AffineTransform bio = new AffineTransform();

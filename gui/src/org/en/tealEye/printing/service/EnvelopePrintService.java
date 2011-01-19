@@ -22,6 +22,8 @@ import java.util.Vector;
 import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.en.tealEye.framework.BeanTableModel;
 import org.en.tealEye.printing.controller.GenericThread;
 
@@ -33,6 +35,7 @@ import org.en.tealEye.printing.controller.GenericThread;
  * To change this template use File | Settings | File Templates.
  */
 public class EnvelopePrintService {
+     protected static final Log log = LogFactory.getLog(EnvelopePrintService.class);
 
     private Object parentObject;
     private Vector<Vector<String[]>> labelStrings = new Vector<Vector<String[]>>();
@@ -93,11 +96,11 @@ public class EnvelopePrintService {
             Object obj = new ServiceWorker(parentObject).executeTransaction();
             labelStrings = (Vector<Vector<String[]>>) obj;
         } catch (InterruptedException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            log.error(e.getMessage(), e);
         } catch (ExecutionException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            log.error(e.getMessage(), e);
         } catch (Exception e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            log.error(e.getMessage(), e);
         }
         getPaperWidth();
         getStringArray();

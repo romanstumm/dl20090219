@@ -1,6 +1,9 @@
 package org.en.tealEye.printing.controller;
 
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.lang.reflect.InvocationTargetException;
@@ -12,6 +15,8 @@ import java.lang.reflect.Method;
  * Date: 16.11.2007, 22 :35:48
  */
 public class WindowController implements WindowListener {
+    protected static final Log log = LogFactory.getLog(WindowController.class);
+
     public void windowOpened(WindowEvent e) {
     }
 
@@ -27,9 +32,9 @@ public class WindowController implements WindowListener {
                     try {
                         m.invoke(e.getWindow().getClass());
                     } catch (IllegalAccessException e1) {
-                        e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                         log.error(e1.getMessage(), e1);
                     } catch (InvocationTargetException e1) {
-                        e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                         log.error(e1.getMessage(), e1);
                     }
                 }
             }
