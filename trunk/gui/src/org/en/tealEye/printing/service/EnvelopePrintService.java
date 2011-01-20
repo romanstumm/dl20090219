@@ -1,31 +1,22 @@
 package org.en.tealEye.printing.service;
 
-import de.liga.dart.gruppen.service.GruppenService;
-import de.liga.dart.common.service.ServiceFactory;
-import de.liga.dart.model.Spielort;
-import de.liga.dart.model.Ligagruppe;
-import de.liga.dart.model.Ligateam;
-import de.liga.dart.spielort.service.SpielortService;
-import de.liga.util.StringUtils;
-
-import javax.swing.*;
-import javax.print.attribute.PrintRequestAttributeSet;
-import javax.print.attribute.HashPrintRequestAttributeSet;
-import javax.print.attribute.Attribute;
-import javax.print.attribute.standard.MediaSizeName;
-import java.awt.*;
-import java.awt.print.*;
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.Set;
-import java.util.Vector;
-import java.util.Date;
-import java.util.concurrent.ExecutionException;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.en.tealEye.framework.BeanTableModel;
-import org.en.tealEye.printing.controller.GenericThread;
+
+import javax.print.attribute.Attribute;
+import javax.print.attribute.HashPrintRequestAttributeSet;
+import javax.print.attribute.PrintRequestAttributeSet;
+import javax.print.attribute.standard.MediaSizeName;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.awt.print.Book;
+import java.awt.print.PageFormat;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
+import java.util.Date;
+import java.util.Vector;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by IntelliJ IDEA.
@@ -119,7 +110,7 @@ public class EnvelopePrintService {
       try {
         pj.print();
       } catch (PrinterException e) {
-        System.out.println(e);
+        log.error(e.getMessage(), e);
       }
     }
     }
