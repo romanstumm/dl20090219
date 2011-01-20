@@ -10,7 +10,6 @@ import javax.print.attribute.standard.MediaSizeName;
 import javax.print.attribute.standard.OrientationRequested;
 import javax.swing.*;
 import java.awt.print.PageFormat;
-import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 
 /**
@@ -25,6 +24,7 @@ public class PrintingUtils {
     private double mediaWidth;
     private double mediaHeight;
     private PrinterJob job;
+
     public PrintingUtils() {
         getMediaSize();
     }
@@ -35,35 +35,28 @@ public class PrintingUtils {
         aset.add(MediaSizeName.ISO_A4);
         aset.add(OrientationRequested.PORTRAIT);
         job = PrinterJob.getPrinterJob();
-        if(job == null ){
+        if (job == null) {
             try {
                 throw new PrintException("Printing not possible");
             } catch (PrintException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                log.error(e.getMessage(), e);
             }
         }
         PageFormat pf = job.getPageFormat(aset);
-        if(pf.getImageableWidth() == 0){
-            throw new NumberFormatException("pf.getImageableWidth() returned 0");
-        }else if(pf.getImageableHeight() == 0){
-            throw new NumberFormatException("pf.getImageableHeight() returned 0");
-        }
-        //mediaSize[0] = Math.max(1000, pf.getImageableWidth());
-        //mediaSize[1] = Math.max(1000, pf.getImageableHeight());
+        
         mediaSize[0] = pf.getImageableWidth();
         mediaSize[1] = pf.getImageableHeight();
-        log.debug(pf.getImageableHeight() + pf.getImageableWidth());
         mediaWidth = mediaSize[0];
         mediaHeight = mediaSize[1];
-        if(mediaWidth == 0)
-               mediaWidth = 571.2;
-        if(mediaHeight == 0)
-               mediaHeight = 817.68;
+        log.debug("mediaHeight: " + mediaHeight + " mediaWidth " + mediaHeight);
+        if (mediaWidth == 0)
+            mediaWidth = 571.2;
+        if (mediaHeight == 0)
+            mediaHeight = 817.68;
     }
 
 
-
-    public PrinterJob getPrinterJob(){
+    public PrinterJob getPrinterJob() {
         return job;
     }
 
@@ -95,7 +88,7 @@ public class PrintingUtils {
         log.debug((mediaWidth) / jTable.getWidth());
         log.debug(mediaWidth);
         log.debug(jTable.getWidth());
-        return (mediaWidth-40) / jTable.getWidth();
+        return (mediaWidth - 40) / jTable.getWidth();
     }
 
     public int[] getGroupColumnWidths() {
@@ -131,52 +124,52 @@ public class PrintingUtils {
         return null;
     }*/
 
-  /*  public double getLabelFactor(int width, int height){
+    /*  public double getLabelFactor(int width, int height){
         double widthFactor = 210 / width;
         double heightFactor = 297 / height;
         return widthFactor;
     }*/
 
-    public int getHLabelCount(int width ){
+    public int getHLabelCount(int width) {
         return 210 / width;
     }
 
-    public int getVLabelCount(int height){
+    public int getVLabelCount(int height) {
         return 297 / height;
     }
 
-    public double getEtiScaleFactorX(){
-        return getMediaWidth()/210;
+    public double getEtiScaleFactorX() {
+        return getMediaWidth() / 210;
     }
 
-    public double getEtiScaleFactorY(){
-        return getMediaHeight() /((double)(297));
+    public double getEtiScaleFactorY() {
+        return getMediaHeight() / ((double) (297));
     }
 
-    public int getLabelsPerPage(int width, int height){
-        log.debug(getVLabelCount(height)*getHLabelCount(width));
-        return getVLabelCount(height)*getHLabelCount(width);
+    public int getLabelsPerPage(int width, int height) {
+        log.debug(getVLabelCount(height) * getHLabelCount(width));
+        return getVLabelCount(height) * getHLabelCount(width);
     }
 
-    public int getNeededPages(int width, int height, int labelCount){
-        log.debug(labelCount/getLabelsPerPage(width,height));
-        return round((double)labelCount/getLabelsPerPage(width,height));
+    public int getNeededPages(int width, int height, int labelCount) {
+        log.debug(labelCount / getLabelsPerPage(width, height));
+        return round((double) labelCount / getLabelsPerPage(width, height));
     }
 
-    public int getEntityCount(int labelCount, int height, int width){
+    public int getEntityCount(int labelCount, int height, int width) {
         log.debug(labelCount);
-        log.debug(getNeededPages(width,height,labelCount));
+        log.debug(getNeededPages(width, height, labelCount));
         log.debug(labelCount);
 
-        return getNeededPages(width,height,labelCount)*getLabelsPerPage(width,height);
+        return getNeededPages(width, height, labelCount) * getLabelsPerPage(width, height);
     }
 
     public int round(double d) {
         int i = (int) d;
-        double rest = d -((double)i);
+        double rest = d - ((double) i);
         log.debug(d);
-        if(rest != 0){
-            i = i+1;
+        if (rest != 0) {
+            i = i + 1;
         }
         return i;
     }
@@ -185,17 +178,17 @@ public class PrintingUtils {
         return round((double) vectorLength / labelsPerPage);
     }
 
-    public int getPagesPerLabel(int labelsPerPage, int labelsWanted){
-        double pPL = (double)labelsWanted/(double)labelsPerPage;
+    public int getPagesPerLabel(int labelsPerPage, int labelsWanted) {
+        double pPL = (double) labelsWanted / (double) labelsPerPage;
         return round(pPL);
     }
 
-    public int getRowsThisPage(int rowsPerPage, int tableRows, int pageIndex){
-        return tableRows-(rowsPerPage*pageIndex+1);
+    public int getRowsThisPage(int rowsPerPage, int tableRows, int pageIndex) {
+        return tableRows - (rowsPerPage * pageIndex + 1);
     }
 
-    public int getPagesPerTable(int tableRows, int rowsPerPage){
-        return round((double)tableRows/(double)rowsPerPage);
+    public int getPagesPerTable(int tableRows, int rowsPerPage) {
+        return round((double) tableRows / (double) rowsPerPage);
     }
 
 }

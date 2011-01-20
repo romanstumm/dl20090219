@@ -7,11 +7,10 @@ import de.liga.dart.model.Ligateam;
 import de.liga.dart.model.Spielort;
 import de.liga.dart.spielort.service.SpielortService;
 import de.liga.util.StringUtils;
-import org.en.tealEye.framework.BeanTableModel;
-import org.en.tealEye.guiServices.GuiService;
-import org.en.tealEye.guiServices.GlobalGuiService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.en.tealEye.framework.BeanTableModel;
+import org.en.tealEye.guiServices.GlobalGuiService;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,9 +20,9 @@ import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Set;
 import java.util.Vector;
-import java.util.Date;
 
 /**
  * Description: <br/>
@@ -304,17 +303,17 @@ public class  LabelPrintingService extends JPanel implements LabelPrinting {
             String[] strings = labelStrings.get(stringBlock);
                 if(!strings[4].equals("")){
                     if(seitenProLabel-1 == pageOfStringBlock){
-                        System.out.println("beep");
+                        log.debug("beep");
                     }
                 }
-            System.out.println("Seite von Stringblock:"+pageOfStringBlock);
-            System.out.println("Stringblock:"+stringBlock);
-            System.out.println("Seite:"+ pageNum);
+            log.debug("Seite von Stringblock:"+pageOfStringBlock);
+            log.debug("Stringblock:"+stringBlock);
+            log.debug("Seite:"+ pageNum);
 
-                System.out.println(strings[0]);
-                System.out.println(strings[1]);
-                System.out.println(strings[2]);
-                System.out.println(strings[3]);
+//                System.out.println(strings[0]);
+//                System.out.println(strings[1]);
+//                System.out.println(strings[2]);
+//                System.out.println(strings[3]);
 
         }else{
                 double t;
@@ -325,17 +324,17 @@ public class  LabelPrintingService extends JPanel implements LabelPrinting {
              String[] strings = labelStrings.get(stringBlock);
                  if(!strings[4].equals("")){
                     if(seitenProLabel-1 == pageOfStringBlock){
-                        System.out.println("beep");
+//                        System.out.println("beep");
                     }
                 }
-                System.out.println("Seite von Stringblock:"+pageOfStringBlock);
-                System.out.println("Stringblock:"+stringBlock);
-                System.out.println("Seite:"+ pageNum);
+                log.debug("Seite von Stringblock:"+pageOfStringBlock);
+                log.debug("Stringblock:"+stringBlock);
+                log.debug("Seite:"+ pageNum);
 
-                System.out.println(strings[0]);
-                System.out.println(strings[1]);
-                System.out.println(strings[2]);
-                System.out.println(strings[3]);
+//                System.out.println(strings[0]);
+//                System.out.println(strings[1]);
+//                System.out.println(strings[2]);
+//                System.out.println(strings[3]);
 
         }
         Graphics2D g2 = im.createGraphics();
