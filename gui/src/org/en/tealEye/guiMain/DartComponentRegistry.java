@@ -4,8 +4,8 @@ import de.liga.dart.automatenaufsteller.service.AutomatenaufstellerService;
 import de.liga.dart.common.service.ServiceFactory;
 import de.liga.dart.gruppen.service.GruppenService;
 import de.liga.dart.liga.service.LigaService;
-import de.liga.dart.ligaklasse.service.LigaklasseService;
 import de.liga.dart.ligaklasse.model.LigaklasseFilter;
+import de.liga.dart.ligaklasse.service.LigaklasseService;
 import de.liga.dart.ligateam.model.TeamWunsch;
 import de.liga.dart.ligateam.model.WunschArt;
 import de.liga.dart.ligateam.service.LigateamService;
@@ -20,8 +20,8 @@ import org.en.tealEye.guiMain.util.TimeHandler;
 import org.en.tealEye.guiMain.util.WeekdayHandler;
 import org.en.tealEye.guiPanels.applicationLogicPanels.CreateGroup;
 import org.en.tealEye.guiPanels.applicationLogicPanels.CreateTeam;
-import org.en.tealEye.guiPanels.applicationLogicPanels.ShowTeams;
 import org.en.tealEye.guiPanels.applicationLogicPanels.ShowGroups;
+import org.en.tealEye.guiPanels.applicationLogicPanels.ShowTeams;
 
 import javax.swing.*;
 import java.util.HashSet;
@@ -362,9 +362,10 @@ public class DartComponentRegistry extends ComponentRegistry {
                         .get(LigaklasseService.class).findAllLigaklasse();
                 LigaklasseFilter filter = new LigaklasseFilter("-alle-");
                 model.addElement(filter);
-                Ligaklasse bez = null, a = null, b = null, c = null;
+                Ligaklasse bzo = null, bez = null, a = null, b = null, c = null;
                 for (Ligaklasse each : klassen) {
-                    if (each.getKlassenName().equals("Bez")) bez = each;
+                    if (each.getKlassenName().equals("Bzo")) bzo = each;
+                    else if (each.getKlassenName().equals("Bez")) bez = each;
                     else if (each.getKlassenName().equals("A")) a = each;
                     else if (each.getKlassenName().equals("B")) b = each;
                     else if (each.getKlassenName().equals("C")) c = each;
@@ -373,6 +374,9 @@ public class DartComponentRegistry extends ComponentRegistry {
                 model.addElement(new LigaklasseFilter("A+B+C", a, b, c));
                 model.addElement(new LigaklasseFilter("Bez+A", bez, a));
                 model.addElement(new LigaklasseFilter("Bez+A+B", bez, a, b));
+                model.addElement(new LigaklasseFilter("Bzo+Bez", bzo, bez));
+                model.addElement(new LigaklasseFilter("Bzo+Bez+A", bzo, bez, a));
+                model.addElement(new LigaklasseFilter("Bzo+Bez+A+B", bzo, bez, a, b));
                 model.addElement(new LigaklasseFilter("B+C", b, c));
                 return model;
             }
