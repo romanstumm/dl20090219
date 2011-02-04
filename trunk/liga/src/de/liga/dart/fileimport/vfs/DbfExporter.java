@@ -5,14 +5,16 @@ import de.liga.dart.fileimport.DbfIO;
 import de.liga.dart.gruppen.service.GruppenService;
 import de.liga.dart.model.*;
 import de.liga.util.CalendarUtils;
-
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.commons.lang.StringUtils;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Description:  Datenexport von Gruppen und Teams in die Altanwendung (.dbf files) <br/>
@@ -38,7 +40,7 @@ public class DbfExporter extends DbfIO {
     protected void exchangeData(Liga liga, String path) throws SQLException {
         // delete from LITSAD
         Statement stmt = connection.createStatement();
-        log.debug("Alle LITSAD löschen");
+        log.debug("Alle LITSAD lï¿½schen");
         stmt.execute("DELETE FROM LITSAD");
         GruppenService service = ServiceFactory.get(GruppenService.class);
         List<Ligagruppe> gruppen;
@@ -50,8 +52,8 @@ public class DbfExporter extends DbfIO {
             maxTeamID = 0; // readMaxTeamID(stmt);
             ligList = readLigList(stmt);
             gruppen = service.findGruppen(liga, null);
-            // alle Gruppen / Teams durchgehen (auch Spielfrei einfügen)
-            log.debug("alle LITTEA löschen");
+            // alle Gruppen / Teams durchgehen (auch Spielfrei einfï¿½gen)
+            log.debug("alle LITTEA lï¿½schen");
             stmt.execute("DELETE FROM LITTEA");
         } finally {
             stmt.close();
@@ -159,9 +161,9 @@ public class DbfExporter extends DbfIO {
         });
         for (File each : indexFiles) {
             if (each.delete()) {
-                log.info(each.getPath() + " wurde gelöscht.");
+                log.info(each.getPath() + " wurde gelï¿½scht.");
             } else {
-                log.warn(each.getPath() + " konnte nicht gelöscht werden!");
+                log.warn(each.getPath() + " konnte nicht gelï¿½scht werden!");
             }
         }
     }*/
@@ -174,7 +176,7 @@ public class DbfExporter extends DbfIO {
         sad.SAI_POSNR = platzNr;
         sad.TEA_NR = tea.TEA_NR;
         if (log.isDebugEnabled())
-            log.debug("LITSAD einfügen: " + sad.TEA_NR + ", " + sad.SAI_POSNR);
+            log.debug("LITSAD einfï¿½gen: " + sad.TEA_NR + ", " + sad.SAI_POSNR);
         insertLITSAD(sadInsertStmt, sad);
         return sad;
     }
@@ -202,7 +204,7 @@ public class DbfExporter extends DbfIO {
             tea.TEA_STATUS = "";
         }
         if (log.isDebugEnabled())
-            log.debug("LITTEA einfügen: " + tea.TEA_NAME + " (" + tea.TEA_NR + ")");
+            log.debug("LITTEA einfï¿½gen: " + tea.TEA_NAME + " (" + tea.TEA_NR + ")");
         insertLITTEA(teamInsertStmt, tea);
         return tea;
     }
@@ -234,7 +236,7 @@ public class DbfExporter extends DbfIO {
                 connection.prepareStatement("insert into LITLOK (" +
                         "LOK_NR, LOK_ID, LOK_DFUE, LOK_NAME, LOK_ZUSATZ, LOK_STRASS, LOK_PLZ, " +
                         "LOK_ORT, LOK_TEL, LOK_FAX, LOK_RUHETA, AUF_NR) VALUES " +
-                        "(?, 0, 0, ?, 'Gaststätte', ?, ?, ?, ?, ?, ?, 1)");
+                        "(?, 0, 0, ?, 'Gaststï¿½tte', ?, ?, ?, ?, ?, ?, 1)");
         pstmt.setInt(1, Integer.parseInt(obj.LOK_NR));
         pstmt.setString(2, obj.LOK_NAME);
         pstmt.setString(3, obj.LOK_STRASS);
@@ -309,7 +311,7 @@ public class DbfExporter extends DbfIO {
             lig.LIG_DISZIP = "301";
             lig.LIG_SPIELT = "Sonntag";
             lig.LIG_UHRZEI = 20 * 60 * 60;
-            if (log.isDebugEnabled()) log.debug("LITLIG einfügen: " + lig.LIG_NAME);
+            if (log.isDebugEnabled()) log.debug("LITLIG einfï¿½gen: " + lig.LIG_NAME);
             insertLITLIG(ligInsertStmt, lig);
         } else {
             log.debug("gefunden!");
@@ -321,6 +323,8 @@ public class DbfExporter extends DbfIO {
         LITLIG found = findLITLIG(ligaklasse.getKlassenName(), gruppenNr);
         if (found == null && "Bez".equals(ligaklasse.getKlassenName()))
             found = findLITLIG("Bezirksliga ", gruppenNr);
+        if (found == null && "Bzo".equals(ligaklasse.getKlassenName()))
+            found = findLITLIG("Bezirksoberliga ", gruppenNr);
         return found;
     }
 
