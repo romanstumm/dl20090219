@@ -217,7 +217,7 @@ public class Spielort implements java.io.Serializable, LigaPersistence {
             if (gruppe != null && (liga == null || gruppe.getLiga().getLigaId() == liga.getLigaId())) {
                 String gname = gruppe.getGruppenNameCompact();
                 gruppen.add(gname);
-                Integer count = gruppenCount.get(gname);
+                Integer count = gruppenCount.get(gname);        
                 if (count == null) {
                     gruppenCount.put(gname, 1);
                 } else {

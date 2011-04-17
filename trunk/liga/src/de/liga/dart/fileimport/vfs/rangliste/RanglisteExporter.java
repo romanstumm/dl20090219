@@ -1,18 +1,20 @@
 package de.liga.dart.fileimport.vfs.rangliste;
 
 import com.thoughtworks.xstream.XStream;
-import de.liga.dart.fileimport.vfs.DbfImportErgebnis;
 import de.liga.dart.fileimport.DataExchanger;
+import de.liga.dart.fileimport.vfs.DbfImportErgebnis;
 import de.liga.dart.gruppen.check.ProgressIndicator;
-
-import java.util.*;
-import java.io.*;
-
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.util.*;
 
 /**
  * Description:  Veranlaﬂt den Import der Daten aus vfs samt Rangberechnung,
@@ -151,7 +153,12 @@ public class RanglisteExporter implements DataExchanger {
                 if (l1.getKlasse().equals(l2.getKlasse())) {
                     // gleiche Klasse: sortiere nach Name
                     return l1.getName().compareTo(l2.getName());
-                } // BZ zuerst
+                }
+                // TODO nach Ligaklasse.rang sortieren! hard-coded Werte entfernen!
+                // BZO zuerst
+                else if (l1.getKlasse().equals("BZO")) return -1;
+                else if (l2.getKlasse().equals("BZO")) return 1;
+                    // BZ danach
                 else if (l1.getKlasse().equals("BZ")) return -1;
                 else if (l2.getKlasse().equals("BZ")) return 1;
                     // nach Name alphabetisch
@@ -177,7 +184,7 @@ public class RanglisteExporter implements DataExchanger {
                     "Liga " + team.getPlainLigaName() + " nicht konfiguriert.");
         VfsConfigKlasse configKlasse = findConfigKlasse(configLiga, team.getVfsLiga().getKlasse());
         if (configKlasse == null)
-            throw new IllegalArgumentException("Klasse " + 
+            throw new IllegalArgumentException("Klasse " +
                     team.getVfsLiga().getKlasse() + " nicht konfiguriert.");
         Map<String, Object> templateVars = new HashMap();
         setTemplateVars(templateVars, team);
