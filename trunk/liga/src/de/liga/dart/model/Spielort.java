@@ -3,8 +3,7 @@ package de.liga.dart.model;
 
 import de.liga.util.CalendarUtils;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Spielort
@@ -197,6 +196,49 @@ public class Spielort implements java.io.Serializable, LigaPersistence {
             }
         }
         return resultTeams;
+    }
+
+    /**
+     * die obere Etikettenzeile mit den Gruppen pro Spielort (wahlweise in einer Liga)
+     * @param liga - die Liga, nach der gefiltert werden soll oder null (ggf. erübrigt sich dieser Filter,
+     * da alle Teams in der gleichen Liga sind)
+     * @return ein Text oder ein leerer Text
+     */
+    public String getLigagruppenLabel(Liga liga) {
+        Set<String> gruppen = new HashSet();
+        Map<String, Integer> gruppenCount = new HashMap();
+
+        for (Ligateam team : ligateams) {
+            Ligateamspiel spiel = team.getLigateamspiel();
+            Ligagruppe gruppe = null;
+            if (spiel != null) {
+                gruppe = spiel.getLigagruppe();
+            }
+            if (gruppe != null && (liga == null || gruppe.getLiga().getLigaId() == liga.getLigaId())) {
+                String gname = gruppe.getGruppenNameCompact();
+                gruppen.add(gname);
+                Integer count = gruppenCount.get(gname);
+                if (count == null) {
+                    gruppenCount.put(gname, 1);
+                } else {
+                    gruppenCount.put(gname, count.intValue() + 1);
+                }
+            }
+        }
+        ArrayList<String> gruppenListe = new ArrayList(gruppen);
+        Collections.sort(gruppenListe);
+        StringBuilder buf = new StringBuilder();
+        boolean sep = false;
+        for (String gname : gruppenListe) {
+            if (sep) buf.append(' ');
+            else sep = true;
+            if (gruppenCount.get(gname).intValue() > 1) {
+                buf.append(gruppenCount.get(gname));
+            }
+            buf.append(gname);
+        }
+
+        return buf.toString();
     }
 
     public String toString() {

@@ -4,8 +4,6 @@ import de.liga.dart.common.service.AbstractService;
 import de.liga.dart.exception.DartException;
 import de.liga.dart.exception.DartValidationException;
 import de.liga.dart.exception.ValidationMessage;
-import static de.liga.dart.exception.ValidationReason.MISSING;
-import static de.liga.dart.exception.ValidationReason.WRONG;
 import de.liga.dart.model.Automatenaufsteller;
 import de.liga.dart.model.Liga;
 import de.liga.dart.model.Spielort;
@@ -15,6 +13,9 @@ import org.hibernate.Query;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
+import static de.liga.dart.exception.ValidationReason.MISSING;
+import static de.liga.dart.exception.ValidationReason.WRONG;
 
 /**
  * Description:   <br/>
