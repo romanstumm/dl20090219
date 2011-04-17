@@ -90,6 +90,12 @@ public class MenuController extends PanelController {
         } else if (action.startsWith("MENU_Rangliste")) {
             instance = new ImportThreadWorker(mainAppFrame, IO_ACTION.ExcelRangliste);
             instance.execute();
+        } else if (action.startsWith("MENU_HTML_Ranglisten")) {
+            instance = new ImportThreadWorker(mainAppFrame, IO_ACTION.HTMLRanglisten);
+            instance.execute();
+        } else if (action.startsWith("MENU_HTML_Spielplaene")) {
+            instance = new ImportThreadWorker(mainAppFrame, IO_ACTION.HTMLSpielplaene);
+            instance.execute();
         } else if (action.startsWith("MENU_Info")) {
             SwingUtils.createOkDialog(mainAppFrame,
                     Application.APPLICATION_NAME + " " + Application.APPLICATION_VERSION +
@@ -205,12 +211,12 @@ public class MenuController extends PanelController {
             Automatenaufsteller aufsteller = null;
             if ("Table_SpielortProLiga".equals(comp.getName())) {
                 Spielort spielort =
-                    (Spielort) ((BeanTableModel) comp.getModel())
-                            .getObject(comp.convertRowIndexToModel(comp.getSelectedRow()));
-                 if(spielort != null) aufsteller = spielort.getAutomatenaufsteller();
+                        (Spielort) ((BeanTableModel) comp.getModel())
+                                .getObject(comp.convertRowIndexToModel(comp.getSelectedRow()));
+                if (spielort != null) aufsteller = spielort.getAutomatenaufsteller();
             } else {
                 aufsteller = (Automatenaufsteller) ((BeanTableModel) comp.getModel())
-                                            .getObject(comp.convertRowIndexToModel(comp.getSelectedRow()));
+                        .getObject(comp.convertRowIndexToModel(comp.getSelectedRow()));
             }
             if (aufsteller != null) {
                 try {

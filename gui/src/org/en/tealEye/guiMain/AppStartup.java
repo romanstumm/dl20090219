@@ -4,12 +4,12 @@ import de.liga.dart.Application;
 import de.liga.dart.common.service.util.HibernateUtil;
 import de.liga.dart.database.AutoMigrator;
 import de.liga.dart.database.AutoMigratorFactory;
+import de.liga.dart.fileimport.FtpWebIO;
 import de.liga.dart.fileimport.vfs.DbfImporter;
 import de.liga.dart.gruppen.check.Options;
 import de.liga.dart.license.Licensable;
 import de.liga.dart.license.License;
 import org.en.tealEye.framework.SwingUtils;
-import org.en.tealEye.controller.gui.MainController;
 
 import javax.swing.*;
 import java.io.FileNotFoundException;
@@ -127,12 +127,20 @@ public class AppStartup implements Application {
             Options.optimizedRecusionExit =
                     Boolean.valueOf((String) settings.get("options.optimizedRecusionExit"));
         DbfImporter.clear();
+        FtpWebIO.clear();
         for (Map.Entry<Object, Object> entry1 : settings.entrySet()) {
             //noinspection RedundantCast
             Map.Entry<String, String> entry = (Map.Entry) entry1;
             if (entry.getKey().startsWith("dbfdir.")) {
                 DbfImporter.putLigaSync(entry.getKey().substring("dbfdir.".length()),
                         entry.getValue());
+            } else if (entry.getKey().startsWith("webdir.")) {
+                FtpWebIO.putLigaWeb(entry.getKey().substring("webdir.".length()),
+                        entry.getValue());
+            } else if (entry.getKey().equals("webfile.rang.suffix")) {
+                FtpWebIO.setRangSuffix(entry.getValue());
+            } else if (entry.getKey().equals("webfile.plan.suffix")) {
+                FtpWebIO.setPlanSuffix(entry.getValue());
             }
         }
     }

@@ -1,23 +1,23 @@
 package org.en.tealEye.guiMain;
 
+import de.liga.dart.exception.DartException;
 import de.liga.dart.fileimport.*;
 import de.liga.dart.fileimport.vfs.DbfExporter;
 import de.liga.dart.fileimport.vfs.DbfImporter;
 import de.liga.dart.fileimport.vfs.rangliste.RanglisteExporter;
 import de.liga.dart.gruppen.check.ProgressIndicator;
-import de.liga.dart.exception.DartException;
-import de.liga.util.thread.ThreadManager;
+import de.liga.dart.model.Liga;
 import de.liga.util.CalendarUtils;
-import org.en.tealEye.framework.LigaChooser;
-import org.en.tealEye.framework.SwingUtils;
+import de.liga.util.thread.ThreadManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.en.tealEye.framework.LigaChooser;
+import org.en.tealEye.framework.SwingUtils;
 
 import javax.swing.*;
 import java.io.File;
-import java.io.IOException;
 import java.io.FileNotFoundException;
-import java.io.FileFilter;
+import java.io.IOException;
 import java.util.Date;
 
 /**
@@ -56,6 +56,10 @@ public class ImportThreadWorker extends SwingWorker implements ProgressIndicator
                     return doExcelImport();
                 case ExcelRangliste:
                     return doExcelRangliste();
+                case HTMLRanglisten:
+                    return doHtmlRanglisten();
+                case HTMLSpielplaene:
+                    return doHtmlSpielplaene();
                 default:
                     return null; // unknown action
             }
@@ -64,8 +68,56 @@ public class ImportThreadWorker extends SwingWorker implements ProgressIndicator
         }
     }
 
+    private Object doHtmlSpielplaene() {
+        LigaChooser chooser =
+                new LigaChooser("HTML Upload - Spielpläne", mainAppFrame,
+                        LigaChooser.SELECTION_MODE_LIGA);
+        if (!chooser.choose() || chooser.getSelectedLiga() == null) {
+            mainAppFrame.setMessage("HTML Upload Spielpläne - Abbruch, keine Liga gewählt!");
+            return null;
+        }
+        Liga liga = chooser.getSelectedLiga();
+        FtpWebIO ftp = new FtpWebIO();
+        try {
+            mainAppFrame.setMessage("Kopiere Spielpläne für " + liga.getLigaName() + "...");
+            ftp.copyPlanHtmlToWebdir(liga);
+            mainAppFrame.setMessage("Uploading Spielpläne für " + liga.getLigaName() + "...");
+            ftp.uploadPlanWebdir(liga);
+            mainAppFrame.setMessage("Verarbeitung der Spielpläne abgeschlossen.");
+        } catch (IOException e) {
+            log.error("HTML Spielpläne - Fehler in Verarbeitung", e);
+            mainAppFrame.setMessage("Fehler in der Verarbeitung: " + e.getMessage());
+        }
+        return null;  //To change body of created methods use File | Settings | File Templates.
+    }
+
+
+    private Object doHtmlRanglisten() {
+        LigaChooser chooser =
+                new LigaChooser("HTML Upload - Ranglisten", mainAppFrame,
+                        LigaChooser.SELECTION_MODE_LIGA);
+        if (!chooser.choose() || chooser.getSelectedLiga() == null) {
+            mainAppFrame.setMessage("HTML Upload Ranglisten - Abbruch, keine Liga gewählt!");
+            return null;
+        }
+        Liga liga = chooser.getSelectedLiga();
+        FtpWebIO ftp = new FtpWebIO();
+        try {
+            mainAppFrame.setMessage("Kopiere Ranglisten für " + liga.getLigaName() + "...");
+            ftp.copyRangHtmlToWebdir(liga);
+            mainAppFrame.setMessage("Uploading Ranglisten für " + liga.getLigaName() + "...");
+            ftp.uploadRangWebdir(liga);
+            mainAppFrame.setMessage("Verarbeitung der Ranglisten abgeschlossen.");
+        } catch (IOException e) {
+            // loggen
+            log.error("HTML Ranglisten - Fehler in Verarbeitung", e);
+            mainAppFrame.setMessage("Fehler in der Verarbeitung: " + e.getMessage());
+        }
+        return null;
+    }
+
     private Object doExcelRangliste() {
-         LigaChooser chooser =
+        LigaChooser chooser =
                 new LigaChooser("vfs-Rangliste erstellen. 1. Liga wählen", mainAppFrame,
                         LigaChooser.SELECTION_MODE_LIGA);
         if (!chooser.choose() || chooser.getSelectedLiga() == null) {
@@ -84,7 +136,7 @@ public class ImportThreadWorker extends SwingWorker implements ProgressIndicator
             setRememberDir(file);
             file = ensureSuffix(file, ".xls");
         }
-        if(file == null) {
+        if (file == null) {
             mainAppFrame.setMessage("Rangliste - Abbruch, keine Exceldatei gewählt!");
             return null;
         }
@@ -138,7 +190,7 @@ public class ImportThreadWorker extends SwingWorker implements ProgressIndicator
         if (!file.getName().toLowerCase().endsWith(suffix.toLowerCase())) {
             String name = file.getName();
             int suff = name.lastIndexOf('.');
-            if(suff>0) {
+            if (suff > 0) {
                 name = name.substring(0, suff);
             }
             file = new File(file.getParent(), name + suffix);

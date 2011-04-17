@@ -5,11 +5,9 @@ import de.liga.dart.exception.DartException;
 import de.liga.dart.gruppen.check.ProgressIndicator;
 import de.liga.dart.liga.service.LigaService;
 import de.liga.dart.model.Liga;
-//import jstels.jdbc.common.CommonStatement;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-//import java.lang.reflect.Field;
 import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -47,6 +45,8 @@ public abstract class DbfIO implements DataExchanger {
             throw new DartException("Kann aktuelle Saison nicht auslesen.");
     }
 
+
+
     public static void putLigaSync(String liga, String dir) {
         SYNC_DIRS.put(liga, dir);
     }
@@ -58,6 +58,7 @@ public abstract class DbfIO implements DataExchanger {
     public static Map<String, String> getSyncDirs() {
         return SYNC_DIRS;
     }
+
 
     public void setProgressIndicator(ProgressIndicator indicator) {
         synchronized (SYNC_DIRS) {
@@ -174,9 +175,7 @@ public abstract class DbfIO implements DataExchanger {
     public boolean start(final String liganame) {
         synchronized (SYNC_DIRS) {
             success = true;
-            final String path = SYNC_DIRS.get(liganame);
-            if (path == null) throw new DartException("dbfdir." + liganame +
-                    " nicht bekannt (bitte settings.properties pruefen)");
+            final String path = getSyncDir(liganame);
             ServiceFactory.runAsTransaction(new Runnable() {
                 public void run() {
                     try {
@@ -211,6 +210,13 @@ public abstract class DbfIO implements DataExchanger {
             });
             return success;
         }
+    }
+
+    public static String getSyncDir(String liganame) {
+        final String path = SYNC_DIRS.get(liganame);
+        if (path == null) throw new DartException("dbfdir." + liganame +
+                " nicht bekannt (bitte settings.properties pruefen)");
+        return path;
     }
 
     public ProgressIndicator getProgressIndicator() {

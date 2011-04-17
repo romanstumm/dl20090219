@@ -3,8 +3,8 @@ package org.en.tealEye.guiMain;
 import org.en.tealEye.controller.gui.MenuController;
 
 import javax.swing.*;
-import java.awt.event.KeyEvent;
 import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 
 public class MainMenu extends JMenuBar {
 
@@ -67,10 +67,21 @@ public class MainMenu extends JMenuBar {
         item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_5, InputEvent.CTRL_MASK));
         addMenuController(menu);
 
-        item = new JMenuItem("Export Rangliste (aus vfs)");
+        menu.add(item = new JMenuItem("Excel (Rangliste aus vfs)"));
         item.setActionCommand("MENU_Rangliste");
         item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_MASK));
-        dateiMenu.add(item);
+
+        menu = new JMenu("HTML-Upload (vfs Dateien zur Website)...");
+        dateiMenu.add(menu);
+
+        menu.add(item = new JMenuItem("Ranglisten"));
+        item.setActionCommand("MENU_HTML_Ranglisten");
+
+        menu.add(item = new JMenuItem("Spielpläne"));
+        item.setActionCommand("MENU_HTML_Spielplaene");
+        addMenuController(menu);
+
+
         // - - - - - - - - - - - -
         dateiMenu.addSeparator();
         dateiMenu.add(new JMenuItem("Beenden"));

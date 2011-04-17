@@ -240,7 +240,7 @@ public class GroupCalculator {
                     if ((wunsch.getWunschArt() == WunschArt.WHITELIST_MUST)  // overrule!
                             && wunsch.getOtherTeam().getPosition() == team.getPosition()) {
                         team.setOther(other);
-                        team.setStatus(PositionStatus.WUNSCH_OVERRULED);   // TODO RSt - stimmt das
+                        team.setStatus(PositionStatus.WUNSCH_OVERRULED);
                         other.setStatus(PositionStatus.WUNSCH_OVERRULED);
                         return true;
                     }
