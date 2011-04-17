@@ -70,6 +70,16 @@ public class Ligagruppe implements java.io.Serializable, LigaPersistence {
         }
     }
 
+    public String getGruppenNameCompact() {
+        if (ligaklasse == null) {
+            return "";
+        } else if (getGruppenNr() > 0) {
+            return ligaklasse.getKlassenName() + getGruppenNr();
+        } else {
+            return ligaklasse.getKlassenName();
+        }
+    }
+
     public String toString() {
         return getGruppenName();
     }
