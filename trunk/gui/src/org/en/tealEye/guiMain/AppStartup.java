@@ -128,6 +128,13 @@ public class AppStartup implements Application {
                     Boolean.valueOf((String) settings.get("options.optimizedRecusionExit"));
         DbfImporter.clear();
         FtpWebIO.clear();
+        FtpWebIO.setFtpServerUserPassword(
+                settings.getProperty("ftp.server"),
+                settings.getProperty("ftp.user"),
+                settings.getProperty("ftp.password"));
+        FtpWebIO.setFtpPlanRangDirs(settings.getProperty("ftp.plan.dir"),
+                settings.getProperty("ftp.rang.dir"));
+        
         for (Map.Entry<Object, Object> entry1 : settings.entrySet()) {
             //noinspection RedundantCast
             Map.Entry<String, String> entry = (Map.Entry) entry1;
