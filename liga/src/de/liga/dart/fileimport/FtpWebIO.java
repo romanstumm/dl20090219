@@ -146,8 +146,9 @@ public class FtpWebIO {
         }
     }
 
-    public void uploadRangWebdir(Liga liga) throws IOException {
+    public boolean uploadRangWebdir(Liga liga) throws IOException {
         FTPClient ftp = prepareFTP();
+        if(ftp == null) return false;
         try {
             File webdir = getWebdirRang(liga);
             if (ftpDirRang != null && ftpDirRang.length() > 0)
@@ -159,10 +160,12 @@ public class FtpWebIO {
         } finally {
             ftpDisconnect(ftp);
         }
+        return true;
     }
 
-    public void uploadPlanWebdir(Liga liga) throws IOException {
+    public boolean uploadPlanWebdir(Liga liga) throws IOException {
         FTPClient ftp = prepareFTP();
+        if(ftp == null) return false;
         try {
             File webdir = getWebdirPlan(liga);
             if (ftpDirPlan != null && ftpDirPlan.length() > 0)
@@ -174,9 +177,11 @@ public class FtpWebIO {
         } finally {
             ftpDisconnect(ftp);
         }
+        return true;
     }
 
     private FTPClient prepareFTP() throws IOException {
+        if(server == null || server.length()== 0) return null;
         FTPClient ftp;
         ftp = new FTPClient();
         ftpConnect(server, ftp);
