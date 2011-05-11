@@ -82,9 +82,12 @@ public class ImportThreadWorker extends SwingWorker implements ProgressIndicator
             mainAppFrame.setMessage("Kopiere Spielpläne für " + liga.getLigaName() + "...");
             ftp.copyPlanHtmlToWebdir(liga);
             mainAppFrame.setMessage("Uploading Spielpläne für " + liga.getLigaName() + "...");
-            ftp.uploadPlanWebdir(liga);
-            mainAppFrame.setMessage("Verarbeitung der Spielpläne abgeschlossen.");
-        } catch (IOException e) {
+            if (ftp.uploadPlanWebdir(liga)) {
+                mainAppFrame.setMessage("Upload der Spielpläne abgeschlossen.");
+            } else {
+                mainAppFrame.setMessage("Upload der Spielpläne nicht möglich, fehlende FTP-Konfiguration.");
+            }
+        } catch (Exception e) {
             log.error("HTML Spielpläne - Fehler in Verarbeitung", e);
             mainAppFrame.setMessage("Fehler in der Verarbeitung: " + e.getMessage());
         }
@@ -106,9 +109,12 @@ public class ImportThreadWorker extends SwingWorker implements ProgressIndicator
             mainAppFrame.setMessage("Kopiere Ranglisten für " + liga.getLigaName() + "...");
             ftp.copyRangHtmlToWebdir(liga);
             mainAppFrame.setMessage("Uploading Ranglisten für " + liga.getLigaName() + "...");
-            ftp.uploadRangWebdir(liga);
-            mainAppFrame.setMessage("Verarbeitung der Ranglisten abgeschlossen.");
-        } catch (IOException e) {
+            if (ftp.uploadRangWebdir(liga)) {
+                mainAppFrame.setMessage("Upload der Ranglisten abgeschlossen.");
+            } else {
+                mainAppFrame.setMessage("Upload der Ranglisten nicht möglich, fehlende FTP-Konfiguration.");
+            }
+        } catch (Exception e) {
             // loggen
             log.error("HTML Ranglisten - Fehler in Verarbeitung", e);
             mainAppFrame.setMessage("Fehler in der Verarbeitung: " + e.getMessage());
