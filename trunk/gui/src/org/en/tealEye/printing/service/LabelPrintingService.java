@@ -53,7 +53,7 @@ public class  LabelPrintingService extends JPanel implements LabelPrinting {
     int padY = 10;
 
     final JTable sourceTable;
-    final Vector<String[]> labelStrings = new Vector<String[]>();
+    Vector<String[]> labelStrings = new Vector<String[]>();
     private Vector<BufferedImage> imageVector = new Vector<BufferedImage>();
     private BufferedImage lastImage;
     private String[] entries;
@@ -67,9 +67,11 @@ public class  LabelPrintingService extends JPanel implements LabelPrinting {
 
     private  Font font = new GlobalGuiService().getFontMap().get("EtiFont");
     private final Font smallFont = new Font(font.getName(),font.getStyle(),font.getSize()-6);
+    private final Font smallFont1 = new Font(font.getName(),font.getStyle(),font.getSize()-3);
+    private boolean teamCount = true;
 
 
-   // private  Font font = new GlobalGuiService().getFontMap().get("EtiFont"); 
+    // private  Font font = new GlobalGuiService().getFontMap().get("EtiFont"); 
 
     public LabelPrintingService(JTable sourceTable,int labelWidth, int labelHeight,
                                 int labelLeftBorder, int labelRightBorder, int labelsWanted, int etiZeilenAbstand)
@@ -132,16 +134,29 @@ public class  LabelPrintingService extends JPanel implements LabelPrinting {
                         g2.drawLine(0,(int)(labelHeight*ScaleY*y+(padY*ScaleY))+2, (int) paperWidth, (int)(labelHeight*ScaleY*y+(padY*ScaleY))+2);
                     }
                     g2.setColor(Color.BLACK);
-                    g2.setFont(font);
-                    g2.drawString(entries[0],(int)(labelWidth*ScaleX*x+(padX*ScaleX)),(int)(labelHeight*ScaleY*y+(fontHeight)+(padY*ScaleY)));
+
+                            if(teamCount){
+                                g2.setFont(smallFont1);
+                                g2.drawString(entries[5], (int) (labelWidth * ScaleX * x + (padX * ScaleX)), (int) (labelHeight * ScaleY * y + (fontHeight) + (padY * ScaleY))-2);
+                                g2.setStroke(new BasicStroke());
+                                g2.drawLine((int)(labelWidth*ScaleX*x+(padX*ScaleX)),(int)(labelHeight*ScaleY*y+(fontHeight)+(padY*ScaleY)),(int)((labelWidth*ScaleX*x+(padX*ScaleX))+(labelWidth*ScaleX-padX*ScaleX-25)),(int)(labelHeight*ScaleY*y+(fontHeight)+(padY*ScaleY)));
+                            }
+                            g2.setFont(font);
+                            g2.drawString(entries[0],(int)(labelWidth*ScaleX*x+(padX*ScaleX)),(int)(labelHeight*ScaleY*y+(fontHeight*2)+(padY*ScaleY)));
+
+
                         if(entries[1].matches("")){
-                            g2.drawString(entries[2],(int)(labelWidth*ScaleX*x+(padX*ScaleX)),(int)(labelHeight*ScaleY*y+(fontHeight*2)+(padY*ScaleY))+etiZeilenAbstand);
-                            g2.drawString(entries[3],(int)(labelWidth*ScaleX*x+(padX*ScaleX)),(int)(labelHeight*ScaleY*y+(fontHeight*3)+(padY*ScaleY))+etiZeilenAbstand*2);
+                            g2.drawString(entries[2],(int)(labelWidth*ScaleX*x+(padX*ScaleX)),(int)(labelHeight*ScaleY*y+(fontHeight*3)+(padY*ScaleY))+etiZeilenAbstand);
+                            g2.drawString(entries[3],(int)(labelWidth*ScaleX*x+(padX*ScaleX)),(int)(labelHeight*ScaleY*y+(fontHeight*4)+(padY*ScaleY))+etiZeilenAbstand*2);
                         }else{
-                            g2.drawString(entries[1],(int)(labelWidth*ScaleX*x+(padX*ScaleX)),(int)(labelHeight*ScaleY*y+(fontHeight*2)+(padY*ScaleY))+etiZeilenAbstand);
-                            g2.drawString(entries[2],(int)(labelWidth*ScaleX*x+(padX*ScaleX)),(int)(labelHeight*ScaleY*y+(fontHeight*3)+(padY*ScaleY))+etiZeilenAbstand*2);
+                            g2.drawString(entries[1],(int)(labelWidth*ScaleX*x+(padX*ScaleX)),(int)(labelHeight*ScaleY*y+(fontHeight*3)+(padY*ScaleY))+etiZeilenAbstand);
+                            g2.drawString(entries[2],(int)(labelWidth*ScaleX*x+(padX*ScaleX)),(int)(labelHeight*ScaleY*y+(fontHeight*4)+(padY*ScaleY))+etiZeilenAbstand*2);
                           //g2.drawString(entries[3],(int)(labelWidth*ScaleX*x+(padX*ScaleX)),(int)(labelHeight*ScaleY*y+(fontHeight*4)+(padY*ScaleY))+etiZeilenAbstand*4);
-                            g2.drawString(entries[3],(int)(labelWidth*ScaleX*x+(padX*ScaleX)),(int)(labelHeight*ScaleY*y+(fontHeight*4)+(padY*ScaleY))+etiZeilenAbstand*3);
+                            g2.drawString(entries[3],(int)(labelWidth*ScaleX*x+(padX*ScaleX)),(int)(labelHeight*ScaleY*y+(fontHeight*5)+(padY*ScaleY))+etiZeilenAbstand*3);
+
+
+
+
                     }
                     if(!entries[4].equals("")){
                         addLocationCount(g2,x,y);
@@ -194,9 +209,10 @@ public class  LabelPrintingService extends JPanel implements LabelPrinting {
                     }
                     if(!(lt==null)){
                         if(!ortIds.contains(spielort.getSpielortId())){
-                            rowString = new String[5];
+                            rowString = new String[6];
                             String lines[] = StringUtils.wordWrap(spielort.getSpielortName(), 25);
                             rowString[0] = lines[0];
+                            rowString[5] = spielort.getLigagruppenLabel(lt.getLiga());
                             if(lines.length > 1) {
                                 rowString[1] = lines[1];
                             } else {
@@ -206,6 +222,8 @@ public class  LabelPrintingService extends JPanel implements LabelPrinting {
 
                             rowString[3] = spielort.getPlzUndOrt();
                             rowString[4] = "";
+
+
                             labelStrings.addElement(rowString);
                             ortIds.add(spielort.getSpielortId());
                             ortIdx.add(spielort.getSpielortId());
@@ -221,11 +239,53 @@ public class  LabelPrintingService extends JPanel implements LabelPrinting {
                                     tmpAnzahl++;
                             }
                             entries[4] = String.valueOf(tmpAnzahl);
+                           // entries[5] = spielort.getLigagruppenLabel(lt.getLiga());
+                            System.out.println(entries[5]);
+
+
                         }
                     }
                 }
             }
         }}});
+        clean();
+    }
+
+    private void clean(){
+
+        String spielortName;
+        String spielortPLZOrt;
+        String spielortStrasse;
+
+        Vector<String[]> tmpVec = new Vector<String[]>();
+
+        int size = labelStrings.size();
+
+        for(int idx = 0; idx<size;idx++){
+            if(idx==labelStrings.size())
+                break;
+            String[]s = labelStrings.get(idx);
+            spielortName = s[0];
+            spielortStrasse = s[2];
+            spielortPLZOrt = s[3];
+
+                for(int i = 0;i<size;i++){
+                    if(i==labelStrings.size())
+                        break;
+                String[] str = labelStrings.get(i);
+                            System.out.println(str[0]);
+
+                            System.out.println(str[2]);
+                            System.out.println(str[3]);
+                    if(str[2].toString().equals(spielortStrasse.toString()) && str[3].equals(spielortPLZOrt) && i!=idx) {
+                            labelStrings.remove(i);
+                    }
+
+                }
+
+        }
+        //labelStrings.clear();
+        //labelStrings = tmpVec;
     }
     public void paintCanvas(){
         BufferedImage im;
@@ -236,6 +296,10 @@ public class  LabelPrintingService extends JPanel implements LabelPrinting {
             //imageVector.addElement(im);
         }
 
+    }
+
+    public void kill() {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
@@ -407,6 +471,10 @@ public class  LabelPrintingService extends JPanel implements LabelPrinting {
 
     public void setGuides(boolean b) {
         guides = b;
+    }
+    
+    public void setTeamsInSpielort(boolean b){
+        teamCount = b;
     }
 
     public void cleanUp(){
