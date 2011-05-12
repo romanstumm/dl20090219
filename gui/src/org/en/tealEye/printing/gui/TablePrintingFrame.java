@@ -120,6 +120,7 @@ public class TablePrintingFrame extends JFrame implements ActionListener, KeyLis
         jMenu1.add(new JMenuItem("Beenden"));
         jMenu1.getItem(0).setActionCommand("Beenden");
         jMenu1.getItem(0).addActionListener(this);
+        teamCount = new JCheckBox();
 
         leftSide = new JTextField("10", 3);
         upperSide = new JTextField("10", 3);
@@ -156,6 +157,8 @@ public class TablePrintingFrame extends JFrame implements ActionListener, KeyLis
         guides.setSelected(true);
         guides.addActionListener(this);
         fontType.addActionListener(this);
+        teamCount.setSelected(true);
+        teamCount.addActionListener(this);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         jToolBar1.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 20, 1, 1,
@@ -183,7 +186,11 @@ public class TablePrintingFrame extends JFrame implements ActionListener, KeyLis
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridx = 0;
         jPanel2.add(jComboBox2, gridBagConstraints);
+
+
+
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
@@ -364,11 +371,19 @@ public class TablePrintingFrame extends JFrame implements ActionListener, KeyLis
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        //gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel6.add(jComboBox1, gridBagConstraints);
         jComboBox1.addActionListener(this);
         jComboBox1.setActionCommand("orientation");
+
+        teamCount.setText("Teamanzeige");
+        teamCount.setActionCommand("teamCount");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridx = 1;
+        jPanel6.add(teamCount, gridBagConstraints);
 
         jToolBar6.add(jPanel6);
 
@@ -463,6 +478,7 @@ public class TablePrintingFrame extends JFrame implements ActionListener, KeyLis
     private javax.swing.JToolBar jToolBar7;
     private javax.swing.JToolBar jToolBar8;
     private javax.swing.JCheckBox guides;
+    private javax.swing.JCheckBox teamCount;
 
     public void rotateAndUpdate() {
         if (tablePrintService != null) {
@@ -534,6 +550,12 @@ public class TablePrintingFrame extends JFrame implements ActionListener, KeyLis
                 } else if (ac.equals("guides")) {
                     if (guides.isSelected()) labelPrinting.setGuides(true);
                     else labelPrinting.setGuides(false);
+                    setLabelValues();
+                    labelPrinting.repaintCanvas(pageIndex);
+                    loadPreview();
+                } else if (ac.equals("teamCount")) {
+                    if (teamCount.isSelected()) labelPrinting.setTeamsInSpielort(true);
+                    else labelPrinting.setTeamsInSpielort(false);
                     setLabelValues();
                     labelPrinting.repaintCanvas(pageIndex);
                     loadPreview();
