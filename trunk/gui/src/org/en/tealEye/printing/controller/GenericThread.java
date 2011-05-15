@@ -1,14 +1,13 @@
 package org.en.tealEye.printing.controller;
 
+import de.liga.util.thread.ThreadManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.en.tealEye.printing.gui.GenericLoadingBarFrame;
 
-import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.List;
-
-import de.liga.util.thread.ThreadManager;
 
 /**
  * Created by IntelliJ IDEA.
@@ -51,7 +50,7 @@ public class GenericThread extends Thread {
 
     public void setDone() {
         done = true;
-        System.out.println("GenericThread done!");
+//        System.out.println("GenericThread done!");
         frame.setVisible(false);
         try {
             this.finalize();

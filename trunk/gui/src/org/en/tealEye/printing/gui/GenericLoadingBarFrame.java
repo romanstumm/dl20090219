@@ -67,7 +67,7 @@ public class GenericLoadingBarFrame extends JFrame {
         );
 
         pack();
-        System.out.println(parentWindow.getLocation());
+//        System.out.println(parentWindow.getLocation());
         this.setLocation((int)parentWindow.getX()+((1024-200)/2),(int)parentWindow.getY()+((768-100)/2));
         this.setVisible(true);
     }

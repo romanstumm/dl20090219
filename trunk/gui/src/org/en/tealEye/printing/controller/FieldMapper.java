@@ -5,19 +5,19 @@ import org.apache.commons.logging.LogFactory;
 import org.en.tealEye.printing.gui.GenericLoadingBarFrame;
 
 import javax.swing.*;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
-import javax.swing.event.ListSelectionListener;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.InvocationTargetException;
-import java.util.*;
-import java.util.List;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.*;
-import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.*;
+import java.util.List;
 
 public class FieldMapper implements ActionListener, ChangeListener, ListSelectionListener, PropertyChangeListener, WindowListener, MouseListener {
     protected static final Log log = LogFactory.getLog(FieldMapper.class);
@@ -194,7 +194,7 @@ public class FieldMapper implements ActionListener, ChangeListener, ListSelectio
         if (m == null){
             m = methodMap.get(compName+"asThread");
         }
-            System.out.println(m.getName());
+//            System.out.println(m.getName());
         if(m.getName().contains("asThread")){
                 Point point = ((JFrame)formObject).getLocationOnScreen();
                 GenericLoadingBarFrame frame = new GenericLoadingBarFrame(point);
@@ -270,7 +270,7 @@ public class FieldMapper implements ActionListener, ChangeListener, ListSelectio
                 }
             }
         }
-        System.out.println("PropertyChangeListener!");
+//        System.out.println("PropertyChangeListener!");
         }
     }
 
@@ -280,7 +280,7 @@ public class FieldMapper implements ActionListener, ChangeListener, ListSelectio
     }
 
     public void windowClosing(WindowEvent e) {
-        System.out.println("Dispose");
+//        System.out.println("Dispose");
         Method dispose = methodMap.get("DisposeMethod");
         if(dispose != null)
             try {
@@ -317,7 +317,7 @@ public class FieldMapper implements ActionListener, ChangeListener, ListSelectio
     public void mouseClicked(MouseEvent e) {
         Component o = e.getComponent();
         String compName = o.getName();
-        System.out.println(compName);
+//        System.out.println(compName);
         Method m = methodMap.get(compName);
             if(m.getName().contains("asThread")){
                 new GenericThread(m, methodObject);
@@ -339,7 +339,7 @@ public class FieldMapper implements ActionListener, ChangeListener, ListSelectio
     public void mouseReleased(MouseEvent e) {
         Component o = e.getComponent();
         String compName = o.getName();
-        System.out.println(compName);
+//        System.out.println(compName);
         Method m = methodMap.get(compName);
             if(m.getName().contains("asThread")){
                 new GenericThread(m, methodObject);
