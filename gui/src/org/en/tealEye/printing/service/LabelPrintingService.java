@@ -240,7 +240,7 @@ public class  LabelPrintingService extends JPanel implements LabelPrinting {
                             }
                             entries[4] = String.valueOf(tmpAnzahl);
                            // entries[5] = spielort.getLigagruppenLabel(lt.getLiga());
-                            System.out.println(entries[5]);
+//                            System.out.println(entries[5]);
 
 
                         }
@@ -273,10 +273,10 @@ public class  LabelPrintingService extends JPanel implements LabelPrinting {
                     if(i==labelStrings.size())
                         break;
                 String[] str = labelStrings.get(i);
-                            System.out.println(str[0]);
+//                            System.out.println(str[0]);
 
-                            System.out.println(str[2]);
-                            System.out.println(str[3]);
+//                            System.out.println(str[2]);
+//                            System.out.println(str[3]);
                     if(str[2].toString().equals(spielortStrasse.toString()) && str[3].equals(spielortPLZOrt) && i!=idx) {
                             labelStrings.remove(i);
                     }

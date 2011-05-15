@@ -2,14 +2,9 @@ package org.en.tealEye.printing.controller;
 
 
 import javax.swing.*;
-import javax.imageio.ImageIO;
-import java.util.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.InputStream;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.File;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
 
 /**
  * Created by IntelliJ IDEA.
@@ -39,7 +34,7 @@ public class ExtResourceBundle {
         String col = resourceBundle.getString(resource);
         String[] c = col.split(", ");
         ArrayList colo = new ArrayList();
-        System.out.println(col);
+//        System.out.println(col);
         for(String s:c){
             if(!s.contains(",")){
                 colo.add(s);
