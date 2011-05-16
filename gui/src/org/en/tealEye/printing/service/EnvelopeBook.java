@@ -65,7 +65,6 @@ public class EnvelopeBook implements Printable {
         this.sliderAddress = sliderAddress;
         this.sliderSender = sliderSender;
     }
-  @Override
   public int print(Graphics gfx, PageFormat pf, int pageIndex) throws PrinterException {
     // pageIndex 1 corresponds to page number 2.
     if (pageIndex > maximumPages)

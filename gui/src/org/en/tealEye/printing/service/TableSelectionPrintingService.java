@@ -260,4 +260,8 @@ public class TableSelectionPrintingService extends JPanel implements TablePrinti
     public void paintCanvas() {
         // do nothing
     }
+
+    public void kill() {
+            System.gc();
+     }
 }
