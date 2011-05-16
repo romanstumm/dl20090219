@@ -32,7 +32,7 @@
 <entry key="AddressFontType">Arial</entry>
 <entry key="senderName">null</entry>
 <entry key="EtiFontStyle">0</entry>
-<entry key="SenderInCorner">false</entry>
+<entry key="SenderInCorner">true</entry>
 <entry key="senderPLZ">null</entry>
 <entry key="FormFontType">Arial</entry>
 <entry key="LabelFontType">Arial</entry>
