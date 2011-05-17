@@ -209,7 +209,7 @@ public class TablePrintingFrame extends JFrame implements ActionListener, KeyLis
         jPanel3.setLayout(new java.awt.GridBagLayout());
 
         jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        jButton8.setText("Vorwï¿½rts");
+        jButton8.setText("Vorwärts");
         jButton8.setActionCommand("forward");
         jButton8.addActionListener(this);
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -227,7 +227,7 @@ public class TablePrintingFrame extends JFrame implements ActionListener, KeyLis
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         jPanel3.add(jButton7, gridBagConstraints);
 
-        jButton6.setText("Zurï¿½ck");
+        jButton6.setText("Zurück");
         jButton6.setActionCommand("backward");
         jButton6.addActionListener(this);
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -378,6 +378,7 @@ public class TablePrintingFrame extends JFrame implements ActionListener, KeyLis
         jComboBox1.setActionCommand("orientation");
 
         teamCount.setText("Gruppenanzeige");
+        teamCount.setToolTipText("Gruppen pro Spielort in der Form A1 C1 usw. anzeigen");
         teamCount.setActionCommand("teamCount");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
