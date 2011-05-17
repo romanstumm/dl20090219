@@ -31,5 +31,5 @@ public interface TablePrinting extends Printable {
 
     void paintCanvas();
 
-    void kill();
+    //void kill();
 }
