@@ -21,10 +21,11 @@ import java.util.StringTokenizer;
  */
 public class FtpWebIO {
     // target files
-    protected static final Map<String, String> WEB_DIRS = new HashMap();
+    protected static final Map<String, String> LIGA_DIRS = new HashMap();
     protected static String rangSuffix = "_rang.html", planSuffix = "_plan.html";
-    private static String server, user, password, ftpDirPlan, ftpDirRang;
+    private static String server, user, password, ftpDir, webDir;
     private static final Log log = LogFactory.getLog(FtpWebIO.class);
+
 
     public static void setRangSuffix(String rangSuffix) {
         FtpWebIO.rangSuffix = rangSuffix;
@@ -34,16 +35,18 @@ public class FtpWebIO {
         FtpWebIO.planSuffix = planSuffix;
     }
 
-    public static void putLigaWeb(String liga, String dir) {
-        WEB_DIRS.put(liga, dir);
+    public static void putLigaDir(String liga, String dir) {
+        LIGA_DIRS.put(liga, dir);
     }
 
-    public static Map<String, String> getWebDirs() {
-        return WEB_DIRS;
+    public static Map<String, String> getLigaDirs() {
+        return LIGA_DIRS;
     }
 
     public static void clear() {
-        WEB_DIRS.clear();
+        LIGA_DIRS.clear();
+        ftpDir = null;
+        webDir = null;
         server = null;
         user = null;
         password = null;
@@ -55,9 +58,9 @@ public class FtpWebIO {
         password = p;
     }
 
-    public static void setFtpPlanRangDirs(String p, String r) {
-        ftpDirPlan = p;
-        ftpDirRang = r;
+    public static void setWebAndFtpDir(String p, String r) {
+        webDir = p;
+        ftpDir = r;
     }
 
     public void copyRangHtmlToWebdir(Liga liga) throws DartException, IOException {
@@ -66,20 +69,32 @@ public class FtpWebIO {
         File sourcedir = new File(syncdir, "HTARCHIV");
 
         // webdir = target dir
-        File targetdir = getWebdirRang(liga);
+        File targetdir = getWebDirRang(liga);
         copyFiles(sourcedir, targetdir, rangSuffix.toLowerCase());
     }
 
-    private File getWebdirRang(Liga liga) {
-        String webdir = getWebdir(liga);
+    private File getWebDirRang(Liga liga) {
+        String webdir = getWebDir(liga);
         return new File(webdir, "rangliste");
     }
 
-    private String getWebdir(Liga liga) {
-        final String path = WEB_DIRS.get(liga.getLigaName());
+    private String getFtpDirRang(Liga liga) {
+        String dir = getFtpDir(liga);
+        return new File(dir, "rangliste").getPath();
+    }
+
+    private String getWebDir(Liga liga) {
+        final String path = LIGA_DIRS.get(liga.getLigaName());
         if (path == null) throw new DartException("webdir." + liga.getLigaName() +
                 " nicht bekannt (bitte settings.properties pruefen)");
-        return path;
+        return new File(webDir, path).getPath();
+    }
+
+    private String getFtpDir(Liga liga) {
+        final String path = LIGA_DIRS.get(liga.getLigaName());
+        if (path == null) throw new DartException("webdir." + liga.getLigaName() +
+                " nicht bekannt (bitte settings.properties pruefen)");        
+        return new File(ftpDir, path).getPath();
     }
 
     public void copyPlanHtmlToWebdir(Liga liga) throws IOException {
@@ -87,13 +102,18 @@ public class FtpWebIO {
         File sourcedir = new File(syncdir, "HTARCHIV");
 
         // webdir = target dir
-        File targetdir = getWebdirPlan(liga);
+        File targetdir = getWebDirPlan(liga);
         copyFiles(sourcedir, targetdir, planSuffix.toLowerCase());
     }
 
-    private File getWebdirPlan(Liga liga) {
-        String webdir = getWebdir(liga);
-        return new File(webdir, "spielplan");
+    private File getWebDirPlan(Liga liga) {
+        String dir = getWebDir(liga);
+        return new File(dir, "spielplan");
+    }
+
+    private String getFtpDirPlan(Liga liga) {
+        String dir = getFtpDir(liga);
+        return new File(dir, "spielplan").getPath();
     }
 
     private void copyFiles(File sourcedir, File targetdir, final String suffix) throws IOException {
@@ -112,13 +132,13 @@ public class FtpWebIO {
             if (!Character.isDigit(klasse.charAt(klasse.length() - 1))) {
                 if (klasse.equals("bezirkoberliga") || klasse.equals("bezirksoberliga")) {
                     klasse = "bzo";
-                    // keine nr ergänzen (siehe westerwald)
+                    // keine nr ergï¿½nzen (siehe westerwald)
                 } else if (klasse.equals("bezirksliga")) {
                     klasse = "bz";
-                    // ggf. fehlende nr ergänzen (siehe westerwald)
+                    // ggf. fehlende nr ergï¿½nzen (siehe westerwald)
                     klasse = klasse + tokens.nextToken();  // blank nach dem Namen, nur hier, sonst nirgends
                 } else {
-                    // ggf. fehlende nr ergänzen (siehe benden A*)
+                    // ggf. fehlende nr ergï¿½nzen (siehe benden A*)
                     klasse = klasse + "1";
                 }
             }
@@ -134,7 +154,7 @@ public class FtpWebIO {
             try {
                 while ((line = br.readLine()) != null) {
                     if (!line.startsWith("<link rel=File-List")) {
-                        // in der Datei die Zeile löschen, die mit "<link rel=File-List" anfängt
+                        // in der Datei die Zeile lï¿½schen, die mit "<link rel=File-List" anfï¿½ngt
                         fw.write(line);
                         fw.write("\n");
                     }
@@ -150,9 +170,10 @@ public class FtpWebIO {
         FTPClient ftp = prepareFTP();
         if(ftp == null) return false;
         try {
-            File webdir = getWebdirRang(liga);
-            if (ftpDirRang != null && ftpDirRang.length() > 0)
-                ftp.changeWorkingDirectory(ftpDirRang);
+            File webdir = getWebDirRang(liga);
+            String ftpdir = getFtpDirRang(liga);
+            if (ftpdir != null && ftpdir.length() > 0)
+                ftp.changeWorkingDirectory(ftpdir);
             for (File each : webdir.listFiles()) {
                 if (each.isFile())
                     ftpStoreFile(each.getPath(), each.getName(), ftp);
@@ -167,9 +188,10 @@ public class FtpWebIO {
         FTPClient ftp = prepareFTP();
         if(ftp == null) return false;
         try {
-            File webdir = getWebdirPlan(liga);
-            if (ftpDirPlan != null && ftpDirPlan.length() > 0)
-                ftp.changeWorkingDirectory(ftpDirPlan);
+            File webdir = getWebDirPlan(liga);
+            String ftpdir = getFtpDirPlan(liga);
+            if (ftpdir != null && ftpdir.length() > 0)
+                ftp.changeWorkingDirectory(ftpdir);
             for (File each : webdir.listFiles()) {
                 if (each.isFile())
                     ftpStoreFile(each.getPath(), each.getName(), ftp);
