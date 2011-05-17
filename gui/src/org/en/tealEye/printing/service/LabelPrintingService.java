@@ -71,6 +71,7 @@ public class  LabelPrintingService extends JPanel implements LabelPrinting {
     private boolean teamCount = true;
 
 
+
     // private  Font font = new GlobalGuiService().getFontMap().get("EtiFont"); 
 
     public LabelPrintingService(JTable sourceTable,int labelWidth, int labelHeight,
@@ -209,10 +210,11 @@ public class  LabelPrintingService extends JPanel implements LabelPrinting {
                     }
                     if(!(lt==null)){
                         if(!ortIds.contains(spielort.getSpielortId())){
-                            rowString = new String[6];
+                            rowString = new String[7];
                             String lines[] = StringUtils.wordWrap(spielort.getSpielortName(), 25);
                             rowString[0] = lines[0];
                             rowString[5] = spielort.getLigagruppenLabel(lt.getLiga());
+                            rowString[6] = lt.getLiga().getLigaName();
                             if(lines.length > 1) {
                                 rowString[1] = lines[1];
                             } else {
@@ -248,7 +250,7 @@ public class  LabelPrintingService extends JPanel implements LabelPrinting {
                 }
             }
         }}});
-      //  clean();
+        clean();
     }
 
     private void clean(){
@@ -256,7 +258,7 @@ public class  LabelPrintingService extends JPanel implements LabelPrinting {
         String spielortName;
         String spielortPLZOrt;
         String spielortStrasse;
-
+        String spielortLiga;
         Vector<String[]> tmpVec = new Vector<String[]>();
 
         int size = labelStrings.size();
@@ -268,16 +270,17 @@ public class  LabelPrintingService extends JPanel implements LabelPrinting {
             spielortName = s[0];
             spielortStrasse = s[2];
             spielortPLZOrt = s[3];
+            spielortLiga = s[6];
 
                 for(int i = 0;i<size;i++){
-                    if(i==labelStrings.size())
+                    if(i>=labelStrings.size())
                         break;
                 String[] str = labelStrings.get(i);
-//                            System.out.println(str[0]);
+                            System.out.println(str[0]);
 
-//                            System.out.println(str[2]);
-//                            System.out.println(str[3]);
-                    if(str[2].toString().equals(spielortStrasse.toString()) && str[3].equals(spielortPLZOrt) && i!=idx) {
+                            System.out.println(str[2]);
+                            System.out.println(str[3]);
+                    if(str[2].toString().equals(spielortStrasse.toString()) && str[3].equals(spielortPLZOrt) && str[6].equals(spielortLiga) && i!=idx) {
                             labelStrings.remove(i);
                     }
 
