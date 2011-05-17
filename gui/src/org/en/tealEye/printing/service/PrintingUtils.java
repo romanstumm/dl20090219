@@ -180,7 +180,7 @@ public class PrintingUtils {
 
     public int getPagesPerLabel(int labelsPerPage, int labelsWanted) {
         double pPL = (double) labelsWanted / (double) labelsPerPage;
-        return round(pPL);
+        return (int) Math.ceil(pPL);
     }
 
     public int getRowsThisPage(int rowsPerPage, int tableRows, int pageIndex) {

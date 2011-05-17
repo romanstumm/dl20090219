@@ -248,7 +248,7 @@ public class  LabelPrintingService extends JPanel implements LabelPrinting {
                 }
             }
         }}});
-        clean();
+      //  clean();
     }
 
     private void clean(){
