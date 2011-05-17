@@ -78,7 +78,7 @@ public class AppStartup implements Application {
             }
         } catch (Exception e) {
             String m2 =
-                    "\nDie Lizenz ist nicht mehr gültig.\nBitte kontaktieren Sie den Hersteller: Stefan Pudras (pudras@gmx.net)";
+                    "\nDie Lizenz ist nicht mehr gï¿½ltig.\nBitte kontaktieren Sie den Hersteller: Stefan Pudras (pudras@gmx.net)";
             if (out != null) {
                 out.println(msg);
                 out.println(m2);
@@ -132,8 +132,9 @@ public class AppStartup implements Application {
                 settings.getProperty("ftp.server"),
                 settings.getProperty("ftp.user"),
                 settings.getProperty("ftp.password"));
-        FtpWebIO.setFtpPlanRangDirs(settings.getProperty("ftp.plan.dir"),
-                settings.getProperty("ftp.rang.dir"));
+        FtpWebIO.setWebAndFtpDir(
+                settings.getProperty("web.dir"),
+                settings.getProperty("ftp.dir"));
         
         for (Map.Entry<Object, Object> entry1 : settings.entrySet()) {
             //noinspection RedundantCast
@@ -142,7 +143,7 @@ public class AppStartup implements Application {
                 DbfImporter.putLigaSync(entry.getKey().substring("dbfdir.".length()),
                         entry.getValue());
             } else if (entry.getKey().startsWith("webdir.")) {
-                FtpWebIO.putLigaWeb(entry.getKey().substring("webdir.".length()),
+                FtpWebIO.putLigaDir(entry.getKey().substring("webdir.".length()),
                         entry.getValue());
             } else if (entry.getKey().equals("webfile.rang.suffix")) {
                 FtpWebIO.setRangSuffix(entry.getValue());
