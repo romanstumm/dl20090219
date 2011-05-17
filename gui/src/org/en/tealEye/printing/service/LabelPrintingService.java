@@ -67,7 +67,7 @@ public class  LabelPrintingService extends JPanel implements LabelPrinting {
 
     private  Font font = new GlobalGuiService().getFontMap().get("EtiFont");
     private final Font smallFont = new Font(font.getName(),font.getStyle(),font.getSize()-6);
-    private final Font smallFont1 = new Font(font.getName(),font.getStyle(),font.getSize()-3);
+    private final Font smallFont1 = new Font(font.getName(),font.getStyle(),font.getSize()-4);
     private boolean teamCount = true;
 
 
@@ -276,10 +276,10 @@ public class  LabelPrintingService extends JPanel implements LabelPrinting {
                     if(i>=labelStrings.size())
                         break;
                 String[] str = labelStrings.get(i);
-                            System.out.println(str[0]);
+ //                           System.out.println(str[0]);
 
-                            System.out.println(str[2]);
-                            System.out.println(str[3]);
+//                            System.out.println(str[2]);
+//                            System.out.println(str[3]);
                     if(str[2].toString().equals(spielortStrasse.toString()) && str[3].equals(spielortPLZOrt) && str[6].equals(spielortLiga) && i!=idx) {
                             labelStrings.remove(i);
                     }
