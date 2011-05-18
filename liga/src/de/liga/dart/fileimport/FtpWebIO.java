@@ -2,6 +2,7 @@ package de.liga.dart.fileimport;
 
 import de.liga.dart.exception.DartException;
 import de.liga.dart.model.Liga;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.net.ftp.FTP;
@@ -23,7 +24,10 @@ public class FtpWebIO {
     // target files
     protected static final Map<String, String> LIGA_DIRS = new HashMap();
     protected static String rangSuffix = "_rang.html", planSuffix = "_plan.html";
-    private static String server, user, password, ftpDir, webDir;
+    private static final String DEFAULT_WEB_DIR = "C:/web/liga/";
+    private static final String DEFAULT_FTP_DIR = "liga/";
+
+    private static String server, user, password, ftpDir = DEFAULT_FTP_DIR, webDir = DEFAULT_WEB_DIR;
     private static final Log log = LogFactory.getLog(FtpWebIO.class);
 
 
@@ -45,8 +49,8 @@ public class FtpWebIO {
 
     public static void clear() {
         LIGA_DIRS.clear();
-        ftpDir = null;
-        webDir = null;
+        ftpDir = DEFAULT_FTP_DIR;
+        webDir = DEFAULT_WEB_DIR;
         server = null;
         user = null;
         password = null;
@@ -61,6 +65,12 @@ public class FtpWebIO {
     public static void setWebAndFtpDir(String p, String r) {
         webDir = p;
         ftpDir = r;
+        if (StringUtils.isEmpty(webDir)) {
+            webDir = DEFAULT_WEB_DIR;
+        }
+        if (StringUtils.isEmpty(ftpDir)) {
+            ftpDir = DEFAULT_FTP_DIR;
+        }
     }
 
     public void copyRangHtmlToWebdir(Liga liga) throws DartException, IOException {
@@ -84,17 +94,27 @@ public class FtpWebIO {
     }
 
     private String getWebDir(Liga liga) {
-        final String path = LIGA_DIRS.get(liga.getLigaName());
+        final String path = getLigaDirs().get(liga.getLigaName());
         if (path == null) throw new DartException("webdir." + liga.getLigaName() +
                 " nicht bekannt (bitte settings.properties pruefen)");
-        return new File(webDir, path).getPath();
+        File fpath = new File(path);
+        if (fpath.isAbsolute()) {
+            return fpath.getPath();
+        } else {
+            return new File(webDir, path).getPath();
+        }
     }
 
     private String getFtpDir(Liga liga) {
-        final String path = LIGA_DIRS.get(liga.getLigaName());
+        final String path = getLigaDirs().get(liga.getLigaName());
         if (path == null) throw new DartException("webdir." + liga.getLigaName() +
-                " nicht bekannt (bitte settings.properties pruefen)");        
-        return new File(ftpDir, path).getPath();
+                " nicht bekannt (bitte settings.properties pruefen)");
+        File fpath = new File(path);
+        if (fpath.isAbsolute()) {
+            return fpath.getPath();
+        } else {
+            return new File(ftpDir, path).getPath();
+        }
     }
 
     public void copyPlanHtmlToWebdir(Liga liga) throws IOException {
@@ -168,7 +188,7 @@ public class FtpWebIO {
 
     public boolean uploadRangWebdir(Liga liga) throws IOException {
         FTPClient ftp = prepareFTP();
-        if(ftp == null) return false;
+        if (ftp == null) return false;
         try {
             File webdir = getWebDirRang(liga);
             String ftpdir = getFtpDirRang(liga);
@@ -186,7 +206,7 @@ public class FtpWebIO {
 
     public boolean uploadPlanWebdir(Liga liga) throws IOException {
         FTPClient ftp = prepareFTP();
-        if(ftp == null) return false;
+        if (ftp == null) return false;
         try {
             File webdir = getWebDirPlan(liga);
             String ftpdir = getFtpDirPlan(liga);
@@ -203,7 +223,7 @@ public class FtpWebIO {
     }
 
     private FTPClient prepareFTP() throws IOException {
-        if(server == null || server.length()== 0) return null;
+        if (server == null || server.length() == 0) return null;
         FTPClient ftp;
         ftp = new FTPClient();
         ftpConnect(server, ftp);
