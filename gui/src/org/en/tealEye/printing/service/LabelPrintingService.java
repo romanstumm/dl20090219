@@ -68,7 +68,7 @@ public class  LabelPrintingService extends JPanel implements LabelPrinting {
     private  Font font = new GlobalGuiService().getFontMap().get("EtiFont");
     private final Font smallFont = new Font(font.getName(),font.getStyle(),font.getSize()-6);
     private final Font smallFont1 = new Font(font.getName(),font.getStyle(),font.getSize()-4);
-    private boolean teamCount = true;
+    private boolean gruppenAnzeige = true;
 
 
 
@@ -136,7 +136,7 @@ public class  LabelPrintingService extends JPanel implements LabelPrinting {
                     }
                     g2.setColor(Color.BLACK);
 
-                            if(teamCount){
+                            if(gruppenAnzeige){
                                 g2.setFont(smallFont1);
                                 g2.drawString(entries[5], (int) (labelWidth * ScaleX * x + (padX * ScaleX)), (int) (labelHeight * ScaleY * y + (fontHeight) + (padY * ScaleY))-2);
                                 g2.setStroke(new BasicStroke());
@@ -476,8 +476,8 @@ public class  LabelPrintingService extends JPanel implements LabelPrinting {
         guides = b;
     }
     
-    public void setTeamsInSpielort(boolean b){
-        teamCount = b;
+    public void setGruppenAnzeige(boolean b){
+        gruppenAnzeige = b;
     }
 
     public void cleanUp(){

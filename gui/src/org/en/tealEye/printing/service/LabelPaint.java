@@ -4,7 +4,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.en.tealEye.guiServices.GlobalGuiService;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.print.PageFormat;
@@ -19,7 +18,7 @@ import java.util.Vector;
  */
 public class LabelPaint {
 
-     private static final Log log = LogFactory.getLog(LabelPrintingService.class);
+     private static final Log log = LogFactory.getLog(LabelPaint.class);
     final PrintingUtils utils = new PrintingUtils();
 
     int labelHeight;
