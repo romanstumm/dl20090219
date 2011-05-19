@@ -558,6 +558,7 @@ public class TablePrintingFrame extends JFrame implements ActionListener, KeyLis
                     if (teamCount.isSelected()) labelPrinting.setGruppenAnzeige(true);
                     else labelPrinting.setGruppenAnzeige(false);
                     setLabelValues();
+                    labelPrinting.computePrintableData();
                     labelPrinting.repaintCanvas(pageIndex);
                     loadPreview();
                 } else if (ac.equals("printPageNum")) {
