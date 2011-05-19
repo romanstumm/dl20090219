@@ -22,7 +22,7 @@ import java.util.Vector;
 public class LabelBook implements Printable {
 
 
-    private static final Log log = LogFactory.getLog(LabelPrintingService.class);
+    private static final Log log = LogFactory.getLog(LabelBook.class);
     final PrintingUtils utils = new PrintingUtils();
 
     int labelHeight;

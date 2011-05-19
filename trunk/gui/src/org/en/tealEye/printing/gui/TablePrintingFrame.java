@@ -6,14 +6,14 @@ import org.en.tealEye.printing.controller.WindowController;
 import org.en.tealEye.printing.service.*;
 
 import javax.swing.*;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
 
 
 public class TablePrintingFrame extends JFrame implements ActionListener, KeyListener, ChangeListener {
@@ -555,8 +555,8 @@ public class TablePrintingFrame extends JFrame implements ActionListener, KeyLis
                     labelPrinting.repaintCanvas(pageIndex);
                     loadPreview();
                 } else if (ac.equals("teamCount")) {
-                    if (teamCount.isSelected()) labelPrinting.setTeamsInSpielort(true);
-                    else labelPrinting.setTeamsInSpielort(false);
+                    if (teamCount.isSelected()) labelPrinting.setGruppenAnzeige(true);
+                    else labelPrinting.setGruppenAnzeige(false);
                     setLabelValues();
                     labelPrinting.repaintCanvas(pageIndex);
                     loadPreview();
