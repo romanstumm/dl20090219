@@ -16,10 +16,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.print.*;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
-import java.util.Date;
 
 /**
  * Description: <br/>
@@ -376,7 +376,4 @@ public class GroupTablePrintingService extends JPanel implements TablePrinting {
         // do nothing
     }
 
-    public void kill() {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
 }
