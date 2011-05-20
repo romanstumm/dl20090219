@@ -135,6 +135,9 @@ public class AppStartup implements Application {
         FtpWebIO.setWebAndFtpDir(
                 settings.getProperty("web.dir"),
                 settings.getProperty("ftp.dir"));
+        if(Boolean.parseBoolean(settings.getProperty("ftp.fake"))) {
+            FtpWebIO.setFakeFtp(true);
+        }
         
         for (Map.Entry<Object, Object> entry1 : settings.entrySet()) {
             //noinspection RedundantCast
