@@ -77,7 +77,7 @@ public class ImportThreadWorker extends SwingWorker implements ProgressIndicator
             return null;
         }
         Liga liga = chooser.getSelectedLiga();
-        FtpWebIO ftp = new FtpWebIO();
+        FtpWebIO ftp = new FtpWebIO(mainAppFrame);
         try {
             mainAppFrame.setMessage("Kopiere Spielpläne für " + liga.getLigaName() + "...");
             ftp.copyPlanHtmlToWebdir(liga);
@@ -90,6 +90,8 @@ public class ImportThreadWorker extends SwingWorker implements ProgressIndicator
         } catch (Exception e) {
             log.error("HTML Spielpläne - Fehler in Verarbeitung", e);
             mainAppFrame.setMessage("Fehler in der Verarbeitung: " + e.getMessage());
+        } finally {
+            mainAppFrame.showProgress(0, "");
         }
         return null;  //To change body of created methods use File | Settings | File Templates.
     }
@@ -104,7 +106,7 @@ public class ImportThreadWorker extends SwingWorker implements ProgressIndicator
             return null;
         }
         Liga liga = chooser.getSelectedLiga();
-        FtpWebIO ftp = new FtpWebIO();
+        FtpWebIO ftp = new FtpWebIO(mainAppFrame);
         try {
             mainAppFrame.setMessage("Kopiere Ranglisten für " + liga.getLigaName() + "...");
             ftp.copyRangHtmlToWebdir(liga);
@@ -118,6 +120,8 @@ public class ImportThreadWorker extends SwingWorker implements ProgressIndicator
             // loggen
             log.error("HTML Ranglisten - Fehler in Verarbeitung", e);
             mainAppFrame.setMessage("Fehler in der Verarbeitung: " + e.getMessage());
+        } finally {
+            mainAppFrame.showProgress(0, "");
         }
         return null;
     }

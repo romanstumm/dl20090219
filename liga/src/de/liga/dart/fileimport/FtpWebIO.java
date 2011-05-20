@@ -1,6 +1,7 @@
 package de.liga.dart.fileimport;
 
 import de.liga.dart.exception.DartException;
+import de.liga.dart.gruppen.check.ProgressIndicator;
 import de.liga.dart.model.Liga;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -20,16 +21,29 @@ import java.util.StringTokenizer;
  * Date: 17.04.2011
  * Time: 20:31:49
  */
-public class FtpWebIO {
+public class FtpWebIO implements ProgressIndicator {
     // target files
     protected static final Map<String, String> LIGA_DIRS = new HashMap();
     protected static String rangSuffix = "_rang.html", planSuffix = "_plan.html";
     private static final String DEFAULT_WEB_DIR = "C:/web/liga/";
     private static final String DEFAULT_FTP_DIR = "liga/";
 
+    private static boolean fakeFtp;
     private static String server, user, password, ftpDir = DEFAULT_FTP_DIR, webDir = DEFAULT_WEB_DIR;
     private static final Log log = LogFactory.getLog(FtpWebIO.class);
+    private final ProgressIndicator mainAppFrame;
 
+    public static boolean isFakeFtp() {
+        return fakeFtp;
+    }
+
+    public static void setFakeFtp(boolean value) {
+        fakeFtp = value;
+    }
+
+    public FtpWebIO(ProgressIndicator mainAppFrame) {
+        this.mainAppFrame = mainAppFrame;
+    }
 
     public static void setRangSuffix(String rangSuffix) {
         FtpWebIO.rangSuffix = rangSuffix;
@@ -142,6 +156,7 @@ public class FtpWebIO {
                 return name.toLowerCase().endsWith(suffix);
             }
         });
+        if (sourcefiles == null) throw new IOException("Quell-Verzeichnis " + sourcedir.getPath() + " nicht vorhanden");
         for (File sourcefile : sourcefiles) {
             // Dateiname parsen, Name der Zieldatei erstellen
             String plainName = sourcefile.getName().substring(0, sourcefile.getName().length() - suffix.length());
@@ -192,16 +207,36 @@ public class FtpWebIO {
         try {
             File webdir = getWebDirRang(liga);
             String ftpdir = getFtpDirRang(liga);
-            if (ftpdir != null && ftpdir.length() > 0)
+            if (ftpdir != null && ftpdir.length() > 0) {
+                log.info("FTP change working dir to: " + ftpdir);
                 ftp.changeWorkingDirectory(ftpdir);
-            for (File each : webdir.listFiles()) {
-                if (each.isFile())
-                    ftpStoreFile(each.getPath(), each.getName(), ftp);
             }
+            uploadFtpFiles(ftp, webdir);
+            log.info("done upload rang from " + webdir.getPath() + " to " + ftpDir + " for " + liga.getLigaName());
         } finally {
             ftpDisconnect(ftp);
         }
         return true;
+    }
+
+    private void uploadFtpFiles(FTPClient ftp, File webdir) throws IOException {
+        File[] files = webdir.listFiles();
+        if (files.length == 0) return;
+        int idx = 1;
+        int filesLength = 0;
+        for (File each : files) {
+            if (each.isFile()) {
+                filesLength++;
+            }
+        }
+        int step = 100 / filesLength;
+        for (File each : files) {
+            if (each.isFile()) {
+                showProgress(step * idx, each.getName() + "...");
+                ftpStoreFile(each.getPath(), each.getName(), ftp);
+                idx++;
+            }
+        }
     }
 
     public boolean uploadPlanWebdir(Liga liga) throws IOException {
@@ -210,12 +245,12 @@ public class FtpWebIO {
         try {
             File webdir = getWebDirPlan(liga);
             String ftpdir = getFtpDirPlan(liga);
-            if (ftpdir != null && ftpdir.length() > 0)
+            if (ftpdir != null && ftpdir.length() > 0) {
+                log.info("FTP change working dir to: " + ftpdir);
                 ftp.changeWorkingDirectory(ftpdir);
-            for (File each : webdir.listFiles()) {
-                if (each.isFile())
-                    ftpStoreFile(each.getPath(), each.getName(), ftp);
             }
+            uploadFtpFiles(ftp, webdir);
+            log.info("done upload spielplan from " + webdir.getPath() + " to " + ftpDir + " for " + liga.getLigaName());
         } finally {
             ftpDisconnect(ftp);
         }
@@ -223,30 +258,51 @@ public class FtpWebIO {
     }
 
     private FTPClient prepareFTP() throws IOException {
-        if (server == null || server.length() == 0) return null;
+        log.info("FTP connect to " + server);
+        if (server == null || server.length() == 0) {
+            log.warn("no 'ftp.server' configured. no upload possible.");
+            return null;
+        }
         FTPClient ftp;
         ftp = new FTPClient();
-        ftpConnect(server, ftp);
-        ftpLogin(user, password, true, ftp);
+        if (!fakeFtp) {
+            ftpConnect(server, ftp);
+            ftpLogin(user, password, true, ftp);
+            log.info("FTP login successful");
+        } else {
+            log.info("Faking FTP connect");
+        }
         return ftp;
     }
 
     private void ftpDisconnect(FTPClient ftp) throws IOException {
-        if (ftp.isConnected()) {
+        if (ftp.isConnected() && !fakeFtp) {
             ftp.disconnect();
+            log.info("FTP disconnected");
         }
     }
 
     private void ftpStoreFile(String local, String remote, FTPClient ftp) throws IOException {
         InputStream input;
-        log.info("ftp uploading file " + local + " to " + remote + "...");
+        log.info("FTP uploading file " + local + " to " + remote + "...");
         input = new FileInputStream(local);
         try {
-            boolean success = ftp.storeFile(remote, input);
+            boolean success;
+
+            if (!fakeFtp) {
+                success = ftp.storeFile(remote, input);
+            } else {
+                try {
+                    Thread.sleep(1000L);
+                } catch (InterruptedException e) {
+                }
+                success = true;
+            }
+
             if (success)
-                log.info("ftp upload of file " + remote + " done: successful");
+                log.info("FTP upload of file " + remote + " done: successful");
             else
-                log.error("ftp upload of file " + remote + " done: failed");
+                log.error("FTP upload of file " + remote + " done: failed");
         } finally {
             input.close();
         }
@@ -290,6 +346,12 @@ public class FtpWebIO {
                 }
             }
             throw new DartException("exception during FTP connect", e);
+        }
+    }
+
+    public void showProgress(int percent, String message) {
+        if (mainAppFrame != null) {
+            mainAppFrame.showProgress(percent, message);
         }
     }
 }
