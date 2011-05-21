@@ -206,13 +206,13 @@ public class FtpWebIO implements ProgressIndicator {
         if (ftp == null) return false;
         try {
             File webdir = getWebDirRang(liga);
-            String ftpdir = getFtpDirRang(liga);
-            if (ftpdir != null && ftpdir.length() > 0) {
-                log.info("FTP change working dir to: " + ftpdir);
-                ftp.changeWorkingDirectory(ftpdir);
+            String theFtpDir = getFtpDirRang(liga);
+            if (theFtpDir != null && theFtpDir.length() > 0) {
+                log.info("FTP change working dir to: " + theFtpDir);
+                if(!fakeFtp) ftp.changeWorkingDirectory(theFtpDir);
             }
             uploadFtpFiles(ftp, webdir);
-            log.info("done upload rang from " + webdir.getPath() + " to " + ftpDir + " for " + liga.getLigaName());
+            log.info("done upload rang from " + webdir.getPath() + " to " + theFtpDir + " for " + liga.getLigaName());
         } finally {
             ftpDisconnect(ftp);
         }
@@ -244,13 +244,13 @@ public class FtpWebIO implements ProgressIndicator {
         if (ftp == null) return false;
         try {
             File webdir = getWebDirPlan(liga);
-            String ftpdir = getFtpDirPlan(liga);
-            if (ftpdir != null && ftpdir.length() > 0) {
-                log.info("FTP change working dir to: " + ftpdir);
-                ftp.changeWorkingDirectory(ftpdir);
+            String theFtpDir = getFtpDirPlan(liga);
+            if (theFtpDir != null && theFtpDir.length() > 0) {
+                log.info("FTP change working dir to: " + theFtpDir);
+                if(!fakeFtp) ftp.changeWorkingDirectory(theFtpDir);
             }
             uploadFtpFiles(ftp, webdir);
-            log.info("done upload spielplan from " + webdir.getPath() + " to " + ftpDir + " for " + liga.getLigaName());
+            log.info("done upload spielplan from " + webdir.getPath() + " to " + theFtpDir + " for " + liga.getLigaName());
         } finally {
             ftpDisconnect(ftp);
         }
