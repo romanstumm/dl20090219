@@ -85,7 +85,7 @@ public class ImportThreadWorker extends SwingWorker implements ProgressIndicator
             if (ftp.uploadPlanWebdir(liga)) {
                 mainAppFrame.setMessage("Upload der Spielpläne abgeschlossen.");
             } else {
-                mainAppFrame.setMessage("Upload der Spielpläne nicht möglich, fehlende FTP-Konfiguration.");
+                mainAppFrame.setMessage("Upload der Spielpläne nicht möglich, fehlende oder falsche FTP-Konfiguration.");
             }
         } catch (Exception e) {
             log.error("HTML Spielpläne - Fehler in Verarbeitung", e);
@@ -114,7 +114,7 @@ public class ImportThreadWorker extends SwingWorker implements ProgressIndicator
             if (ftp.uploadRangWebdir(liga)) {
                 mainAppFrame.setMessage("Upload der Ranglisten abgeschlossen.");
             } else {
-                mainAppFrame.setMessage("Upload der Ranglisten nicht möglich, fehlende FTP-Konfiguration.");
+                mainAppFrame.setMessage("Upload der Ranglisten nicht möglich, fehlende oder falsche FTP-Konfiguration.");
             }
         } catch (Exception e) {
             // loggen

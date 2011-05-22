@@ -207,14 +207,24 @@ public class FtpWebIO implements ProgressIndicator {
         try {
             File webdir = getWebDirRang(liga);
             String theFtpDir = getFtpDirRang(liga);
-            if (theFtpDir != null && theFtpDir.length() > 0) {
-                log.info("FTP change working dir to: " + theFtpDir);
-                if(!fakeFtp) ftp.changeWorkingDirectory(theFtpDir);
-            }
+            if (!changeDir(ftp, theFtpDir)) return false;
             uploadFtpFiles(ftp, webdir);
             log.info("done upload rang from " + webdir.getPath() + " to " + theFtpDir + " for " + liga.getLigaName());
         } finally {
             ftpDisconnect(ftp);
+        }
+        return true;
+    }
+
+    private boolean changeDir(FTPClient ftp, String theFtpDir) throws IOException {
+        if (theFtpDir != null && theFtpDir.length() > 0) {
+            theFtpDir = theFtpDir.replace("\\", "/");
+            log.info("FTP change working dir to: " + theFtpDir);
+            if(!fakeFtp) {
+                if(!ftp.changeWorkingDirectory(theFtpDir)) {
+                    return false;
+                }
+            }
         }
         return true;
     }
@@ -245,10 +255,7 @@ public class FtpWebIO implements ProgressIndicator {
         try {
             File webdir = getWebDirPlan(liga);
             String theFtpDir = getFtpDirPlan(liga);
-            if (theFtpDir != null && theFtpDir.length() > 0) {
-                log.info("FTP change working dir to: " + theFtpDir);
-                if(!fakeFtp) ftp.changeWorkingDirectory(theFtpDir);
-            }
+            if (!changeDir(ftp, theFtpDir)) return false;
             uploadFtpFiles(ftp, webdir);
             log.info("done upload spielplan from " + webdir.getPath() + " to " + theFtpDir + " for " + liga.getLigaName());
         } finally {
