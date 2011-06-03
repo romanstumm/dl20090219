@@ -65,11 +65,12 @@ public class MainMenu extends JMenuBar {
         menu.add(item = new JMenuItem("vfs/dBase (Teams, Gruppen)"));
         item.setActionCommand("MENU_Datenexport");
         item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_5, InputEvent.CTRL_MASK));
-        addMenuController(menu);
 
         menu.add(item = new JMenuItem("Excel (Rangliste aus vfs)"));
         item.setActionCommand("MENU_Rangliste");
-        item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_MASK));
+        item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_MASK));       
+
+        addMenuController(menu);
 
         menu = new JMenu("HTML-Upload (vfs Dateien zur Website)...");
         dateiMenu.add(menu);
