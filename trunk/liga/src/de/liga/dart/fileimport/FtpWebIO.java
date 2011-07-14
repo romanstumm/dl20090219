@@ -188,8 +188,12 @@ public class FtpWebIO implements ProgressIndicator {
             // Kopieren
             try {
                 while ((line = br.readLine()) != null) {
-                    if (!line.startsWith("<link rel=File-List")) {
-                        // in der Datei die Zeile l�schen, die mit "<link rel=File-List" anf�ngt
+                    if (line.startsWith("<link rel=File-List")) {
+                        while(line != null && !line.contains(">")) {
+                            line = br.readLine();
+                        }
+                    } else {
+                        // in der Datei die Zeile loeschen, die mit "<link rel=File-List" anf�ngt
                         fw.write(line);
                         fw.write("\n");
                     }
