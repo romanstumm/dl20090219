@@ -9,7 +9,7 @@ import java.util.LinkedList;
 
 public class ActiveFrameInfo extends TitleBarPanel {
     private final LinkedList messages = new LinkedList();
-    private static final int MAX_MESSAGES = 3;
+    private static final int MAX_MESSAGES = 30;
 
     private JTextArea tArea;
 
