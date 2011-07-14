@@ -202,9 +202,9 @@ public class DartComponentRegistry extends ComponentRegistry {
                             model.setObjects(ServiceFactory
                                     .get(GruppenService.class).findGruppenAndOrt(liga, ort));
                         } else {
-                           model.setObjects(ServiceFactory
-                                .get(GruppenService.class).findGruppenLikeName(
-                                   liga, showGroups.getSuchenTextTF().getText()));
+                            model.setObjects(ServiceFactory
+                                    .get(GruppenService.class).findGruppenLikeName(
+                                    liga, showGroups.getSuchenTextTF().getText()));
                         }
                         model.touch();
                         return model;
@@ -215,6 +215,18 @@ public class DartComponentRegistry extends ComponentRegistry {
     }
 
     private void setupLists() {
+        ModelFactory modelFactory = new ModelFactory() {
+            public Object create(JPanel panel) {
+                DefaultListModel model = new DefaultListModel();
+                List<Liga> ligen = ServiceFactory.get(LigaService.class).findAllLiga();
+                for (Liga each : ligen) {
+                    model.addElement(each);
+                }
+                return model;
+            }
+        };
+        listModels.put("Combo_Liga", modelFactory);
+
         listModels.put("List_TeamWunschList", new ModelFactory() {
 
             public Object create(JPanel panel) {

@@ -71,28 +71,38 @@ public class ImportThreadWorker extends SwingWorker implements ProgressIndicator
     private Object doHtmlSpielplaene() {
         LigaChooser chooser =
                 new LigaChooser("HTML Upload - Spielpläne", mainAppFrame,
-                        LigaChooser.SELECTION_MODE_LIGA);
-        if (!chooser.choose() || chooser.getSelectedLiga() == null) {
-            mainAppFrame.setMessage("HTML Upload Spielpläne - Abbruch, keine Liga gewählt!");
+                        LigaChooser.SELECTION_MODE_LIGA, true);
+
+        if (!chooser.choose() || chooser.getSelectedLigas() == null || chooser.getSelectedLigas().length == 0) {
+            mainAppFrame.setMessage("HTML Upload Spielpläne - Abbruch, keine Ligas gewählt!");
             return null;
         }
-        Liga liga = chooser.getSelectedLiga();
-        FtpWebIO ftp = new FtpWebIO(mainAppFrame);
-        try {
-            mainAppFrame.setMessage("Kopiere Spielpläne für " + liga.getLigaName() + "...");
-            ftp.copyPlanHtmlToWebdir(liga);
-            mainAppFrame.setMessage("Uploading Spielpläne für " + liga.getLigaName() + "...");
-            if (ftp.uploadPlanWebdir(liga)) {
-                mainAppFrame.setMessage("Upload der Spielpläne abgeschlossen.");
-            } else {
-                mainAppFrame.setMessage("Upload der Spielpläne nicht möglich, fehlende oder falsche FTP-Konfiguration.");
+        StringBuilder ligen = new StringBuilder();
+        int i=0;
+        for (Liga liga : chooser.getSelectedLigas()) {
+             if(i> 0) {
+                ligen.append(", ");
             }
-        } catch (Exception e) {
-            log.error("HTML Spielpläne - Fehler in Verarbeitung", e);
-            mainAppFrame.setMessage("Fehler in der Verarbeitung: " + e.getMessage());
-        } finally {
-            mainAppFrame.showProgress(0, "");
+            i++;
+            ligen.append(liga.getLigaName());
+            FtpWebIO ftp = new FtpWebIO(mainAppFrame);
+            try {
+                mainAppFrame.setMessage("Kopiere Spielpläne für " + liga.getLigaName() + "...");
+                ftp.copyPlanHtmlToWebdir(liga);
+                mainAppFrame.setMessage("Uploading Spielpläne für " + liga.getLigaName() + "...");
+                if (ftp.uploadPlanWebdir(liga)) {
+                    mainAppFrame.setMessage("Upload der Spielpläne abgeschlossen.");
+                } else {
+                    mainAppFrame.setMessage("Upload der Spielpläne nicht möglich, fehlende oder falsche FTP-Konfiguration.");
+                }
+            } catch (Exception e) {
+                log.error("HTML Spielpläne - Fehler in Verarbeitung", e);
+                mainAppFrame.setMessage("Fehler in der Verarbeitung: " + e.getMessage());
+            } finally {
+                mainAppFrame.showProgress(0, "");
+            }
         }
+        mainAppFrame.setMessage("Spielpläne von " + ligen + " verarbeitet.");
         return null;  //To change body of created methods use File | Settings | File Templates.
     }
 
@@ -100,29 +110,38 @@ public class ImportThreadWorker extends SwingWorker implements ProgressIndicator
     private Object doHtmlRanglisten() {
         LigaChooser chooser =
                 new LigaChooser("HTML Upload - Ranglisten", mainAppFrame,
-                        LigaChooser.SELECTION_MODE_LIGA);
-        if (!chooser.choose() || chooser.getSelectedLiga() == null) {
-            mainAppFrame.setMessage("HTML Upload Ranglisten - Abbruch, keine Liga gewählt!");
+                        LigaChooser.SELECTION_MODE_LIGA, true);
+        if (!chooser.choose() || chooser.getSelectedLigas() == null || chooser.getSelectedLigas().length == 0) {
+            mainAppFrame.setMessage("HTML Upload Ranglisten - Abbruch, keine Ligas gewählt!");
             return null;
         }
-        Liga liga = chooser.getSelectedLiga();
-        FtpWebIO ftp = new FtpWebIO(mainAppFrame);
-        try {
-            mainAppFrame.setMessage("Kopiere Ranglisten für " + liga.getLigaName() + "...");
-            ftp.copyRangHtmlToWebdir(liga);
-            mainAppFrame.setMessage("Uploading Ranglisten für " + liga.getLigaName() + "...");
-            if (ftp.uploadRangWebdir(liga)) {
-                mainAppFrame.setMessage("Upload der Ranglisten abgeschlossen.");
-            } else {
-                mainAppFrame.setMessage("Upload der Ranglisten nicht möglich, fehlende oder falsche FTP-Konfiguration.");
+        StringBuilder ligen = new StringBuilder();
+        int i=0;
+        for (Liga liga : chooser.getSelectedLigas()) {
+            if(i> 0) {
+                ligen.append(", ");
             }
-        } catch (Exception e) {
-            // loggen
-            log.error("HTML Ranglisten - Fehler in Verarbeitung", e);
-            mainAppFrame.setMessage("Fehler in der Verarbeitung: " + e.getMessage());
-        } finally {
-            mainAppFrame.showProgress(0, "");
-        }
+            i++;
+            ligen.append(liga.getLigaName());
+            FtpWebIO ftp = new FtpWebIO(mainAppFrame);
+            try {
+                mainAppFrame.setMessage("Kopiere Ranglisten für " + liga.getLigaName() + "...");
+                ftp.copyRangHtmlToWebdir(liga);
+                mainAppFrame.setMessage("Uploading Ranglisten für " + liga.getLigaName() + "...");
+                if (ftp.uploadRangWebdir(liga)) {
+                    mainAppFrame.setMessage("Upload der Ranglisten abgeschlossen.");
+                } else {
+                    mainAppFrame.setMessage("Upload der Ranglisten nicht möglich, fehlende oder falsche FTP-Konfiguration.");
+                }
+            } catch (Exception e) {
+                // loggen
+                log.error("HTML Ranglisten - Fehler in Verarbeitung bei " + liga.getLigaName(), e);
+                mainAppFrame.setMessage("Fehler in Verarbeitung bei " + liga.getLigaName() + ": " + e.getMessage());
+            } finally {
+                mainAppFrame.showProgress(0, "");
+            }
+        }                
+        mainAppFrame.setMessage("Ranglisten von " + ligen + " verarbeitet.");
         return null;
     }
 
