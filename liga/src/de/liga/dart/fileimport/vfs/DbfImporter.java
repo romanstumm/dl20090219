@@ -14,9 +14,9 @@ import org.apache.commons.logging.LogFactory;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.HashSet;
 
 /**
  * Description: Datenabgleich mit Altdaten in DBF Datenbank
@@ -29,7 +29,7 @@ public class DbfImporter extends DbfIO {
     protected String actionVerb() { return "Importiere"; }
     protected String actionName() { return "Import"; }
 
-    protected void exchangeData(Liga liga, String path) throws SQLException {
+    protected void exchangeData(Liga liga) throws SQLException {
         importAufsteller(liga);
         importSpielorte(liga);
     }

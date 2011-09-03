@@ -37,7 +37,7 @@ public class DbfExporter extends DbfIO {
         return "Export";
     }
 
-    protected void exchangeData(Liga liga, String path) throws SQLException {
+    protected void exchangeData(Liga liga) throws SQLException {
         // delete from LITSAD
         Statement stmt = connection.createStatement();
         log.debug("Alle LITSAD l�schen");
