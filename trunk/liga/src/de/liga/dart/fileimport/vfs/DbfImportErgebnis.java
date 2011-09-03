@@ -2,16 +2,18 @@ package de.liga.dart.fileimport.vfs;
 
 import de.liga.dart.fileimport.DbfIO;
 import de.liga.dart.fileimport.vfs.rangliste.VfsErgebnis;
-import de.liga.dart.fileimport.vfs.rangliste.VfsTeam;
 import de.liga.dart.fileimport.vfs.rangliste.VfsLiga;
+import de.liga.dart.fileimport.vfs.rangliste.VfsTeam;
 import de.liga.dart.model.Liga;
 import de.liga.util.CalendarUtils;
-
-import java.sql.*;
-import java.util.*;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.*;
 
 /**
  * Description:   Liest Rangliste aus vfs Dateien aus holt die Rohdaten zur
@@ -56,7 +58,7 @@ public class DbfImportErgebnis extends DbfIO {
         return "Berechne";
     }
 
-    protected void exchangeData(Liga liga, String path) throws SQLException {
+    protected void exchangeData(Liga liga) throws SQLException {
         Statement stmt = connection.createStatement();
         try {
             readCurrentSaison(stmt);
