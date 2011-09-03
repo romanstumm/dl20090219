@@ -66,7 +66,7 @@ public class MainMenu extends JMenuBar {
         item.setActionCommand("MENU_Datenexport");
         item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_5, InputEvent.CTRL_MASK));
 
-        menu.add(item = new JMenuItem("Excel (Rangliste aus vfs)"));
+        menu.add(item = new JMenuItem("Excel (Rangliste aus vfs für Urkundendruck)"));
         item.setActionCommand("MENU_Rangliste");
         item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_MASK));       
 
