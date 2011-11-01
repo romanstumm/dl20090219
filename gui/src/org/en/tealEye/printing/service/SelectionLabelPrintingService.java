@@ -69,6 +69,7 @@ public class SelectionLabelPrintingService extends JPanel implements LabelPrinti
     private final Font smallFont1 = new Font(font.getName(), font.getStyle(), font.getSize() - 4);
     private boolean gruppenAnzeige = true;
     private ArrayList<LabelEntry> cachedEntries; // aus Performancegründen gecacht, damit Umschalten schneller geht
+    private boolean bWarning = false;
 
 
     // private  Font font = new GlobalGuiService().getFontMap().get("EtiFont");
@@ -214,11 +215,13 @@ public class SelectionLabelPrintingService extends JPanel implements LabelPrinti
                 int[] rowSelectionCount;
                 rowSelectionCount = sourceTable.getSelectedRows();
                 if (rowSelectionCount.length < 1) {
-                    rowSelectionCount = new int[sourceTable.getRowCount()];
-                    for (int i = 0; i < sourceTable.getRowCount(); i++) {
+                    bWarning = true;
+                }
+                if(!bWarning){
+                    for (int i = 0; i < rowSelectionCount.length; i++) {
                         rowSelectionCount[i] = i;
                     }
-                }
+
                 GruppenService gruppenService = ServiceFactory.get(GruppenService.class);
                 Spielort spielort = null;
 
@@ -265,6 +268,7 @@ public class SelectionLabelPrintingService extends JPanel implements LabelPrinti
                             }
                         }
                     }
+                }
                 }
             }
         });
@@ -468,6 +472,10 @@ public class SelectionLabelPrintingService extends JPanel implements LabelPrinti
         imageVector = null;
         System.gc();
         this.removeAll();
+    }
+
+    public boolean getWarning(){
+       return bWarning;
     }
 }
 
