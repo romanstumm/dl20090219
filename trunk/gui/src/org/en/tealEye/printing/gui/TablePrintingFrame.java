@@ -634,18 +634,34 @@ public class TablePrintingFrame extends JFrame implements ActionListener, KeyLis
         }
         if (selectionLabelPrinting != null && tablePrintService == null) {
             selectionLabelPrinting.setLabelCount(Integer.parseInt(etiAnzahl.getValue().toString()));
+             if(selectionLabelPrinting.getWarning()){
+                JFrame frame = new JFrame();
+
+                JOptionPane.showMessageDialog(frame,
+                    "Achtung, es sind keinerlei Gruppen ausgewählt!",
+                    "Warnung",
+                    JOptionPane.WARNING_MESSAGE);
+
+            }
+            if(!selectionLabelPrinting.getWarning()){
             BufferedImage canvas = selectionLabelPrinting.getPaintingCanvas(pageIndex);
             if (canvas != null) {
                 contentLabel = new JLabel(new ImageIcon(canvas));
                 contentPanel.add(contentLabel, BorderLayout.CENTER);
             }
-//               System.out.println(etiAnzahl.getText());
+            }
         }
 
         contentPanel.setLayout(new BorderLayout());
         contentPanel.setVisible(false);
         contentPanel.removeAll();
-        contentPanel.add(contentLabel, BorderLayout.CENTER);
+
+        if(selectionLabelPrinting != null &&!selectionLabelPrinting.getWarning())
+            contentPanel.add(contentLabel, BorderLayout.CENTER);
+        else if(tablePrintService != null)
+            contentPanel.add(contentLabel, BorderLayout.CENTER);
+        else if(labelPrinting != null)
+            contentPanel.add(contentLabel, BorderLayout.CENTER);
         contentPanel.setVisible(true);
 
     }
