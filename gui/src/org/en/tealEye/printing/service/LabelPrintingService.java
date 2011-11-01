@@ -210,12 +210,11 @@ public class LabelPrintingService extends JPanel implements LabelPrinting {
         ServiceFactory.runAsTransaction(new Runnable() {
             public void run() {
                 int[] rowSelectionCount;
-                rowSelectionCount = sourceTable.getSelectedRows();
-                if (rowSelectionCount.length < 1) {
+
                     rowSelectionCount = new int[sourceTable.getRowCount()];
                     for (int i = 0; i < sourceTable.getRowCount(); i++) {
                         rowSelectionCount[i] = i;
-                    }
+
                 }
                 GruppenService gruppenService = ServiceFactory.get(GruppenService.class);
                 Spielort spielort = null;
