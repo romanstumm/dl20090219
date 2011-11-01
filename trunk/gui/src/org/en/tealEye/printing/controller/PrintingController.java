@@ -56,6 +56,10 @@ public class PrintingController implements ActionListener, MouseListener, Window
                         tablePrintFrame =
                                 new TablePrintingFrame(PrintingController.this, getPrintableTable(),
                                         mode, winCon);
+                    if (mode.equals("auswahlEtikett"))
+                        tablePrintFrame =
+                                new TablePrintingFrame(PrintingController.this, getPrintableTable(),
+                                        mode, winCon);
                     if (mode.equals("envelope")){
                         //new FieldMapper(EnvelopePrintFrame.class, EnvelopePrintFrameMethods.class, getPrintableTable());
                         GlobalListenerService gls = new GlobalListenerService();

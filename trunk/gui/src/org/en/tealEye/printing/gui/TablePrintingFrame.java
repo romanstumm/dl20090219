@@ -35,6 +35,7 @@ public class TablePrintingFrame extends JFrame implements ActionListener, KeyLis
     private JSpinner etiZeilenAbstandSpinner;
     private int initialLineSpaceInt = 5;
     private JLabel etiZeilenAbstandSpinnerLabel;
+    private SelectionLabelPrintingService selectionLabelPrinting = null;
 
 
     public TablePrintingFrame(PrintingController pControl, JTable sourceTable,
@@ -61,11 +62,27 @@ public class TablePrintingFrame extends JFrame implements ActionListener, KeyLis
                   Integer.parseInt(etiRandOben.getValue().toString()),
                   Integer.parseInt(etiAnzahl.getValue().toString()),
                   Integer.parseInt(etiZeilenAbstandSpinner.getValue().toString())
+
             );
             setLabelValues();
             pagesNeeded = labelPrinting.getAllPagesNeeded();
             labelPrinting.setGuides(true);
             labelPrinting.repaintCanvas(pageIndex);
+        }
+           if (mode.equals("auswahlEtikett")) {
+            selectionLabelPrinting = new SelectionLabelPrintingService(sourceTable,
+                  Integer.parseInt(etiBreite.getValue().toString()),
+                  Integer.parseInt(etiHoehe.getValue().toString()),
+                  Integer.parseInt(etiRandSeite.getValue().toString()),
+                  Integer.parseInt(etiRandOben.getValue().toString()),
+                  Integer.parseInt(etiAnzahl.getValue().toString()),
+                  Integer.parseInt(etiZeilenAbstandSpinner.getValue().toString())
+            );
+
+            setLabelValues();
+            pagesNeeded = selectionLabelPrinting.getAllPagesNeeded();
+            selectionLabelPrinting.setGuides(true);
+            selectionLabelPrinting.repaintCanvas(pageIndex);
         }
 
         loadPreview();
@@ -202,7 +219,7 @@ public class TablePrintingFrame extends JFrame implements ActionListener, KeyLis
         gridBagConstraints.gridx = 4;
         jPanel2.add(printPageNb, gridBagConstraints);
 
-        if (!mode.equals("etikett")) jToolBar3.add(jPanel2);
+        if (!mode.equals("etikett")&&!mode.equals("auswahlEtikett"))jToolBar3.add(jPanel2);
 
         jToolBar1.add(jToolBar3);
 
@@ -421,6 +438,8 @@ public class TablePrintingFrame extends JFrame implements ActionListener, KeyLis
 
         if (mode.equals("etikett"))
             getContentPane().add(jToolBar4, java.awt.BorderLayout.SOUTH);
+        if (mode.equals("auswahlEtikett"))
+            getContentPane().add(jToolBar4, java.awt.BorderLayout.SOUTH);
 
         jMenu1.setText("Datei");
         jMenuBar1.add(jMenu1);
@@ -488,6 +507,8 @@ public class TablePrintingFrame extends JFrame implements ActionListener, KeyLis
             tablePrintService.repaintCanvas();
         } else if (labelPrinting != null) {
             labelPrinting.rotate();
+        }else if (selectionLabelPrinting != null) {
+            selectionLabelPrinting.rotate();
         }
         loadPreview();
     }
@@ -529,6 +550,10 @@ public class TablePrintingFrame extends JFrame implements ActionListener, KeyLis
                         labelPrinting.flushStringIndex();
                         labelPrinting.setLabelValues();
                         labelPrinting.generateDoc();
+                    }if (selectionLabelPrinting != null) {
+                        selectionLabelPrinting.flushStringIndex();
+                        selectionLabelPrinting.setLabelValues();
+                        selectionLabelPrinting.generateDoc();
                     }
                 }
 
@@ -549,18 +574,37 @@ public class TablePrintingFrame extends JFrame implements ActionListener, KeyLis
                     new LabelFontFrame(ich);
 //                    System.out.println("FontCOnfig");
                 } else if (ac.equals("guides")) {
+                    if(labelPrinting != null){
                     if (guides.isSelected()) labelPrinting.setGuides(true);
                     else labelPrinting.setGuides(false);
                     setLabelValues();
                     labelPrinting.repaintCanvas(pageIndex);
                     loadPreview();
+                    }else{
+                        if (teamCount.isSelected()) selectionLabelPrinting.setGruppenAnzeige(true);
+                        else selectionLabelPrinting.setGruppenAnzeige(false);
+                        setLabelValues();
+                        selectionLabelPrinting.computePrintableData();
+                        selectionLabelPrinting.repaintCanvas(pageIndex);
+                        loadPreview();
+                    }
                 } else if (ac.equals("teamCount")) {
+                    if(labelPrinting != null){
                     if (teamCount.isSelected()) labelPrinting.setGruppenAnzeige(true);
                     else labelPrinting.setGruppenAnzeige(false);
                     setLabelValues();
                     labelPrinting.computePrintableData();
                     labelPrinting.repaintCanvas(pageIndex);
                     loadPreview();
+                    }else{
+                        if (teamCount.isSelected()) selectionLabelPrinting.setGruppenAnzeige(true);
+                        else selectionLabelPrinting.setGruppenAnzeige(false);
+                        setLabelValues();
+                        selectionLabelPrinting.computePrintableData();
+                        selectionLabelPrinting.repaintCanvas(pageIndex);
+                        loadPreview();
+
+                    }
                 } else if (ac.equals("printPageNum")) {
                     if (printPageNb.isSelected()) tablePrintService.setPrintPageNum(true);
                     else tablePrintService.setPrintPageNum(false);
@@ -582,6 +626,15 @@ public class TablePrintingFrame extends JFrame implements ActionListener, KeyLis
         if (labelPrinting != null && tablePrintService == null) {
             labelPrinting.setLabelCount(Integer.parseInt(etiAnzahl.getValue().toString()));
             BufferedImage canvas = labelPrinting.getPaintingCanvas(pageIndex);
+            if (canvas != null) {
+                contentLabel = new JLabel(new ImageIcon(canvas));
+                contentPanel.add(contentLabel, BorderLayout.CENTER);
+            }
+//               System.out.println(etiAnzahl.getText());
+        }
+        if (selectionLabelPrinting != null && tablePrintService == null) {
+            selectionLabelPrinting.setLabelCount(Integer.parseInt(etiAnzahl.getValue().toString()));
+            BufferedImage canvas = selectionLabelPrinting.getPaintingCanvas(pageIndex);
             if (canvas != null) {
                 contentLabel = new JLabel(new ImageIcon(canvas));
                 contentPanel.add(contentLabel, BorderLayout.CENTER);
@@ -611,6 +664,7 @@ public class TablePrintingFrame extends JFrame implements ActionListener, KeyLis
 
         if (kc == KeyEvent.VK_ENTER) {
             Object source = e.getSource();
+           if(labelPrinting!= null){
             if (source.equals(etiAnzahl)) {
                 setLabelValues();
                 pagesNeeded = 0;
@@ -643,10 +697,45 @@ public class TablePrintingFrame extends JFrame implements ActionListener, KeyLis
                 tablePrintService.repaintCanvas();
                 loadPreview();
             }
+        }else{
+               if (source.equals(etiAnzahl)) {
+                   setLabelValues();
+                   pagesNeeded = 0;
+                   pagesNeeded = labelPrinting.getAllPagesNeeded();
+                   selectionLabelPrinting.repaintCanvas(pageIndex);
+                   pageIndex = 0;
+                   loadPreview();
+               } else if (source.equals(etiRandSeite)) {
+                   setLabelValues();
+                   selectionLabelPrinting.repaintCanvas(pageIndex);
+                   loadPreview();
+               } else if (source.equals(etiRandOben)) {
+                   setLabelValues();
+                   selectionLabelPrinting.repaintCanvas(pageIndex);
+                   loadPreview();
+               } else if (source.equals(etiHoehe)) {
+                   setLabelValues();
+                   selectionLabelPrinting.repaintCanvas(pageIndex);
+                   loadPreview();
+               } else if (source.equals(etiBreite)) {
+                   setLabelValues();
+                   selectionLabelPrinting.repaintCanvas(pageIndex);
+                   loadPreview();
+               } else if (source.equals(leftSide)) {
+                   setTableValues();
+                   selectionLabelPrinting.repaintCanvas();
+                   loadPreview();
+               } else if (source.equals(upperSide)) {
+                   setTableValues();
+                   tablePrintService.repaintCanvas();
+                   loadPreview();
+               }
+           }
         }
     }
 
     private void setLabelValues() {
+        if(labelPrinting!=null){
         labelPrinting.setLabelCount(Integer.parseInt(etiAnzahl.getValue().toString()));
         labelPrinting.setLabelSideBorder(Integer.parseInt(etiRandSeite.getValue().toString()));
         labelPrinting.setLabelUpperBorder(Integer.parseInt(etiRandOben.getValue().toString()));
@@ -654,14 +743,29 @@ public class TablePrintingFrame extends JFrame implements ActionListener, KeyLis
         labelPrinting.setLabelWidth(Integer.parseInt(etiBreite.getValue().toString()));
         labelPrinting.setEtiZeilenAbstand(Integer.parseInt(etiZeilenAbstandSpinner.getValue().toString()));
         pagesNeeded = labelPrinting.getAllPagesNeeded();
-
+        }else{
+        selectionLabelPrinting.setLabelCount(Integer.parseInt(etiAnzahl.getValue().toString()));
+        selectionLabelPrinting.setLabelSideBorder(Integer.parseInt(etiRandSeite.getValue().toString()));
+        selectionLabelPrinting.setLabelUpperBorder(Integer.parseInt(etiRandOben.getValue().toString()));
+        selectionLabelPrinting.setLabelHeight(Integer.parseInt(etiHoehe.getValue().toString()));
+        selectionLabelPrinting.setLabelWidth(Integer.parseInt(etiBreite.getValue().toString()));
+        selectionLabelPrinting.setEtiZeilenAbstand(Integer.parseInt(etiZeilenAbstandSpinner.getValue().toString()));
+        pagesNeeded = selectionLabelPrinting.getAllPagesNeeded();
+        }
     }
 
     public void setLabelFont(Font font) {
+        if(labelPrinting != null){
         labelPrinting.setLabelFont(font);
         setLabelValues();
         labelPrinting.repaintCanvas(pageIndex);
         loadPreview();
+        }else{
+        selectionLabelPrinting.setLabelFont(font);
+        setLabelValues();
+        selectionLabelPrinting.repaintCanvas(pageIndex);
+        loadPreview();
+        }
     }
 
     public void getPageCount() {
@@ -669,13 +773,14 @@ public class TablePrintingFrame extends JFrame implements ActionListener, KeyLis
             pagesNeeded = tablePrintService.getPageCount();
         } else if (labelPrinting != null) {
             pagesNeeded = labelPrinting.getAllPagesNeeded();
-        }
+        } else if (selectionLabelPrinting != null)
+            pagesNeeded = selectionLabelPrinting.getAllPagesNeeded();
     }
 
     public void stateChanged(ChangeEvent e) {
         JSpinner spinner = (JSpinner) e.getSource();
         int i = Integer.parseInt(spinner.getValue().toString());
-
+           if(labelPrinting != null){
             if(spinner.equals(etiAnzahl)){
              setLabelValues();
                 pagesNeeded = 0;
@@ -705,6 +810,37 @@ public class TablePrintingFrame extends JFrame implements ActionListener, KeyLis
                 loadPreview();                
             }else{
             }
+           }else{
+            if(spinner.equals(etiAnzahl)){
+             setLabelValues();
+                pagesNeeded = 0;
+                pagesNeeded = labelPrinting.getAllPagesNeeded();
+                selectionLabelPrinting.repaintCanvas(pageIndex);
+                pageIndex = 0;
+                loadPreview();
+            }else if(spinner.equals(etiBreite)){
+                setLabelValues();
+                selectionLabelPrinting.repaintCanvas(pageIndex);
+                loadPreview();
+            }else if(spinner.equals(etiHoehe)){
+                setLabelValues();
+                selectionLabelPrinting.repaintCanvas(pageIndex);
+                loadPreview();
+            }else if(spinner.equals(etiRandOben)){
+                setLabelValues();
+                selectionLabelPrinting.repaintCanvas(pageIndex);
+                loadPreview();
+            }else if(spinner.equals(etiRandSeite)){
+                setLabelValues();
+                selectionLabelPrinting.repaintCanvas(pageIndex);
+                loadPreview();
+            }else if(spinner.equals(etiZeilenAbstandSpinner)){
+                setLabelValues();
+                selectionLabelPrinting.repaintCanvas(pageIndex);
+                loadPreview();
+            }else{
+            }
+           }
 
     }
 
