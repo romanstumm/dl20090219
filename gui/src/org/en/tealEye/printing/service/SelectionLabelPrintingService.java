@@ -75,7 +75,7 @@ public class SelectionLabelPrintingService extends JPanel implements LabelPrinti
     // private  Font font = new GlobalGuiService().getFontMap().get("EtiFont");
 
     public SelectionLabelPrintingService(JTable sourceTable, int labelWidth, int labelHeight,
-                                int labelLeftBorder, int labelRightBorder, int labelsWanted, int etiZeilenAbstand) {
+                                         int labelLeftBorder, int labelRightBorder, int labelsWanted, int etiZeilenAbstand) {
         this.labelHeight = labelHeight;
         this.labelWidth = labelWidth;
         this.labelLeftBorder = labelLeftBorder;
@@ -217,58 +217,62 @@ public class SelectionLabelPrintingService extends JPanel implements LabelPrinti
                 if (rowSelectionCount.length < 1) {
                     bWarning = true;
                 }
-                if(!bWarning){
+                if (!bWarning) {
                     for (int i = 0; i < rowSelectionCount.length; i++) {
                         rowSelectionCount[i] = i;
                     }
 
-                GruppenService gruppenService = ServiceFactory.get(GruppenService.class);
-                Spielort spielort = null;
+                    GruppenService gruppenService = ServiceFactory.get(GruppenService.class);
+                    Spielort spielort = null;
 
-
-                if (sourceTable.getName().equals("Table_Ligagruppe")) {
-                    for (int rowIndex : rowSelectionCount) {
-                        Object obj = ((BeanTableModel) sourceTable.getModel()).getObject(sourceTable.convertRowIndexToModel(rowIndex));
-                        Ligagruppe gruppe = ((Ligagruppe) obj);
-                        ArrayList<LabelEntry> entriesInGruppe = new ArrayList();
-                        for (int teamIndex = 1; teamIndex <= 8; teamIndex++) {
-                            Ligateam lt;
-                            try {
-                                lt = gruppe.findSpiel(gruppenService.findSpieleInGruppe(gruppe), teamIndex).getLigateam();
-                            } catch (NullPointerException e) {
-                                lt = null;
-                            }
-                            if (lt != null) {
-                                spielort = ServiceFactory.get(SpielortService.class)
-                                        .findSpielortById(lt.getSpielort().getSpielortId());
-                            }
-                            if (!(lt == null)) {
-                                LabelEntry entry = findEntryBySpielortId(entriesInGruppe, spielort.getSpielortId());
-                                if (entry == null) {
-                                    entry = new LabelEntry();
-                                    entry.setSpielortName(spielort.getSpielortName());
-                                    String lines[] = StringUtils.wordWrap(spielort.getSpielortName(), 25);
-                                    entry.setSpielortNameLine1(lines[0]);
-                                    if (lines.length > 1) {
-                                        entry.setSpielortNameLine2(lines[1]);
+                    if (sourceTable.getName().equals("Table_Ligagruppe")) {
+                        Set<Ligagruppe> gruppen = new HashSet<Ligagruppe>();
+                        for (int rowIndex : rowSelectionCount) {
+                            Object obj = ((BeanTableModel) sourceTable.getModel()).getObject(sourceTable.convertRowIndexToModel(rowIndex));
+                            gruppen.add((Ligagruppe) obj);
+                        }
+                        for (int rowIndex : rowSelectionCount) {
+                            Object obj = ((BeanTableModel) sourceTable.getModel()).getObject(sourceTable.convertRowIndexToModel(rowIndex));
+                            Ligagruppe gruppe = ((Ligagruppe) obj);
+                            ArrayList<LabelEntry> entriesInGruppe = new ArrayList();
+                            for (int teamIndex = 1; teamIndex <= 8; teamIndex++) {
+                                Ligateam lt;
+                                try {
+                                    lt = gruppe.findSpiel(gruppenService.findSpieleInGruppe(gruppe), teamIndex).getLigateam();
+                                } catch (NullPointerException e) {
+                                    lt = null;
+                                }
+                                if (lt != null) {
+                                    spielort = ServiceFactory.get(SpielortService.class)
+                                            .findSpielortById(lt.getSpielort().getSpielortId());
+                                }
+                                if (!(lt == null)) {
+                                    LabelEntry entry = findEntryBySpielortId(entriesInGruppe, spielort.getSpielortId());
+                                    if (entry == null) {
+                                        entry = new LabelEntry();
+                                        entry.setSpielortName(spielort.getSpielortName());
+                                        String lines[] = StringUtils.wordWrap(spielort.getSpielortName(), 25);
+                                        entry.setSpielortNameLine1(lines[0]);
+                                        if (lines.length > 1) {
+                                            entry.setSpielortNameLine2(lines[1]);
+                                        } else {
+                                            entry.setSpielortNameLine2("");
+                                        }
+                                        entry.setGruppenLabel(spielort.getLigagruppenLabel(lt.getLiga(), gruppen));
+                                        entry.setLigaName(lt.getLiga().getLigaName());
+                                        entry.setStrasse(spielort.getStrasse());
+                                        entry.setPlzUndOrt(spielort.getPlzUndOrt());
+                                        entry.setAnzahl(1);
+                                        entry.setSpielortId(spielort.getSpielortId());
+                                        entries.add(entry);
+                                        entriesInGruppe.add(entry);
                                     } else {
-                                        entry.setSpielortNameLine2("");
+                                        entry.setAnzahl(entry.getAnzahl() + 1);
                                     }
-                                    entry.setGruppenLabel(spielort.getLigagruppenLabel(lt.getLiga()));
-                                    entry.setLigaName(lt.getLiga().getLigaName());
-                                    entry.setStrasse(spielort.getStrasse());
-                                    entry.setPlzUndOrt(spielort.getPlzUndOrt());
-                                    entry.setAnzahl(1);
-                                    entry.setSpielortId(spielort.getSpielortId());
-                                    entries.add(entry);
-                                    entriesInGruppe.add(entry);
-                                } else {
-                                    entry.setAnzahl(entry.getAnzahl() + 1);
                                 }
                             }
                         }
                     }
-                }
                 }
             }
         });
@@ -474,8 +478,8 @@ public class SelectionLabelPrintingService extends JPanel implements LabelPrinti
         this.removeAll();
     }
 
-    public boolean getWarning(){
-       return bWarning;
+    public boolean getWarning() {
+        return bWarning;
     }
 }
 
