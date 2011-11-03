@@ -20,6 +20,7 @@ import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.util.*;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -226,7 +227,7 @@ public class SelectionLabelPrintingService extends JPanel implements LabelPrinti
                     Spielort spielort = null;
 
                     if (sourceTable.getName().equals("Table_Ligagruppe")) {
-                        Set<Ligagruppe> gruppen = new HashSet<Ligagruppe>();
+                        List<Ligagruppe> gruppen = new ArrayList<Ligagruppe>();
                         for (int rowIndex : rowSelectionCount) {
                             Object obj = ((BeanTableModel) sourceTable.getModel()).getObject(sourceTable.convertRowIndexToModel(rowIndex));
                             gruppen.add((Ligagruppe) obj);
