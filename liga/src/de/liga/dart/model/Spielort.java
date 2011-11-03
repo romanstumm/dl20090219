@@ -200,11 +200,23 @@ public class Spielort implements java.io.Serializable, LigaPersistence {
 
     /**
      * die obere Etikettenzeile mit den Gruppen pro Spielort (wahlweise in einer Liga)
+     *
      * @param liga - die Liga, nach der gefiltert werden soll oder null (ggf. erübrigt sich dieser Filter,
-     * da alle Teams in der gleichen Liga sind)
+     *             da alle Teams in der gleichen Liga sind)
      * @return ein Text oder ein leerer Text
      */
     public String getLigagruppenLabel(Liga liga) {
+        return getLigagruppenLabel(liga, null);
+    }
+
+    /**
+     * die obere Etikettenzeile mit den Gruppen pro Spielort (wahlweise in einer Liga und eingeschränkt
+     * für eine bestimmte Menge an Ligagruppen)
+     * @param liga  - die Liga, nach der gefiltert werden soll oder null
+     * @param ligaGruppen  - die Ligagruppen, die berücksichtigt werden sollen oder null (keine Einschränkung)
+     * @return ein Text oder ein leerer Text
+     */
+    public String getLigagruppenLabel(Liga liga, Collection<Ligagruppe> ligaGruppen) {
         Set<String> gruppen = new HashSet();
         Map<String, Integer> gruppenCount = new HashMap();
 
@@ -214,10 +226,11 @@ public class Spielort implements java.io.Serializable, LigaPersistence {
             if (spiel != null) {
                 gruppe = spiel.getLigagruppe();
             }
-            if (gruppe != null && (liga == null || gruppe.getLiga().getLigaId() == liga.getLigaId())) {
+            if (gruppe != null && (ligaGruppen == null || containsGruppe(ligaGruppen, gruppe)) &&
+                    (liga == null || gruppe.getLiga().getLigaId() == liga.getLigaId())) {
                 String gname = gruppe.getGruppenNameCompact();
                 gruppen.add(gname);
-                Integer count = gruppenCount.get(gname);        
+                Integer count = gruppenCount.get(gname);
                 if (count == null) {
                     gruppenCount.put(gname, 1);
                 } else {
@@ -239,6 +252,13 @@ public class Spielort implements java.io.Serializable, LigaPersistence {
         }
 
         return buf.toString();
+    }
+
+    private boolean containsGruppe(Collection<Ligagruppe> ligaGruppen, Ligagruppe gruppe) {
+        for (Ligagruppe each : ligaGruppen) {
+            if (each.getGruppenId() == gruppe.getGruppenId()) return true;
+        }
+        return false;
     }
 
     public String toString() {

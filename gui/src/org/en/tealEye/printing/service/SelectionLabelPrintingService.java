@@ -28,9 +28,9 @@ import java.util.*;
  * Time: 18:40
  * To change this template use File | Settings | File Templates.
  */
-
+// todo - fix me: duplicate code with LabelPrintingService
 public class SelectionLabelPrintingService extends JPanel implements LabelPrinting {
-    private static final Log log = LogFactory.getLog(LabelPrintingService.class);
+    private static final Log log = LogFactory.getLog(SelectionLabelPrintingService.class);
     final PrintingUtils utils = new PrintingUtils();
 
     int labelHeight;
