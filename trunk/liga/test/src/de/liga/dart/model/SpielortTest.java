@@ -2,6 +2,9 @@ package de.liga.dart.model;
 
 import junit.framework.TestCase;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * viaboxx GmbH, (c) 2010
  * User: roman.stumm
@@ -16,18 +19,21 @@ public class SpielortTest extends TestCase {
 
         Ligagruppe gruppeA1 = new Ligagruppe();
         gruppeA1.setGruppenNr(1);
+        gruppeA1.setGruppenId(1);
         Ligaklasse klasseA = new Ligaklasse();
         klasseA.setKlassenName("A");
         gruppeA1.setLigaklasse(klasseA);
 
         Ligagruppe gruppeB1 = new Ligagruppe();
         gruppeB1.setGruppenNr(1);
+        gruppeB1.setGruppenId(2);
         Ligaklasse klasseB = new Ligaklasse();
         klasseB.setKlassenName("B");
         gruppeB1.setLigaklasse(klasseB);
 
         Ligagruppe gruppeB2 = new Ligagruppe();
         gruppeB2.setGruppenNr(2);
+        gruppeB2.setGruppenId(3);
         gruppeB2.setLigaklasse(klasseB);
 
         Ligateam team = new Ligateam();
@@ -68,6 +74,12 @@ public class SpielortTest extends TestCase {
 
         text = ort.getLigagruppenLabel(null);
         assertEquals("3A1 2B1 B2", text);
+
+        List<Ligagruppe> gruppen = new ArrayList();
+        gruppen.add(gruppeA1);
+        gruppen.add(gruppeB2);
+        text = ort.getLigagruppenLabel(null, gruppen);
+        assertEquals("3A1 B2", text);
 
 
     }
