@@ -219,10 +219,6 @@ public class SelectionLabelPrintingService extends JPanel implements LabelPrinti
                     bWarning = true;
                 }
                 if (!bWarning) {
-                    for (int i = 0; i < rowSelectionCount.length; i++) {
-                        rowSelectionCount[i] = i;
-                    }
-
                     GruppenService gruppenService = ServiceFactory.get(GruppenService.class);
                     Spielort spielort = null;
 
@@ -259,7 +255,11 @@ public class SelectionLabelPrintingService extends JPanel implements LabelPrinti
                                         } else {
                                             entry.setSpielortNameLine2("");
                                         }
-                                        entry.setGruppenLabel(spielort.getLigagruppenLabel(lt.getLiga(), gruppen));
+
+                                        //TODO
+                                        //entry.setGruppenLabel(spielort.getLigagruppenLabel(lt.getLiga(), gruppen));
+                                        entry.setGruppenLabel("Tralalala");
+                                        //TODO
                                         entry.setLigaName(lt.getLiga().getLigaName());
                                         entry.setStrasse(spielort.getStrasse());
                                         entry.setPlzUndOrt(spielort.getPlzUndOrt());
