@@ -260,4 +260,8 @@ public class TablePrintingService extends JPanel implements TablePrinting {
     public void paintCanvas() {
         // do nothing
     }
+
+    public void kill() {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
 }
