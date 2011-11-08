@@ -48,15 +48,6 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module-library" exported="">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/postgresql-8.2-506.jdbc4.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
     <orderEntry type="module" module-name="compressed" exported="" />
     <orderEntry type="module-library" exported="">
       <library>
@@ -138,6 +129,15 @@
       <library>
         <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/commons-net-2.2.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/postgresql-8.4-703.jdbc4.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
