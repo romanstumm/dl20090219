@@ -256,7 +256,7 @@ public class SelectionLabelPrintingService extends JPanel implements LabelPrinti
                                             entry.setSpielortNameLine2("");
                                         }
 
-                                        entry.setGruppenLabel(spielort.getLigagruppenLabel(lt.getLiga()));
+                                        entry.setGruppenLabel(spielort.getLigagruppenLabel(lt.getLiga(), gruppen));
                                         entry.setLigaName(lt.getLiga().getLigaName());
                                         entry.setStrasse(spielort.getStrasse());
                                         entry.setPlzUndOrt(spielort.getPlzUndOrt());
