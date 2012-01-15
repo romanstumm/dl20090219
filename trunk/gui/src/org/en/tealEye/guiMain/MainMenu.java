@@ -46,7 +46,7 @@ public class MainMenu extends JMenuBar {
         item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_1, InputEvent.CTRL_MASK));
 
         menu.add(item = new JMenuItem("vfs/dBase (Spielorte, Aufsteller)"));
-        item.setActionCommand("MENU_Datenabgleich");
+        item.setActionCommand("MENU_Datenimport_Spielorte_Aufsteller");
         item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_2, InputEvent.CTRL_MASK));
 
         menu.add(item = new JMenuItem("CSV-Dateien (Standorte, Aufsteller)"));
@@ -62,8 +62,11 @@ public class MainMenu extends JMenuBar {
         item.setActionCommand("MENU_Excelexport");
         item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_4, InputEvent.CTRL_MASK));
 
+        menu.add(item = new JMenuItem("vfs/dBase (Spielorte, Aufsteller)"));
+        item.setActionCommand("MENU_Spielort_Aufsteller_Datenexport");
+
         menu.add(item = new JMenuItem("vfs/dBase (Teams, Gruppen)"));
-        item.setActionCommand("MENU_Datenexport");
+        item.setActionCommand("MENU_Teams_Gruppen_Datenexport");
         item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_5, InputEvent.CTRL_MASK));
 
         menu.add(item = new JMenuItem("Excel (Rangliste aus vfs für Urkundendruck)"));

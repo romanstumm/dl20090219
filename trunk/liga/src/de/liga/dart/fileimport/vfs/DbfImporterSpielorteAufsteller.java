@@ -24,8 +24,8 @@ import java.util.Set;
  * User: roman
  * Date: 21.03.2008, 11:31:57
  */
-public class DbfImporter extends DbfIO {
-    private static final Log log = LogFactory.getLog(DbfImporter.class);
+public class DbfImporterSpielorteAufsteller extends DbfIO {
+    private static final Log log = LogFactory.getLog(DbfImporterSpielorteAufsteller.class);
     protected String actionVerb() { return "Importiere"; }
     protected String actionName() { return "Import"; }
 

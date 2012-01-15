@@ -21,8 +21,8 @@ import java.util.List;
  * User: roman
  * Date: 17.05.2008, 14:44:13
  */
-public class DbfExporter extends DbfIO {
-    private static final Log log = LogFactory.getLog(DbfExporter.class);
+public class DbfExporterTeamsGruppen extends DbfIO {
+    private static final Log log = LogFactory.getLog(DbfExporterTeamsGruppen.class);
 
     private List<LITLIG> ligList;
     private int maxLigId;

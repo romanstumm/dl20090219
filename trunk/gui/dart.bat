@@ -12,4 +12,4 @@ SET MYCP=%MYCP%;lib\liquidlnf.jar;lib\log4j-1.2.15.jar;lib\nimrodlf.j16.jar;lib\
 SET MYCP=%MYCP%;lib\slf4j-api-1.5.6.jar;lib\slf4j-log4j12-1.5.6.jar;lib\xpp3_min-1.1.4c.jar;lib\xstream-1.3.1.jar
 SET MYCP=%MYCP%;lib\substance.jar;lib\jl1.0.jar;lib\poi-3.2-FINAL-20081019.jar
 
-%JAVA_CMD% -cp %MYCP% org.en.tealEye.guiMain.AppStartup
+%JAVA_CMD% -Djava.net.preferIPv4Stack=true -cp %MYCP% org.en.tealEye.guiMain.AppStartup
