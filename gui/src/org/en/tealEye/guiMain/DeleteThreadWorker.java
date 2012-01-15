@@ -11,14 +11,14 @@ import de.liga.dart.model.Ligagruppe;
 import de.liga.dart.model.Ligateam;
 import de.liga.dart.model.Spielort;
 import de.liga.dart.spielort.service.SpielortService;
-import org.en.tealEye.controller.PanelController;
-import org.en.tealEye.framework.BeanTableModel;
-import org.en.tealEye.framework.TransactionWorker;
-import org.en.tealEye.framework.SwingUtils;
-import org.en.tealEye.guiExt.ExtPanel.ExtJTablePanel;
-import org.en.tealEye.guiExt.ExtPanel.ShowTablePanel;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.en.tealEye.controller.PanelController;
+import org.en.tealEye.framework.BeanTableModel;
+import org.en.tealEye.framework.SwingUtils;
+import org.en.tealEye.framework.TransactionWorker;
+import org.en.tealEye.guiExt.ExtPanel.ExtJTablePanel;
+import org.en.tealEye.guiExt.ExtPanel.ShowTablePanel;
 
 import java.util.List;
 
@@ -54,7 +54,7 @@ public class DeleteThreadWorker extends TransactionWorker {
                 AutomatenaufstellerService service =
                         ServiceFactory.get(AutomatenaufstellerService.class);
                 for (Automatenaufsteller each : (List<Automatenaufsteller>) entries) {
-                    service.deleteAutomatenaufsteller(each);
+                    if(each != null) service.deleteAutomatenaufsteller(each);
                 }
             } else if (jPanel.getModelClass().equals(Spielort.class)) {
                 SpielortService service =
