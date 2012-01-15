@@ -79,7 +79,7 @@ public class DbfImporterSpielorteAufsteller extends DbfIO {
             aufsteller.setKontaktName(litauf.AUF_ZUSATZ);
         }
         if (StringUtils.isNotEmpty(litauf.AUF_STRASS)) {
-            aufsteller.setTelefon(litauf.AUF_STRASS);
+            aufsteller.setStrasse(litauf.AUF_STRASS);
         }
         if (StringUtils.isNotEmpty(litauf.AUF_PLZ)) {
             aufsteller.setPlz(litauf.AUF_PLZ);
@@ -179,6 +179,9 @@ public class DbfImporterSpielorteAufsteller extends DbfIO {
         spielort.setSpielortName(litlok.LOK_NAME);
         if (StringUtils.isNotEmpty(litlok.LOK_STRASS)) {
             spielort.setStrasse(litlok.LOK_STRASS);
+        }
+        if (StringUtils.isNotEmpty(litlok.LOK_ZUSATZ)) {
+            spielort.setKontaktName(litlok.LOK_ZUSATZ);
         }
         if (StringUtils.isNotEmpty(litlok.LOK_PLZ)) {
             spielort.setPlz(litlok.LOK_PLZ);
