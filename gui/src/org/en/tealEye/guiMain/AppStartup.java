@@ -5,7 +5,7 @@ import de.liga.dart.common.service.util.HibernateUtil;
 import de.liga.dart.database.AutoMigrator;
 import de.liga.dart.database.AutoMigratorFactory;
 import de.liga.dart.fileimport.FtpWebIO;
-import de.liga.dart.fileimport.vfs.DbfImporter;
+import de.liga.dart.fileimport.vfs.DbfImporterSpielorteAufsteller;
 import de.liga.dart.gruppen.check.Options;
 import de.liga.dart.license.Licensable;
 import de.liga.dart.license.License;
@@ -126,7 +126,7 @@ public class AppStartup implements Application {
         if (settings.containsKey("options.optimizedRecusionExit"))
             Options.optimizedRecusionExit =
                     Boolean.valueOf((String) settings.get("options.optimizedRecusionExit"));
-        DbfImporter.clear();
+        DbfImporterSpielorteAufsteller.clear();
         FtpWebIO.clear();
         FtpWebIO.setFtpServerUserPassword(
                 settings.getProperty("ftp.server"),
@@ -143,7 +143,7 @@ public class AppStartup implements Application {
             //noinspection RedundantCast
             Map.Entry<String, String> entry = (Map.Entry) entry1;
             if (entry.getKey().startsWith("dbfdir.")) {
-                DbfImporter.putLigaSync(entry.getKey().substring("dbfdir.".length()),
+                DbfImporterSpielorteAufsteller.putLigaSync(entry.getKey().substring("dbfdir.".length()),
                         entry.getValue());
             } else if (entry.getKey().startsWith("webdir.")) {
                 FtpWebIO.putLigaDir(entry.getKey().substring("webdir.".length()),

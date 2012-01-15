@@ -2,8 +2,9 @@ package org.en.tealEye.guiMain;
 
 import de.liga.dart.exception.DartException;
 import de.liga.dart.fileimport.*;
-import de.liga.dart.fileimport.vfs.DbfExporter;
-import de.liga.dart.fileimport.vfs.DbfImporter;
+import de.liga.dart.fileimport.vfs.DbfExporterSpielorteAufsteller;
+import de.liga.dart.fileimport.vfs.DbfExporterTeamsGruppen;
+import de.liga.dart.fileimport.vfs.DbfImporterSpielorteAufsteller;
 import de.liga.dart.fileimport.vfs.rangliste.RanglisteExporter;
 import de.liga.dart.gruppen.check.ProgressIndicator;
 import de.liga.dart.model.Liga;
@@ -46,10 +47,12 @@ public class ImportThreadWorker extends SwingWorker implements ProgressIndicator
             switch (action) {
                 case CsvImport:
                     return doCsvImport();
-                case DBaseImport:
+                case DBaseImportSpielorteAufsteller:
                     return doDBaseImport();
-                case DBaseExport:
-                    return doDBaseExport();
+                case DBaseExportSpielorteAufsteller:
+                    return doDBaseExportSpielorteAufsteller();
+                case DBaseExportTeamsGruppen:
+                    return doDBaseExportTeamsGruppen();
                 case ExcelExport:
                     return doExcelExport();
                 case ExcelImport:
@@ -78,9 +81,9 @@ public class ImportThreadWorker extends SwingWorker implements ProgressIndicator
             return null;
         }
         StringBuilder ligen = new StringBuilder();
-        int i=0;
+        int i = 0;
         for (Liga liga : chooser.getSelectedLigas()) {
-             if(i> 0) {
+            if (i > 0) {
                 ligen.append(", ");
             }
             i++;
@@ -116,9 +119,9 @@ public class ImportThreadWorker extends SwingWorker implements ProgressIndicator
             return null;
         }
         StringBuilder ligen = new StringBuilder();
-        int i=0;
+        int i = 0;
         for (Liga liga : chooser.getSelectedLigas()) {
-            if(i> 0) {
+            if (i > 0) {
                 ligen.append(", ");
             }
             i++;
@@ -140,7 +143,7 @@ public class ImportThreadWorker extends SwingWorker implements ProgressIndicator
             } finally {
                 mainAppFrame.showProgress(0, "");
             }
-        }                
+        }
         mainAppFrame.setMessage("Ranglisten von " + ligen + " verarbeitet.");
         return null;
     }
@@ -261,24 +264,24 @@ public class ImportThreadWorker extends SwingWorker implements ProgressIndicator
         return null;
     }
 
-    private Object doDBaseExport() {
+    private Object doDBaseExportSpielorteAufsteller() {
         LigaChooser chooser =
-                new LigaChooser("Export Teams und Gruppen in dBase Dateien", mainAppFrame);
+                new LigaChooser("Export Spielorte und Aufsteller (Gaststätten) in dBase Dateien", mainAppFrame);
         if (!chooser.choose()) {
-            mainAppFrame.setMessage("Datenexport - Abbruch!");
+            mainAppFrame.setMessage("Datenexport Spielorte - Abbruch!");
             return null;
         }
-        DataExchanger importer = new DbfExporter();
-        importer.setProgressIndicator(this);
+        DataExchanger exporter = new DbfExporterSpielorteAufsteller();
+        exporter.setProgressIndicator(this);
         boolean success;
         if (chooser.getSelectedLiga() != null) {
             try {
-                success = importer.start(chooser.getSelectedLiga().getLigaName());
+                success = exporter.start(chooser.getSelectedLiga().getLigaName());
                 if (success) {
-                    mainAppFrame.setMessage("dBase-Export für Liga " +
+                    mainAppFrame.setMessage("dBase-Export Spielorte/Aufsteller für Liga " +
                             chooser.getSelectedLiga().getLigaName() + " beendet");
                 } else {
-                    mainAppFrame.setMessage("dBase-Export - nicht möglich (Fehler)!");
+                    mainAppFrame.setMessage("dBase-Export Spielorte/Aufsteller - nicht möglich (Fehler)!");
                     SwingUtils.createOkDialog(mainAppFrame, "Export nicht möglich (Fehler)!",
                             "dBase-Export");
                 }
@@ -288,7 +291,45 @@ public class ImportThreadWorker extends SwingWorker implements ProgressIndicator
                 SwingUtils.createOkDialog(mainAppFrame, ex.getMessage(), "dBase-Export");
             }
         } else {
-            success = importer.start();
+            success = exporter.start();
+            if (success) {
+                mainAppFrame.setMessage("dBase-Export für alle Ligen beendet");
+            } else {
+                mainAppFrame.setMessage("dBase-Export - nicht möglich (Fehler)!");
+            }
+        }
+        return null;
+    }
+
+
+    private Object doDBaseExportTeamsGruppen() {
+        LigaChooser chooser =
+                new LigaChooser("Export Teams und Gruppen in dBase Dateien", mainAppFrame);
+        if (!chooser.choose()) {
+            mainAppFrame.setMessage("Datenexport Teams - Abbruch!");
+            return null;
+        }
+        DataExchanger exporter = new DbfExporterTeamsGruppen();
+        exporter.setProgressIndicator(this);
+        boolean success;
+        if (chooser.getSelectedLiga() != null) {
+            try {
+                success = exporter.start(chooser.getSelectedLiga().getLigaName());
+                if (success) {
+                    mainAppFrame.setMessage("dBase-Export Teams/Gruppen für Liga " +
+                            chooser.getSelectedLiga().getLigaName() + " beendet");
+                } else {
+                    mainAppFrame.setMessage("dBase-Export Teams/Gruppen - nicht möglich (Fehler)!");
+                    SwingUtils.createOkDialog(mainAppFrame, "Export nicht möglich (Fehler)!",
+                            "dBase-Export");
+                }
+            } catch (DartException ex) {
+                log.error(null, ex);
+                mainAppFrame.setMessage(ex.getMessage());
+                SwingUtils.createOkDialog(mainAppFrame, ex.getMessage(), "dBase-Export");
+            }
+        } else {
+            success = exporter.start();
             if (success) {
                 mainAppFrame.setMessage("dBase-Export für alle Ligen beendet");
             } else {
@@ -305,7 +346,7 @@ public class ImportThreadWorker extends SwingWorker implements ProgressIndicator
             mainAppFrame.setMessage("dBase-Import - Abbruch!");
             return null;
         }
-        DataExchanger importer = new DbfImporter();
+        DataExchanger importer = new DbfImporterSpielorteAufsteller();
         importer.setProgressIndicator(this);
         boolean success;
         if (chooser.getSelectedLiga() != null) {

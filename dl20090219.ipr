@@ -53,7 +53,7 @@
   </component>
   <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false" defaultCharsetForPropertiesFiles="windows-1252" />
   <component name="EntryPointsManager">
-    <entry_points />
+    <entry_points version="2.0" />
   </component>
   <component name="ExportToHTMLSettings">
     <option name="PRINT_LINE_NUMBERS" value="false" />
@@ -84,11 +84,7 @@
           <option name="CHECK_ACTIONS" value="true" />
           <option name="IGNORE_NON_PUBLIC" value="true" />
         </inspection_tool>
-        <inspection_tool class="ComponentRegistrationProblems" level="ERROR" enabled="false">
-          <option name="CHECK_PLUGIN_XML" value="true" />
-          <option name="CHECK_JAVA_CODE" value="true" />
-          <option name="CHECK_ACTIONS" value="true" />
-        </inspection_tool>
+        <inspection_tool class="ComponentRegistrationProblems" enabled="false" level="ERROR" enabled_by_default="false" />
         <inspection_tool class="ConditionSignal" enabled="true" level="WARNING" enabled_by_default="true" />
         <inspection_tool class="ConstantConditionalExpressionJS" enabled="false" level="WARNING" enabled_by_default="false" />
         <inspection_tool class="ConstantIfStatementJS" enabled="false" level="WARNING" enabled_by_default="false" />
@@ -127,6 +123,7 @@
         </inspection_tool>
         <inspection_tool class="ForCanBeForeach" enabled="false" level="WARNING" enabled_by_default="false">
           <option name="REPORT_INDEXED_LOOP" value="true" />
+          <option name="ignoreUntypedCollections" value="false" />
         </inspection_tool>
         <inspection_tool class="FunctionWithInconsistentReturnsJS" enabled="false" level="WARNING" enabled_by_default="false" />
         <inspection_tool class="GWTRemoteServiceAsyncCheck" enabled="false" level="ERROR" enabled_by_default="false" />
@@ -178,6 +175,7 @@
           <option name="IGNORE_DEPRECATED" value="false" />
           <option name="IGNORE_JAVADOC_PERIOD" value="true" />
           <option name="IGNORE_DUPLICATED_THROWS" value="false" />
+          <option name="IGNORE_POINT_TO_ITSELF" value="false" />
           <option name="myAdditionalJavadocTags" value="" />
         </inspection_tool>
         <inspection_tool class="JavadocReference" enabled="false" level="ERROR" enabled_by_default="false" />
@@ -436,6 +434,9 @@
       <module fileurl="file://$PROJECT_DIR$/liga/liga.iml" filepath="$PROJECT_DIR$/liga/liga.iml" />
     </modules>
   </component>
+  <component name="ProjectResources">
+    <default-html-doctype>http://www.w3.org/1999/xhtml</default-html-doctype>
+  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_5" assert-keyword="true" jdk-15="true" project-jdk-name="1.6" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/../horst/classes" />
   </component>
@@ -445,20 +446,6 @@
         <entry key="$PROJECT_DIR$">
           <value>
             <SvnBranchConfiguration>
-              <option name="branchMap">
-                <map>
-                  <entry key="https://dl20090219.googlecode.com/svn/branches">
-                    <value>
-                      <list />
-                    </value>
-                  </entry>
-                  <entry key="https://dl20090219.googlecode.com/svn/tags">
-                    <value>
-                      <list />
-                    </value>
-                  </entry>
-                </map>
-              </option>
               <option name="branchUrls">
                 <list>
                   <option value="https://dl20090219.googlecode.com/svn/branches" />
@@ -472,20 +459,6 @@
         <entry key="$PROJECT_DIR$/gui">
           <value>
             <SvnBranchConfiguration>
-              <option name="branchMap">
-                <map>
-                  <entry key="https://dl20090219.googlecode.com/svn/branches">
-                    <value>
-                      <list />
-                    </value>
-                  </entry>
-                  <entry key="https://dl20090219.googlecode.com/svn/tags">
-                    <value>
-                      <list />
-                    </value>
-                  </entry>
-                </map>
-              </option>
               <option name="branchUrls">
                 <list>
                   <option value="https://dl20090219.googlecode.com/svn/branches" />
@@ -499,20 +472,6 @@
         <entry key="$PROJECT_DIR$/liga">
           <value>
             <SvnBranchConfiguration>
-              <option name="branchMap">
-                <map>
-                  <entry key="https://dl20090219.googlecode.com/svn/branches">
-                    <value>
-                      <list />
-                    </value>
-                  </entry>
-                  <entry key="https://dl20090219.googlecode.com/svn/tags">
-                    <value>
-                      <list />
-                    </value>
-                  </entry>
-                </map>
-              </option>
               <option name="branchUrls">
                 <list>
                   <option value="https://dl20090219.googlecode.com/svn/branches" />

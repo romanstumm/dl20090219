@@ -72,28 +72,31 @@ public class MenuController extends PanelController {
         ImportThreadWorker instance;
         if (action.equals("Drucken")) {
             new PrintingController(mainAppFrame);
-        } else if (action.startsWith("MENU_Datenabgleich")) {
-            instance = new ImportThreadWorker(mainAppFrame, IO_ACTION.DBaseImport);
+        } else if (action.equalsIgnoreCase("MENU_Datenimport_Spielorte_Aufsteller")) {
+            instance = new ImportThreadWorker(mainAppFrame, IO_ACTION.DBaseImportSpielorteAufsteller);
             instance.execute();
-        } else if (action.startsWith("MENU_Datenexport")) {
-            instance = new ImportThreadWorker(mainAppFrame, IO_ACTION.DBaseExport);
+        } else if (action.equalsIgnoreCase("MENU_Spielort_Aufsteller_Datenexport")) {
+            instance = new ImportThreadWorker(mainAppFrame, IO_ACTION.DBaseExportSpielorteAufsteller);
             instance.execute();
-        } else if (action.startsWith("MENU_Datenimport")) {
+        } else if (action.equalsIgnoreCase("MENU_Teams_Gruppen_Datenexport")) {
+            instance = new ImportThreadWorker(mainAppFrame, IO_ACTION.DBaseExportTeamsGruppen);
+            instance.execute();
+        } else if (action.equalsIgnoreCase("MENU_Datenimport")) {
             instance = new ImportThreadWorker(mainAppFrame, IO_ACTION.CsvImport);
             instance.execute();
-        } else if (action.startsWith("MENU_Excelimport")) {
+        } else if (action.equalsIgnoreCase("MENU_Excelimport")) {
             instance = new ImportThreadWorker(mainAppFrame, IO_ACTION.ExcelImport);
             instance.execute();
-        } else if (action.startsWith("MENU_Excelexport")) {
+        } else if (action.equalsIgnoreCase("MENU_Excelexport")) {
             instance = new ImportThreadWorker(mainAppFrame, IO_ACTION.ExcelExport);
             instance.execute();
-        } else if (action.startsWith("MENU_Rangliste")) {
+        } else if (action.equalsIgnoreCase("MENU_Rangliste")) {
             instance = new ImportThreadWorker(mainAppFrame, IO_ACTION.ExcelRangliste);
             instance.execute();
-        } else if (action.startsWith("MENU_HTML_Ranglisten")) {
+        } else if (action.equalsIgnoreCase("MENU_HTML_Ranglisten")) {
             instance = new ImportThreadWorker(mainAppFrame, IO_ACTION.HTMLRanglisten);
             instance.execute();
-        } else if (action.startsWith("MENU_HTML_Spielplaene")) {
+        } else if (action.equalsIgnoreCase("MENU_HTML_Spielplaene")) {
             instance = new ImportThreadWorker(mainAppFrame, IO_ACTION.HTMLSpielplaene);
             instance.execute();
         } else if (action.startsWith("MENU_Info")) {
