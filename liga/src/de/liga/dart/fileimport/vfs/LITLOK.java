@@ -7,6 +7,8 @@ package de.liga.dart.fileimport.vfs;
  */
 class LITLOK {
     String LOK_NR; // number
+    int LOK_ID;    // LOK_ID,N,8,0  == immer 0
+    int LOK_DFUE; // LOK_DFUE,N,1,0 == immer 0
     String LOK_NAME;
     String LOK_ZUSATZ;
     String LOK_STRASS;
