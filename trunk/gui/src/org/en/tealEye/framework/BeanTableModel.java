@@ -122,7 +122,7 @@ public class BeanTableModel<E>
         List<E> selectedObjects = new ArrayList(selection.length);
         for (int each : selection) {
             E eachObj = getObject(each);
-            selectedObjects.add(eachObj);
+            if(eachObj != null) selectedObjects.add(eachObj);
         }
         return selectedObjects;
     }
