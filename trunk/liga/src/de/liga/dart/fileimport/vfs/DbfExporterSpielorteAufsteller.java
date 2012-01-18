@@ -198,7 +198,7 @@ public class DbfExporterSpielorteAufsteller extends DbfIO {
         stmt.setString(6, spielort.getTelefon()); // LOK_TEL,
         stmt.setString(7, spielort.getFax()); // LOK_FAX,
         stmt.setString(8, spielort.getFreierTagName()); // LOK_RUHETA,
-        stmt.setString(9, spielort.getAutomatenaufsteller().getExterneId()); // AUF_NR,
+        stmt.setInt(9, Integer.parseInt(spielort.getAutomatenaufsteller().getExterneId())); // AUF_NR,
         final int externe;
         if (spielort.getExterneId() == null || spielort.getExterneId().length() == 0) {
             externe = ++maxLokId;
