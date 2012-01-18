@@ -7,6 +7,7 @@ import de.liga.dart.model.Automatenaufsteller;
 import de.liga.dart.model.Liga;
 import de.liga.dart.model.Spielort;
 import de.liga.dart.spielort.service.SpielortService;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -52,12 +53,13 @@ public class DbfExporterSpielorteAufsteller extends DbfIO {
             aufstellerService = ServiceFactory.get(AutomatenaufstellerService.class);
             List<Automatenaufsteller> alle = aufstellerService.findAllAutomatenaufstellerByLiga(liga);
 
-            Set<String> existingExternalIDs = fetchAllExternalIDs(litaufSelect);
+            Set<Integer> existingExternalIDs = fetchAllExternalIDs(litaufSelect);
             maxAufId = findMaxId(existingExternalIDs);
             log.info("Read max LITAUF.AUF_NR = " + maxAufId);
-            Set<String> newExternalIDs = new HashSet<String>();
+            Set<Integer> newExternalIDs = new HashSet<Integer>();
             for (Automatenaufsteller each : alle) {
-                if (existingExternalIDs.contains(each.getExterneId())) { // update
+                if (StringUtils.isNotEmpty(each.getExterneId()) &&
+                        existingExternalIDs.contains(Integer.parseInt(each.getExterneId()))) { // update
                     log.info("update dbase LITAUF " + each + ", externalId: " + each.getExterneId());
                     setAufstellerParameters(litaufUpdate, each);
                     log.info("rows affected: " + litaufUpdate.executeUpdate());
@@ -68,13 +70,15 @@ public class DbfExporterSpielorteAufsteller extends DbfIO {
                     log.info("rows affected: " + litaufInsert.executeUpdate());
                     log.info("done as with externalId: " + each.getExterneId());
                 }
-                newExternalIDs.add(each.getExterneId());
+                if (each.getExterneId() != null) {
+                    newExternalIDs.add(Integer.parseInt(each.getExterneId()));
+                }
             }
             // delete all others
-            for (String id : existingExternalIDs) {
+            for (Integer id : existingExternalIDs) {
                 if (!newExternalIDs.contains(id)) { // delete
                     log.info("delete dbase LITAUF.AUF_NR=" + id);
-                    litaufDelete.setString(1, id);
+                    litaufDelete.setInt(1, id);
                     log.info("rows affected: " + litaufDelete.executeUpdate());
                 }
             }
@@ -86,13 +90,12 @@ public class DbfExporterSpielorteAufsteller extends DbfIO {
         }
     }
 
-    private int findMaxId(Set<String> existingExternalIDs) {
+    private int findMaxId(Set<Integer> existingExternalIDs) {
         int max = 0;
-        for (String id : existingExternalIDs) {
+        for (Integer id : existingExternalIDs) {
             try {
-                int theInt = Integer.parseInt(id);
-                if (theInt > max) {
-                    max = theInt;
+                if (id > max) {
+                    max = id;
                 }
             } catch (NumberFormatException ignore) {
             }
@@ -100,12 +103,12 @@ public class DbfExporterSpielorteAufsteller extends DbfIO {
         return max;
     }
 
-    private Set<String> fetchAllExternalIDs(PreparedStatement litaufSelect) throws SQLException {
+    private Set<Integer> fetchAllExternalIDs(PreparedStatement litaufSelect) throws SQLException {
         ResultSet rs = litaufSelect.executeQuery();
-        Set<String> ids = new HashSet<String>();
+        Set<Integer> ids = new HashSet<Integer>();
         try {
             while (rs.next()) {
-                ids.add(String.valueOf(rs.getInt(1)));
+                ids.add(rs.getInt(1));
             }
         } finally {
             rs.close();
@@ -121,11 +124,15 @@ public class DbfExporterSpielorteAufsteller extends DbfIO {
         stmt.setString(5, each.getOrt());          // ORT
         stmt.setString(6, each.getTelefon());      // TEL
         stmt.setString(7, each.getFax());          // FAX
+        final int externeId;
         if (each.getExterneId() == null || each.getExterneId().length() == 0) {
-            each.setExterneId(String.valueOf(++maxAufId));
+            externeId = ++maxAufId;
+            each.setExterneId(String.valueOf(externeId));
             aufstellerService.saveAutomatenaufsteller(each);
+        } else {
+            externeId = Integer.parseInt(each.getExterneId());
         }
-        stmt.setString(8, each.getExterneId());    // AUF_NR
+        stmt.setInt(8, externeId);    // AUF_NR
     }
 
     private void exportSpielorte(Liga liga) throws SQLException {
@@ -143,12 +150,13 @@ public class DbfExporterSpielorteAufsteller extends DbfIO {
             spielortService = ServiceFactory.get(SpielortService.class);
             List<Spielort> alle = spielortService.findAllSpielortByLiga(liga);
 
-            Set<String> existingExternalIDs = fetchAllExternalIDs(litlokSelect);
+            Set<Integer> existingExternalIDs = fetchAllExternalIDs(litlokSelect);
             maxLokId = findMaxId(existingExternalIDs);
             log.info("Read max LITLOK.LOK_NR = " + maxLokId);
-            Set<String> newExternalIDs = new HashSet<String>();
+            Set<Integer> newExternalIDs = new HashSet<Integer>();
             for (Spielort each : alle) {
-                if (existingExternalIDs.contains(each.getExterneId())) { // update
+                if (StringUtils.isNotEmpty(each.getExterneId())
+                        && existingExternalIDs.contains(Integer.parseInt(each.getExterneId()))) { // update
                     log.info("update dbase LITLOK " + each + ", externalId: " + each.getExterneId());
                     setSpielortParameters(litlokUpdate, each);
                     log.info("rows affected: " + litlokUpdate.executeUpdate());
@@ -161,13 +169,15 @@ public class DbfExporterSpielorteAufsteller extends DbfIO {
                     log.info("rows affected: " + litaufInsert.executeUpdate());
                     log.info("done as externalId: " + each.getExterneId());
                 }
-                newExternalIDs.add(each.getExterneId());
+                if (each.getExterneId() != null) {
+                    newExternalIDs.add(Integer.parseInt(each.getExterneId()));
+                }
             }
             // delete all others
-            for (String id : existingExternalIDs) {
+            for (Integer id : existingExternalIDs) {
                 if (!newExternalIDs.contains(id)) { // delete
                     log.info("delete dbase LITLOK.LOK_NR=" + id);
-                    litlokDelete.setString(1, id);
+                    litlokDelete.setInt(1, id);
                     log.info("rows affected: " + litlokDelete.executeUpdate());
                 }
             }
@@ -189,10 +199,14 @@ public class DbfExporterSpielorteAufsteller extends DbfIO {
         stmt.setString(7, spielort.getFax()); // LOK_FAX,
         stmt.setString(8, spielort.getFreierTagName()); // LOK_RUHETA,
         stmt.setString(9, spielort.getAutomatenaufsteller().getExterneId()); // AUF_NR,
+        final int externe;
         if (spielort.getExterneId() == null || spielort.getExterneId().length() == 0) {
-            spielort.setExterneId(String.valueOf(++maxLokId));
+            externe = ++maxLokId;
+            spielort.setExterneId(String.valueOf(externe));
             spielortService.saveSpielort(spielort);
+        } else {
+            externe = Integer.parseInt(spielort.getExterneId());
         }
-        stmt.setString(10, spielort.getExterneId()); // LOK_NR
+        stmt.setInt(10, externe); // LOK_NR
     }
 }

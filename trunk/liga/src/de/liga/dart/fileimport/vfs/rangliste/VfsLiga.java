@@ -22,6 +22,37 @@ public class VfsLiga {
         return name;
     }
 
+    /**
+     * Der letzte Teil des Liganamens nach dem Leerzeichen ist
+     * der PlainName der Liga
+     */
+    public String getPlainName() {
+        String n = getName().trim();
+        int idx = n.lastIndexOf(' ');
+        if (idx >= 0 && idx < n.length()) {
+            return n.substring(idx + 1);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Fische die Zahl aus dem Liganamen
+     */
+    public String getPlainGruppenNr() {
+        int start = 0;
+        String txt = getName();
+        while (start < txt.length() && !Character.isDigit(txt.charAt(start))) {
+            start++;
+        }
+        int end = start;
+        while (end < txt.length() && Character.isDigit(txt.charAt(end))) {
+            end++;
+        }
+        return txt.substring(start, end);
+    }
+
+
     public void setName(String name) {
         this.name = name;
     }
@@ -50,6 +81,6 @@ public class VfsLiga {
     }
 
     public String toString() {
-        return getClass().getName() + "{ nr=" + nr +";name=" + name + "}";
+        return getClass().getName() + "{ nr=" + nr + "; name=" + name + ";klasse=" + klasse + "}";
     }
 }
