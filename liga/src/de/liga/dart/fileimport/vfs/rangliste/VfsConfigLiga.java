@@ -17,6 +17,9 @@ import java.util.List;
 public class VfsConfigLiga {
     @XStreamAsAttribute
     private String name;
+    @XStreamImplicit(itemFieldName = "alias")
+    private List<String> aliases;
+
     @XStreamImplicit
     private List<VfsConfigKlasse> configKlassen;
 
@@ -34,5 +37,13 @@ public class VfsConfigLiga {
 
     public void setConfigKlassen(List<VfsConfigKlasse> configKlassen) {
         this.configKlassen = configKlassen;
+    }
+
+    public List<String> getAliases() {
+        return aliases;
+    }
+
+    public void setAliases(List<String> aliases) {
+        this.aliases = aliases;
     }
 }

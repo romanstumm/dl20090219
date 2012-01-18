@@ -144,8 +144,9 @@ public class RanglisteExporter implements DataExchanger {
             throws IOException, TemplateException {
         Set<VfsLiga> ligen = new HashSet();
         for (VfsTeam team : dbfImport.getTeams()) {
-            compile(team);
-            ligen.add(team.getVfsLiga());
+            if (compile(team)) {
+                ligen.add(team.getVfsLiga());
+            }
         }
         List<VfsLiga> sortedLigen = new ArrayList(ligen);
         Collections.sort(sortedLigen, new Comparator<VfsLiga>() {
@@ -174,26 +175,31 @@ public class RanglisteExporter implements DataExchanger {
      * die variablen in der config durch freemarker ersetzen lassen.
      *
      * @param team - klasse, ligameister + liganame werden ersetzt
+     * @return false to exclude the team
      * @throws IOException
      * @throws TemplateException
      */
-    protected void compile(VfsTeam team) throws IOException, TemplateException {
+    protected boolean compile(VfsTeam team) throws IOException, TemplateException {
         VfsConfigLiga configLiga = findConfigLiga(team.getPlainLigaName());
         if (configLiga == null)
             throw new IllegalArgumentException(
                     "Liga " + team.getPlainLigaName() + " nicht konfiguriert bei " + team);
         VfsConfigKlasse configKlasse = findConfigKlasse(configLiga, team.getVfsLiga().getKlasse());
-        if (configKlasse == null)
-            throw new IllegalArgumentException("Klasse " +
+        if (configKlasse == null) {
+            log.warn("Lasse Team  " + team.getTeamname() + " aus, weil Klasse " +
                     team.getVfsLiga().getKlasse() + " nicht konfiguriert bei " + team);
-        Map<String, Object> templateVars = new HashMap();
-        setTemplateVars(templateVars, team);
-        team.setKlasse(
-                processTemplate(freemarker, templateVars, configKlasse.getKlasse()));
-        team.setLigameister(
-                processTemplate(freemarker, templateVars, configKlasse.getLigameister()));
-        team.setLiganame(
-                processTemplate(freemarker, templateVars, configKlasse.getLiganame()));
+            return false;
+        } else {
+            Map<String, Object> templateVars = new HashMap();
+            setTemplateVars(templateVars, team);
+            team.setKlasse(
+                    processTemplate(freemarker, templateVars, configKlasse.getKlasse()));
+            team.setLigameister(
+                    processTemplate(freemarker, templateVars, configKlasse.getLigameister()));
+            team.setLiganame(
+                    processTemplate(freemarker, templateVars, configKlasse.getLiganame()));
+            return true;
+        }
     }
 
     private void setTemplateVars(Map<String, Object> templateVars, VfsTeam team) {
@@ -210,6 +216,7 @@ public class RanglisteExporter implements DataExchanger {
     }
 
     private VfsConfigKlasse findConfigKlasse(VfsConfigLiga configLiga, String vfsLigaKlasse) {
+        if (vfsLigaKlasse == null) return null;  // not found
         for (VfsConfigKlasse each : configLiga.getConfigKlassen()) {
             if (vfsLigaKlasse.equalsIgnoreCase(each.getName())) return each;
         }
@@ -219,6 +226,11 @@ public class RanglisteExporter implements DataExchanger {
     private VfsConfigLiga findConfigLiga(String vfsLigaName) {
         for (VfsConfigLiga each : getVfsConfig().getConfigLigen()) {
             if (vfsLigaName.equalsIgnoreCase(each.getName())) return each;
+            if (each.getAliases() != null) { // search by alias
+                for (String alias : each.getAliases()) {
+                    if (vfsLigaName.equalsIgnoreCase(alias)) return each;
+                }
+            }
         }
         return null;  // not found
     }
