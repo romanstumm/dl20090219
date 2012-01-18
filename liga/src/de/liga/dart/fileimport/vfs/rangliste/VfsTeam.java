@@ -36,16 +36,7 @@ public class VfsTeam {
      * Fische die Zahl aus dem Liganamen
      */
     public String getPlainGruppenNr() {
-        int start = 0;
-        String txt = vfsLiga.getName();
-        while (start < txt.length() && !Character.isDigit(txt.charAt(start))) {
-            start++;
-        }
-        int end = start;
-        while (end < txt.length() && Character.isDigit(txt.charAt(end))) {
-            end++;
-        }
-        return txt.substring(start, end);
+        return vfsLiga.getPlainGruppenNr();
     }
 
     /**
@@ -53,8 +44,7 @@ public class VfsTeam {
      * der PlainName der Liga 
      */
     public String getPlainLigaName() {
-        int idx = vfsLiga.getName().lastIndexOf(' ');
-        return vfsLiga.getName().substring(idx + 1);
+        return vfsLiga.getPlainName();
     }
 
     public VfsLiga getVfsLiga() {
@@ -159,5 +149,16 @@ public class VfsTeam {
 
     public void setSaetze2(int saetze2) {
         this.saetze2 = saetze2;
+    }
+
+    @Override
+    public String toString() {
+        return "VfsTeam{" +
+                "teamNr=" + teamNr +
+                ", klasse='" + klasse + '\'' +
+                ", liganame='" + liganame + '\'' +
+                ", teamname='" + teamname + '\'' +
+                ", vfsLiga=" + vfsLiga +
+                '}';
     }
 }

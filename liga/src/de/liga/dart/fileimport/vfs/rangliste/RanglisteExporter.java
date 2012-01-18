@@ -181,11 +181,11 @@ public class RanglisteExporter implements DataExchanger {
         VfsConfigLiga configLiga = findConfigLiga(team.getPlainLigaName());
         if (configLiga == null)
             throw new IllegalArgumentException(
-                    "Liga " + team.getPlainLigaName() + " nicht konfiguriert.");
+                    "Liga " + team.getPlainLigaName() + " nicht konfiguriert bei " + team);
         VfsConfigKlasse configKlasse = findConfigKlasse(configLiga, team.getVfsLiga().getKlasse());
         if (configKlasse == null)
             throw new IllegalArgumentException("Klasse " +
-                    team.getVfsLiga().getKlasse() + " nicht konfiguriert.");
+                    team.getVfsLiga().getKlasse() + " nicht konfiguriert bei " + team);
         Map<String, Object> templateVars = new HashMap();
         setTemplateVars(templateVars, team);
         team.setKlasse(
