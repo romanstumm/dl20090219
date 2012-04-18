@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 02.11.2007 12:26:42 by Hibernate Tools 3.2.0.b11 -->
+<hibernate-mapping>
+    <class name="de.liga.dart.model.Liga" table="liga" schema="public">
+        <cache usage="read-write"/>
+        <id name="ligaId" type="long">
+            <column name="ligaid" />
+             <generator class="sequence">
+                <param name="sequence">liga_ligaid_seq</param>
+            </generator>
+        </id>
+        <property name="ligaName" type="string">
+            <column name="liganame" not-null="true" unique="true" />
+        </property>
+    </class>
+</hibernate-mapping>

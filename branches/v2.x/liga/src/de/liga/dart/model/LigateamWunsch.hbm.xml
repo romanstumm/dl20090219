@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="de.liga.dart.model.LigateamWunsch" table="ligateamwunsch"
+           schema="public" batch-size="20">
+        <cache usage="read-write"/>
+        <id name="wunschId" type="long">
+            <column name="wunschId"/>
+            <generator class="sequence">
+                <param name="sequence">ligateamwunsch_wunschid_seq</param>
+            </generator>
+        </id>
+        <many-to-one not-null="true" name="team1"
+                     class="de.liga.dart.model.Ligateam"
+                     fetch="select">
+            <column name="team1" not-null="true"/>
+        </many-to-one>
+        <many-to-one not-null="true" name="team2"
+                     class="de.liga.dart.model.Ligateam"
+                     fetch="join">
+            <column name="team2" not-null="true"/>
+        </many-to-one>
+        <property name="wunschArt" type="int">
+            <column name="wunschArt" not-null="true"/>
+        </property>
+    </class>
+</hibernate-mapping>

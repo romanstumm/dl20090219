@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>properties</comment>
+<entry key="AddressFontSize">12</entry>
+<entry key="TableFontType">Arial Fett</entry>
+<entry key="ImagePath">null</entry>
+<entry key="YAxisGraphic">0</entry>
+<entry key="SliderSender">0</entry>
+<entry key="FormFontSize">12</entry>
+<entry key="LabelFontSize">12</entry>
+<entry key="ShowSender">true</entry>
+<entry key="XAxisSender">0</entry>
+<entry key="TableFontSize">12</entry>
+<entry key="XAxisAddress">0</entry>
+<entry key="AddressFontStyle">0</entry>
+<entry key="SenderFontStyle">0</entry>
+<entry key="TableFontStyle">1</entry>
+<entry key="SenderFontType">Arial</entry>
+<entry key="FormFontStyle">0</entry>
+<entry key="XAxisGraphic">0</entry>
+<entry key="ShowGraphic">true</entry>
+<entry key="EtiFontType">Arial Fett</entry>
+<entry key="YAxisSender">0</entry>
+<entry key="epCount">1</entry>
+<entry key="SenderFontSize">12</entry>
+<entry key="epEnvelopeType">6</entry>
+<entry key="SliderAddress">0</entry>
+<entry key="senderStreet">null</entry>
+<entry key="YAxisAddress">0</entry>
+<entry key="EtiFontSize">9</entry>
+<entry key="AddressFontType">Arial</entry>
+<entry key="senderName">null</entry>
+<entry key="EtiFontStyle">0</entry>
+<entry key="SenderInCorner">true</entry>
+<entry key="senderPLZ">null</entry>
+<entry key="FormFontType">Arial</entry>
+<entry key="LabelFontType">Arial</entry>
+<entry key="senderCorp">null</entry>
+<entry key="senderLocation">null</entry>
+<entry key="LabelFontStyle">0</entry>
+</properties>
