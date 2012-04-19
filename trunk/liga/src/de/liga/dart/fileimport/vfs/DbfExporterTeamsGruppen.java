@@ -16,6 +16,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.apache.commons.lang.StringUtils.trim;
+
 /**
  * Description:  Datenexport von Gruppen und Teams in die Altanwendung (.dbf files) <br/>
  * User: roman
@@ -387,8 +389,8 @@ public class DbfExporterTeamsGruppen extends DbfIO {
         LITSAI sai = new LITSAI();
         sai.SAI_NR = resultSet.getDate(1);
         sai.LIG_NR = resultSet.getInt(2);
-        sai.SAI_EINZEL = resultSet.getString(3);
-        sai.SAI_STATUS = resultSet.getString(4);
+        sai.SAI_EINZEL = trim(resultSet.getString(3));
+        sai.SAI_STATUS = trim(resultSet.getString(4));
         return sai;
     }
 
@@ -415,12 +417,12 @@ public class DbfExporterTeamsGruppen extends DbfIO {
     private LITLIG readLITLIG(ResultSet resultSet) throws SQLException {
         LITLIG lig = new LITLIG();
         lig.LIG_NR = resultSet.getInt(1);
-        lig.LIG_NAME = resultSet.getString(2);
-        lig.LIG_ZUSATZ = resultSet.getString(3);
-        lig.SPO_SPORTA = resultSet.getString(4);
+        lig.LIG_NAME = trim(resultSet.getString(2));
+        lig.LIG_ZUSATZ = trim(resultSet.getString(3));
+        lig.SPO_SPORTA = trim(resultSet.getString(4));
         lig.LIG_STAERK = resultSet.getInt(5);
-        lig.LIG_DISZIP = resultSet.getString(6);
-        lig.LIG_SPIELT = resultSet.getString(7);
+        lig.LIG_DISZIP = trim(resultSet.getString(6));
+        lig.LIG_SPIELT = trim(resultSet.getString(7));
         lig.LIG_UHRZEI = resultSet.getInt(8);
         return lig;
     }

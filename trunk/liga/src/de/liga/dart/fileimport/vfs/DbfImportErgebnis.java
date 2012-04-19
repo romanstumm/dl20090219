@@ -15,6 +15,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
 
+import static org.apache.commons.lang.StringUtils.trim;
+
 /**
  * Description:   Liest Rangliste aus vfs Dateien aus holt die Rohdaten zur
  * Berechnung der Rangliste für den Seriendruck der Urkunden.
@@ -266,7 +268,7 @@ public class DbfImportErgebnis extends DbfIO {
 
                 erg.setPAR_RUNDE(resultSet.getInt(c++));
                 erg.setPAR_SPIEL(resultSet.getInt(c++));
-                erg.setPAR_CODE(resultSet.getString(c++));
+                erg.setPAR_CODE(trim(resultSet.getString(c++)));
 
                 erg.heim().setPUNKT(resultSet.getInt(c++));
                 erg.heim().setSPIEL(resultSet.getInt(c++));
@@ -363,8 +365,8 @@ public class DbfImportErgebnis extends DbfIO {
 
     private VfsLiga createLiga(ResultSet resultSet, int ligNr) throws SQLException {
         VfsLiga litlig = new VfsLiga();
-        litlig.setName(resultSet.getString(1));
-        litlig.setKlasse(resultSet.getString(2));
+        litlig.setName(trim(resultSet.getString(1)));
+        litlig.setKlasse(trim(resultSet.getString(2)));
         litlig.setNr(ligNr);
         return litlig;
     }
@@ -375,11 +377,11 @@ public class DbfImportErgebnis extends DbfIO {
         littea.SAI_NR = resultSet.getDate(c++);
         littea.LIG_NR = resultSet.getInt(c++);
         littea.TEA_NR = resultSet.getInt(c++);
-        littea.TEA_NAME = resultSet.getString(c++);
+        littea.TEA_NAME = trim(resultSet.getString(c++));
         littea.LOK_NR = resultSet.getInt(c++);
-        littea.TEA_SPIELT = resultSet.getString(c++);
+        littea.TEA_SPIELT = trim(resultSet.getString(c++));
         littea.TEA_UHRZEI = resultSet.getInt(c++);
-        littea.TEA_STATUS = resultSet.getString(c);
+        littea.TEA_STATUS = trim(resultSet.getString(c));
         return littea;
     }
 
