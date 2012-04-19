@@ -18,6 +18,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static org.apache.commons.lang.StringUtils.trim;
+
 /**
  * Description: Datenabgleich mit Altdaten in DBF Datenbank
  * (Aufsteller, Spielorte)<br/>
@@ -229,27 +231,27 @@ public class DbfImporterSpielorteAufsteller extends DbfIO {
     private LITAUF readLITAUF(ResultSet rs) throws SQLException {
         LITAUF obj = new LITAUF();
         obj.AUF_NR = String.valueOf(rs.getInt(1));
-        obj.AUF_NAME = rs.getString(2);
-        obj.AUF_ZUSATZ = rs.getString(3);
-        obj.AUF_STRASS = rs.getString(4);
-        obj.AUF_PLZ = rs.getString(5);
-        obj.AUF_ORT = rs.getString(6);
-        obj.AUF_TEL = rs.getString(7);
-        obj.AUF_FAX = rs.getString(8);
+        obj.AUF_NAME = trim(rs.getString(2));
+        obj.AUF_ZUSATZ = trim(rs.getString(3));
+        obj.AUF_STRASS = trim(rs.getString(4));
+        obj.AUF_PLZ = trim(rs.getString(5));
+        obj.AUF_ORT = trim(rs.getString(6));
+        obj.AUF_TEL = trim(rs.getString(7));
+        obj.AUF_FAX = trim(rs.getString(8));
         return obj;
     }
 
     private LITLOK readLITLOK(ResultSet rs) throws SQLException {
         LITLOK obj = new LITLOK();
         obj.LOK_NR = String.valueOf(rs.getInt(1));
-        obj.LOK_NAME = rs.getString(2);
-        obj.LOK_ZUSATZ = rs.getString(3);
-        obj.LOK_STRASS = rs.getString(4);
-        obj.LOK_PLZ = rs.getString(5);
-        obj.LOK_ORT = rs.getString(6);
-        obj.LOK_TEL = rs.getString(7);
-        obj.LOK_FAX = rs.getString(8);
-        obj.LOK_RUHETA = rs.getString(9);
+        obj.LOK_NAME = trim(rs.getString(2));
+        obj.LOK_ZUSATZ = trim(rs.getString(3));
+        obj.LOK_STRASS = trim(rs.getString(4));
+        obj.LOK_PLZ = trim(rs.getString(5));
+        obj.LOK_ORT = trim(rs.getString(6));
+        obj.LOK_TEL = trim(rs.getString(7));
+        obj.LOK_FAX = trim(rs.getString(8));
+        obj.LOK_RUHETA = trim(rs.getString(9));
         obj.AUF_NR = String.valueOf(rs.getInt(10));
         return obj;
     }
